@@ -45,7 +45,7 @@
     <main>
         <div class="panorama_geral_linha_1">
             <div class="titulo">
-                PANORAMA GERAL
+                PANORAMA GERAL <span id="resumo_filtros" style="display: none; font-size: 15px; color: #555; margin-left: 10px;"></span>
             </div>
             <div class="filtros">
                 <select name="mes" id="mes">
@@ -164,8 +164,8 @@
         </div>
         <b class="direitos">WISETOUR © 2025. TODOS OS DIREITOS RESERVADOS</b>
     </footer>
-</body>
 
+<<<<<<< Updated upstream:Front-end/private/index.html
 </html>
 
 <script>
@@ -229,3 +229,42 @@
         }
     });
 </script>
+=======
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mes = document.getElementById('mes');
+            const ano = document.getElementById('ano');
+            const pais = document.getElementById('pais');
+            const resumo = document.getElementById('resumo_filtros');
+        
+            function atualizarResumo() {
+                const selecionados = [];
+        
+                if (mes.value) {
+                    selecionados.push(mes.options[mes.selectedIndex].text);
+                }
+                if (ano.value) {
+                    selecionados.push(ano.options[ano.selectedIndex].text);
+                }
+                if (pais.value) {
+                    selecionados.push(pais.options[pais.selectedIndex].text);
+                }
+        
+                if (selecionados.length > 0) {
+                    resumo.style.display = 'inline';
+                    resumo.textContent = `(${selecionados.join(' • ')})`;
+                } else {
+                    resumo.style.display = 'none';
+                    resumo.textContent = '';
+                }
+            }
+        
+            mes.addEventListener('change', atualizarResumo);
+            ano.addEventListener('change', atualizarResumo);
+            pais.addEventListener('change', atualizarResumo);
+        });
+        </script>
+        
+</body>
+</html>
+>>>>>>> Stashed changes:private/index.html
