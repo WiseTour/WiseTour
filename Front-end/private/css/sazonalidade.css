@@ -94,6 +94,7 @@ header .container {
     font-size: 25px;
     font-weight: 700;
     margin-left: 15px;
+    width: 50%;
 }
 
 .sazonalidade_linha_1 .filtros {
