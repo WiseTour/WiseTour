@@ -31,12 +31,12 @@
 
             <div class="icon_container">
                 <a class="opcao entrar" href="/auth/login.html">
-                    <img src="assets/not-icon.png" alt="">
+                    <img src="assets/not-icon.svg" id=icon-not>
                 </a>
                 <a class="opcao entrar" href="gerenciamento.html">
                     <img src="assets/ger-icon.png" alt="">
                 </a>
-                <a class="opcao entrar" href="/auth/login.html">
+                <a class="opcao entrar" href="usuarios.html">
                     <img src="assets/user-icon.png" alt="">
                 </a>
             </div>
@@ -49,7 +49,7 @@
         <!-- filtros e titulo -->
         <div class="panorama_geral_linha_1">
             <div class="titulo">
-                PERFIL DO TURISTA
+                 PERFIL DO TURISTA ESTRANGEIRO <span id="resumo_filtros" style="display: none; font-size: 20px; color: #555; margin-left: 10px;"></span>
             </div>
             <div class="filtros">
                 <select name="mes" id="mes">
@@ -124,7 +124,7 @@
             <div class="graficos">
                 <div class="coluna-grafico-esquerda">
                     <div class="titulo-grafico-container">
-                        <div class="titulo-grafico">Motivo das Viagens Realizadas</div>
+                        <div class="titulo-grafico">MOTIVO DAS VIAGENS REALIZADAS</div>
                     </div>
 
                     <canvas id="graficoMotivos"></canvas>
@@ -133,7 +133,7 @@
                 <div class="coluna-graficos-direita">
                     <div class="grafico-superior-direito">
                         <div class="titulo-grafico-container">
-                            <div class="titulo-grafico">Fonte de informação para planejamento da viagem</div>
+                            <div class="titulo-grafico">FONTE DE INFORMAÇÃO PARA PLANEJAMENTO DA VIAGEM</div>
                         </div>
                         <canvas id="graficoFontes"></canvas>
                     </div>
@@ -141,14 +141,14 @@
                     <div class="graficos-inferiores">
                         <div class="grafico-inferior">
                             <div class="titulo-grafico-container">
-                                <div class="titulo-grafico">Composição do grupo turístico</div>
+                                <div class="titulo-grafico">COMPOSIÇÃO DO GRUPO TURÍSTICO</div>
                             </div>
                             <canvas id="graficoComposicao"></canvas>
                         </div>
 
                         <div class="grafico-inferior">
                             <div class="titulo-grafico-container">
-                                <div class="titulo-grafico">Vias de Acesso Mais Utilizadas</div>
+                                <div class="titulo-grafico">VIAS DE ACESSO MAIS UTILIZADAS</div>
                             </div>
                             <canvas id="graficoVias"></canvas>
                         </div>
@@ -190,6 +190,45 @@
         </div>
         <b class="direitos">WISETOUR © 2025. TODOS OS DIREITOS RESERVADOS</b>
     </footer>
+
+     <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const mes = document.getElementById('mes');
+    const ano = document.getElementById('ano');
+    const pais = document.getElementById('pais');
+    const resumo = document.getElementById('resumo_filtros');
+
+    function atualizarResumo() {
+        const selecionados = [];
+
+        if (mes.value) {
+            selecionados.push(mes.options[mes.selectedIndex].text);
+        }
+        if (ano.value) {
+            selecionados.push(ano.options[ano.selectedIndex].text);
+        }
+        if (pais.value) {
+            selecionados.push(pais.options[pais.selectedIndex].text);
+        }
+
+        if (selecionados.length > 0) {
+            resumo.style.display = 'inline';
+            resumo.textContent = `(${selecionados.join(' • ')})`;
+        } else {
+            resumo.style.display = 'none';
+            resumo.textContent = '';
+        }
+    }
+
+    mes.addEventListener('change', atualizarResumo);
+    ano.addEventListener('change', atualizarResumo);
+    pais.addEventListener('change', atualizarResumo);
+});
+</script>
 </body>
+
+
+<div id="dataHora" style="position: fixed; bottom: 20px; right: 25px; font-family: 'Anybody', sans-serif; 
+font-size: 16px; color: #0b0b0b;"></div>
 
 </html>

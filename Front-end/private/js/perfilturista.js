@@ -5,9 +5,10 @@ const coresUsadas = {
     marromBege: '#C49F1B',
     amareloClaro: '#FFE483',
     avermelhado: '#A66D44',
-    esverdeado: '#938100',
-    verde: '#B9B453',
-    cinza: '#E0E0E0'
+    cimento: '#87826E',
+    acinzentado: '#DDD8C5',
+    cinza: '#E0E0E0',
+    marromForte: '#A98400'
 };
 
 
@@ -89,63 +90,63 @@ new Chart(ctxMotivos, {
 });
 
 
-const ctxFontes = document.getElementById('graficoFontes');
-new Chart(ctxFontes, {
-    type: 'bar',
-    data: {
-        labels: ['Amigos/Parentes', 'Escritórios', 'Feiras', 'Eventos', 'Agência', 'Outros', 'Internet', 'Guias', 'Corporativo'],
-        datasets: [{
-            label: 'Fontes',
-            data: [20, 15, 10, 8, 12, 5, 25, 3, 12],
-            backgroundColor: [
-                coresUsadas.amarelo,
-                coresUsadas.marrom,
-                coresUsadas.marromBege,
-                coresUsadas.amareloClaro,
-                coresUsadas.avermelhado,
-                coresUsadas.esverdeado,
-                coresUsadas.verde,
-                coresUsadas.cinza,
-                '#D9C7A7' 
-            ],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        ...opcoesPadrao,
-        plugins: {
-            legend: {
-                display: false
-            }
+    const ctxFontes = document.getElementById('graficoFontes');
+    
+    new Chart(ctxFontes, {
+        type: 'bar',
+        data: {
+            labels: ['Amigos/Parentes', 'Escritórios', 'Feiras', 'Eventos', 'Agência', 'Outros', 'Internet', 'Guias', 'Corporativo'],
+            datasets: [{
+                label: 'Fontes',
+                data: [20, 15, 10, 8, 12, 5, 25, 3, 12],
+                backgroundColor: [
+                    coresUsadas.amarelo,
+                    coresUsadas.marrom,
+                    coresUsadas.marromBege,
+                    coresUsadas.amareloClaro,
+                    coresUsadas.marromForte,
+                    coresUsadas.esverdeado,
+                    coresUsadas.acinzentado,
+                    coresUsadas.cinza,
+                    '#D9C7A7' 
+                ],
+                borderWidth: 0
+            }]
         },
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: {
+        options: {
+            ...opcoesPadrao,
+            plugins: {
+                legend: {
                     display: false
-                },
-                ticks: {
-                    ...estiloDoTextoDoGrafico
                 }
             },
-            x: {
-                grid: {
-                    display: false
-                },
-                ticks: {
-                    ...estiloDoTextoDoGrafico,
-                    font: {
-                        ...estiloDoTextoDoGrafico.font,
-                        size: 12
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        display: false
                     },
-                    maxRotation: 0, 
-                    minRotation: 0  
+                    ticks: {
+                        ...estiloDoTextoDoGrafico
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        ...estiloDoTextoDoGrafico,
+                        font: {
+                            ...estiloDoTextoDoGrafico.font,
+                            size: 9
+                        },
+                        maxRotation: 0, 
+                        minRotation: 0  
+                    }
                 }
             }
         }
-    }
-});
-
+    });
 
 const ctxComposicao = document.getElementById('graficoComposicao');
 new Chart(ctxComposicao, {
@@ -194,8 +195,8 @@ new Chart(ctxVias, {
             data: [60, 30, 5, 5],
             backgroundColor: [
                 coresUsadas.avermelhado,
-                coresUsadas.esverdeado,
-                coresUsadas.verde,
+                coresUsadas.cimento,
+                coresUsadas.acinzentado,
                 coresUsadas.cinza
             ],
             borderWidth: 0
@@ -221,3 +222,24 @@ new Chart(ctxVias, {
         }
     }
 });
+
+function atualizarDataHora() {
+    const agora = new Date();
+
+    const data = agora.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+
+    const hora = agora.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+
+    document.getElementById('dataHora').textContent = `${data} - ${hora}`;
+}
+
+atualizarDataHora();
+setInterval(atualizarDataHora, 1000);

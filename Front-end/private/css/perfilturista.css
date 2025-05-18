@@ -21,15 +21,14 @@ header .container {
     width: 90%;
     margin: 0 auto;
     margin-inline: 5%;
-    display: flex
-;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     height: 120px;
 }
 
 .logo_container .logo {
-    height: 85px;
+    height: 70px;
 }
 
 .menu_container {
@@ -48,6 +47,7 @@ header .container {
     padding: 13px 31px;
     transition: transform 0.3s ease;
     font-size: 17px;
+    transition: all 0.8s ease;
 }
 
 .menu_container .opcao.active {
@@ -69,7 +69,7 @@ header .container {
 }
 
 .icon_container img {
-    width: 60px;
+    width: 50px;
 }
 
 
@@ -82,7 +82,9 @@ body {
 
 main {
     background-color: #d6d1d1;
-    /* min-height: 100vw; */
+    min-height: 42vw
+
+;
     display: flex
 ;
     flex-direction: column;
@@ -97,25 +99,23 @@ main .panorama_geral_linha_1 {
 ;
     align-items: center;
     justify-content: space-between;
-    height: 70px;
+    height: 60px;
     width: 90%;
 }
 
 main .panorama_geral_linha_1 .titulo {
-    display: flex
-;
+    display: flex;
     font-size: 25px;
     font-weight: bolder;
     justify-content: flex-start;
     align-items: center;
     height: 100%;
-    width: 30%;
+    width: 60%;
 }
 
 main .panorama_geral_linha_1 .filtros {
     /* background-color: blue; */
-    display: flex
-;
+    display: flex;
     justify-content: flex-end;
     align-items: center;
     /* height: 100%; */
@@ -145,7 +145,7 @@ main .panorama_geral_linha_1 .filtros select {
 }
 
 .menu_container .opcao:hover {
-    background-color: var(--cinza_claro);
+    background-color: #F2F2F2;
     color: black;
     border-radius: 50px;
 }
@@ -156,8 +156,7 @@ select:hover {
 
 .card {
     position: relative;
-    display: flex
-;
+    display: flex;
     align-items: center;
     width: 250px;
     /* min-height: 160px; */
@@ -172,8 +171,9 @@ select:hover {
 ;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    gap: 10px;
-    margin: 5px auto;
+    /* gap: 10px; */
+    /* margin: 5px auto; */
+    margin-top: -8px;
 }
 
 .card-amarelo-fundo {
@@ -185,8 +185,7 @@ select:hover {
     border-radius: 35px;
     height: 80px;
     width: 110px;
-    display: flex
-;
+    display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -209,8 +208,7 @@ select:hover {
     /* width: calc(100% - 10px); */
     /* min-height: 140px; */
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-    display: flex
-;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -236,8 +234,7 @@ select:hover {
 .graficos {
     width: 100%;
     height: 350px;
-    display: flex
-;
+    display: flex;
     gap: 20px;
     margin: 5px;
 }
@@ -254,8 +251,7 @@ select:hover {
 .coluna-graficos-direita {
     width: 72%;
     height: 95%;
-    display: flex
-;
+    display: flex;
     flex-direction: column;
     gap: 20px;
 }
@@ -269,8 +265,7 @@ select:hover {
 }
 
 .graficos-inferiores {
-    display: flex
-;
+    display: flex;
     gap: 20px;
     height: 50%;
 }
@@ -293,18 +288,18 @@ select:hover {
 
 .titulo-grafico-container {
     background-color: rgba(175, 145, 39, 0.35);
-    padding: 16px 15px; 
-    margin-bottom: 10px; 
-    border-radius: 15px 15px 0 0; 
-    margin-left: -20px; 
+    padding: 16px 15px;
+    margin-bottom: 10px;
+    border-radius: 15px 15px 0 0;
+    margin-left: -20px;
     margin-right: -20px;
     margin-top: -20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .titulo-grafico-container .titulo-grafico {
     color: #333;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
     margin-bottom: 0;
     text-align: center;
@@ -351,6 +346,20 @@ canvas {
     height: auto;
     width: 100%;
 }
+
+.icon_container img {
+    transition: transform 0.6s ease;
+}
+
+.icon_container img:hover {
+    transform: scale(1.1);
+    
+}
+
+#icon-not {
+    width: 25px; 
+    height: auto; 
+  }
 
 
 

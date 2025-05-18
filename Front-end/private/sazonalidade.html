@@ -7,25 +7,26 @@
     <title>WiseTour</title>
 
     <link rel="shortcut icon" href="../common/assets/logo/logo_padrao.svg" type="image/x-icon">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/sazonalidade.css">
     <script src="https://kit.fontawesome.com/041dbc8823.js" crossorigin="anonymous"></script>
     <script src="/common/js/nav-bar.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="js/index.js" defer></script>
+    <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+    <script src="https://code.highcharts.com/mapdata/countries/br/br-all.js"></script>
+    <script src="js/sazonalidade.js" defer></script>
 </head>
 
-<body id="panorama_geral_body">
+<body id="sazonalidade_body">
     <header id="header" class="header">
         <div id="header_container" class="container">
-
             <div class="logo_container">
                 <img class="logo" src="/common/assets/logo/logo_cinza_escuro.svg" alt="Logo WiseTour">
             </div>
 
             <nav class="menu_container">
-                <a class="opcao active" href="index.html">Panorama Geral</a>
+                <a class="opcao" href="index.html">Panorama Geral</a>
                 <a class="opcao" href="perfilturista.html">Perfil do Turista</a>
-                <a class="opcao" href="sazonalidade.html">Sazonalidade</a>
+                <a class="opcao active" href="sazonalidade.html">Sazonalidade</a>
             </nav>
 
             <div class="icon_container">
@@ -42,12 +43,10 @@
         </div>
     </header>
 
-
     <main>
-
-        <div class="panorama_geral_linha_1">
+        <div class="sazonalidade_linha_1">
             <div class="titulo">
-                PANORAMA GERAL <span id="resumo_filtros" style="display: none; font-size: 20px; color: #555; margin-left: 10px;"></span>
+                 SAZONALIDADE <span id="resumo_filtros" style="display: none; font-size: 20px; color: #555; margin-left: 10px;"></span>
             </div>
             <div class="filtros">
                 <select name="mes" id="mes">
@@ -69,79 +68,83 @@
             </div>
         </div>
 
-        <div class="panorama_geral_linha_2">
-            <div class="panorama_geral_coluna_1">
-                <div class="principais_paises_origem">
-                    <div class="titulo_grafico">
-                        PRINCIPAIS PAÍSES DE ORIGEM
-                    </div>
-                    <div class="grafico">
-                        <div class="grafico-container">
-                            <canvas id="myChart"></canvas>
-                        </div>
 
-                    </div>
+
+
+        <!-- kpis -->
+
+        <div class="coluna-kpis">
+
+            <div class="card">
+                <div class="card-amarelo-fundo">
+                    <img src="assets/kpi-img-7.svg" alt="">
                 </div>
-                <div class="presenca_turista_uf">
-                    <div class="titulo_grafico">
-                        PRESENÇA DE TURISTAS POR UNIDADE FEDERATIVA
-                    </div>
-                    <div class="grafico">
-                        <div class="grafico-container">
-                            <canvas id="presencaTuristaChart"></canvas>
-                        </div>
+                <div class="card-kpi kpilonga">
+                    <h1>6.435,87</h1>
+                    <h3>QUANTIDADE TOTAL DE TURISTAS</h3>
+                </div>
+            </div>
 
+            
+
+
+            <div class="card">
+                <div class="card-amarelo-fundo">
+                    <img src="assets/kpi-img-6.svg" alt="">
+                </div>
+                <div class="card-kpi kpilonga">
+                    <h1>+10%</h1>
+                    <h3>DE VARIAÇÃO DE TURISTAS EM RELAÇÃO À MAIO DO ANO ANTERIOR</h3>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-amarelo-fundo">
+                    <img src="assets/kpi-img-9.svg" alt="">
+                </div>
+                <div class="card-kpi kpi-maior">
+                    <div>
+                        <div>
+                            <h1>TOP 3</h1>
+                            <h3>ESTADOS MAIS VISITADOS</h3>
+                        </div>
+                        <div class="states-over-image">
+                            <span class="state">São Paulo</span>
+                            <span class="state">Rio de Janeiro</span>
+                            <span class="state">Santa Catarina</span>
+                            <img src="assets/top3.svg" alt="">
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="panorama_geral_coluna_2">
-                <div class="kpis">
-                    <div class="kpi">
-                        <div class="card">
-                            <div class="icon-box">
-                                <img src="assets/kpi-img-5.svg" alt="">
-                            </div>
-                            <div class="info-box">
-                                <div class="number">8.987.064</div>
-                                <div class="label">TOTAL DE CHEGADAS <br><span>em 2023</span></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="kpi">
-                        <div class="card">
-                            <div class="icon-box">
-                                <img src="assets/kpi-img-5.svg" alt="">
-                            </div>
-                            <div class="info-box">
-                                <div class="number">9.762,81</div>
-                                <div class="label">TOTAL DE CHEGADAS <br><span>em 2024</span></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="kpi">
-                        <div class="card">
-                            <div class="icon-box">
-                                <img src="assets/kpi-img-6.svg" alt="">
-                            </div>
-                            <div class="info-box">
-                                <div class="number">+8,63%</div>
-                                <div class="label">PORCENTAGEM <br>COMPARATIVA</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="chegadas_turistas_estrangeiros">
-                    <div class="titulo_grafico">
-                        CHEGADA DE TURISTAS ESTRANGEIROS
-                    </div>
-                    <div class="grafico">
-                        <div class="grafico-container">
-                            <canvas id="chegadasTuristasChart"></canvas>
-                        </div>
 
-                    </div>
+        </div>
+
+        <!--gráficos-->
+
+        <div class="sazonalidade_linha_2">
+
+            <div class="pico_de_visitas_por_nacionalidades_em_2024">
+                <div class="titulo_grafico">
+                    PICO DE VISITAS POR NACIONALIDADE
+                </div>
+                <div class="grafico">
+                    <canvas id="picoVisitasChart"></canvas>
                 </div>
             </div>
+
+            <div class="estados_mais_visitados">
+                <div class="titulo_grafico">
+                    ESTADOS MAIS VISITADOS
+                </div>
+                <div class="grafico">
+                    <div class="grafico-brasil" id="mapaBrasil" style="height: 260px; width: 600px;">
+                </div>
+
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -176,7 +179,7 @@
         <b class="direitos">WISETOUR © 2025. TODOS OS DIREITOS RESERVADOS</b>
     </footer>
 
-    <script>
+     <script>
 document.addEventListener('DOMContentLoaded', function () {
     const mes = document.getElementById('mes');
     const ano = document.getElementById('ano');
@@ -211,10 +214,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-</body>
 
 <div id="dataHora" style="position: fixed; bottom: 20px; right: 25px; font-family: 'Anybody', sans-serif; 
 font-size: 16px; color: #0b0b0b;"></div>
-
-
-</html>
