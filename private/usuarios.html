@@ -3,147 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Usuário</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/usuarios.css">
+    <script src="/private/js/script.js"></script>
     <script src="https://kit.fontawesome.com/041dbc8823.js" crossorigin="anonymous"></script>
-    <script src="/common/js/nav-bar.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-    
+
     <header id="header" class="header">
         <div id="header_container" class="container">
-            <div class="logo_container">
-                <img class="logo" src="/common/assets/logo/logo_cinza_escuro.svg" alt="Logo WiseTour">
-            </div>
-    
-            <nav class="menu_container">
+            <img class="logo" src="/common/assets/logo/logo_cinza_escuro.svg" alt="Logo WiseTour">
+
+            <nav class="menu_container_middle">
                 <a class="opcao" href="index.html">Panorama Geral</a>
                 <a class="opcao" href="perfilturista.html">Perfil do Turista</a>
                 <a class="opcao" href="sazonalidade.html">Sazonalidade</a>
             </nav>
-    
-            <div class="icon_container">
-                <a class="opcao entrar not" href="/auth/login.html">
-                    <img src="assets/not-icon.svg" alt=""id=icon-not>
+
+            <nav class="menu_container_right">
+                <a class="opcao" href="gerenciamento.html">
+                    <i class="fa-solid fa-gear"></i>
                 </a>
-                <a class="opcao entrar" href="gerenciamento.html">
-                    <img src="assets/ger-icon.png" alt="">
+                <a class="opcao active" href="usuarios.html">
+                    <img src="/common/assets/icon/user_icon.svg">
                 </a>
-                <a class="opcao entrar" href="usuarios.html">
-                    <img src="assets/user-icon.png" alt="">
-                </a>
-            </div>
+            </nav>
         </div>
     </header>
 
-    <main>
-        <h1>USUÁRIO</h1>
-        <div class="tela-usuarios">
-            <div class="container-usuarios">
-                <div class="cabecalho">
-                    <img src="assets/inf.svg" alt="">
-                    <h2 class="texto-gerenciamento">INFORMAÇÕES PESSOAIS</h2>
-                    <img src="assets/icon-senha.svg" alt="">
-                    <h2 class="texto-gerenciamento">SENHA</h2>
-                </div>
-                <div class="container-informacoes">
-                    <div class="informacoes">
-                        <h2>Bem vindo!</h2>
-                        <div class="campo-info"> 
-                            <span>NOME:</span>
-                            <input type="text" value="Ian Pimenta">
-                        </div>
-                        <div class="campo-info">
-                            <span>E-MAIL:</span>
-                            <input type="text" value="ian@hotmail.com">
-                        </div>
-                        <div class="campo-info">
-                            <span>FUNÇÃO:</span>
-                            <select name="" id="">
-                                <option value="administrador" selected>ADMINISTRADOR</option>
-                                <option value="marketing">MARKETING</option>
-                                <option value="vendedor">VENDEDOR</option>
-                            </select>
-                        </div>
-                        <div class="campo-info">
-                            <span>TELEFONE:</span>
-                            <input type="text" value="(11) 987654321">
-                        </div>
-                        <div class="campo-info">
-                            <span>PREFERÊNCIA DE VISUALIZAÇÃO DE TELA:</span>
-                        </div>
-                        <div class="campo-preferencia" style="display: flex;">
-                            <label>
-                                <input type="checkbox">
-                                <span>PANORAMA GERAL</span>
-                            </label>
-                            <label>
-                                <input type="checkbox">
-                                <span>PERFIL DO TURISTA</span>
-                            </label>
-                        </div>
-                        <div class="campo-preferencia" style="display: flex;"">
-                            <label>
-                                <input type="checkbox">
-                                <span>SAZONALIDADE</span>
-                            </label>
-                            <label>
-                                <input type="checkbox">
-                                <span>GERENCIAMENTO</span>
-                            </label>
-                        </div>
-                        <div class="campo-info">
-                            <span>DATA DE NASCIMENTO:</span>
-                            <input type="date">
-                        </div>
-                    </div>
-                    <div class="passaporte">
-                        <div class="container-passaporte">
-                            <div class="passaporte-frente">
-                                <div class="cabeca">
-                                    <div></div>
-                                    <span>PASSAPORTE</span>
-                                </div>
-                                <div class="complemento"></div>
-                                <div class="frente">
-                                    <img src="../common/assets/logo/logo_cinza_escuro.svg" alt="">
-                                </div>
+    <main class="main">
+        <h2>GERENCIAMENTO DE USUÁRIO</h2>
+        <div class="container_main">
+            <div class="cabecalho">
+                <button class="active">
+                    <img src="/common/assets/icon/user_icon.svg">
+                    INFORMAÇÕES PESSOAIS
+                </button>
+                <button>
+                    <i class="fa-solid fa-lock"></i>
+                    SENHA
+                </button>
+                <button>
+                    <i class="fa-solid fa-chart-line"></i>
+                    PREFERÊNCIAS DE VISUALIZAÇÃO DAS DASHBOARDS
+                </button>
+            </div>
+            <div class="container_gerenciamento_usuario">
+                <div class="left_container">
+                    <div class="left_container_container informacoes_pessoais">
+                        <h2>Bem-vindo!</h2>
+                        <form action="">
+                            <div class="form_container">
+                                <label for="nome"><img src="/common/assets/icon/user_icon.svg">
+                                    NOME:</label>
+                                <input type="text" id="nome" name="nome" value="Ian Pimenta">
                             </div>
-                            <div class="passaporte-tras">
-                                <div class="informacoes-pessoais">
-                                    <div class="amarela"></div>
-                                    <img src="assets/icon.svg" id="iconuser">
-                                    <div class="dados">
-                                        <div>
-                                            <span class="titulobold">N. PASSAPORTE: </span>
-                                            <span>0000</span>
-                                        </div>
-                                        <div>
-                                            <span class="titulobold">NOME: </span>
-                                            <span>IAN PIMENTA</span>
-                                        </div>
-                                        <div>
-                                            <span class="titulobold">DATA NASCIMENTO: </span>
-                                            <span>01/01/2001</span>
-                                        </div>
-                                        <div>
-                                            <span class="titulobold">NACIONALIDADE: </span>
-                                            <span>BRASILEIRO</span>
-                                        </div>
+
+                            <div class="form_container">
+                                <label for="email"><i class="fa-solid fa-envelope"></i>E-MAIL:</label>
+                                <input type="text" id="email" name="email" value="ian@hotmail.com">
+                            </div>
+
+                            <div class="form_container">
+                                <label for="funcao"> <i class="fa-solid fa-user"></i>FUNÇÃO:</label>
+                                <input type="text" id="funcao" name="funcao" value="Administrador">
+                            </div>
+
+                            <div class="form_container">
+                                <label for="telefone"><i class="fa-solid fa-phone"></i>TELEFONE:</label>
+                                <input type="text" id="telefone" name="telefone" value="(11) 987654321">
+                            </div>
+
+                            <div class="form_container_button">
+                                <button class="btn_editar" type="button"><i class="fa-solid fa-pen"></i>Editar</button>
+                                <button class="btn_salvar" type="submit"><i
+                                        class="fa-solid fa-check"></i>Salvar</button>
+                            </div>
+
+
+                        </form>
+
+
+                    </div>
+
+                    <div class="left_container_container gerenciamento_senha">
+                        <h2>GERENCIAMENTO SENHA</h2>
+                        <form action="">
+                            <div class="form_container">
+                                <label for="nome_gerenciamento_senha"><img src="/common/assets/icon/user_icon.svg">
+                                    NOME:</label>
+                                <input type="text" id="nome_gerenciamento_senha" name="nome_gerenciamento_senha"
+                                    value="Ian Pimenta">
+                            </div>
+
+                            <div class="form_container">
+                                <label for="email_gerenciamento_senha"><i
+                                        class="fa-solid fa-envelope"></i>E-MAIL:</label>
+                                <input type="text" id="email_gerenciamento_senha" name="email_gerenciamento_senha"
+                                    value="ian@hotmail.com">
+                            </div>
+
+                            <div class="form_container">
+                                <label for="senha_gerenciamento_senha"> <i class="fa-solid fa-lock"></i>SENHA:</label>
+                                <input type="password" id="senha_gerenciamento_senha" name="senha_gerenciamento_senha"
+                                    value="urubu100">
+                                <i class="fa-solid fa-eye-slash eye"></i>
+                            </div>
+
+                            <div class="form_container">
+                                <label for="nova_senha_gerenciamento_senha"><i class="fa-solid fa-lock"></i>NOVA
+                                    SENHA:</label>
+                                <input type="password" id="nova_senha_gerenciamento_senha"
+                                    name="nova_senha_gerenciamento_senha" value="urubu100">
+                                <i class="fa-solid fa-eye-slash eye"></i>
+                            </div>
+
+                            <div class="form_container_button">
+                                <button class="btn_editar" type="button"><i class="fa-solid fa-pen"></i>Alterar
+                                    senha</button>
+                                <button class="btn_salvar" type="submit"><i class="fa-solid fa-check"></i>Salvar
+                                    senha</button>
+
+                            </div>
+
+
+                        </form>
+                    </div>
+
+                    <div class="left_container_container preferencias_dashboard">
+                        <h2>GERENCIAMENTO DASHBOARD</h2>
+                        <form action="">
+                            <div class="form_container">
+                                <label for="panorama_geral">
+                                    Panorama geral
+                                    <input type="checkbox" name="preferencias_dashboard_escolhas[]" id="panorama_geral">
+
+                                </label>
+                            </div>
+
+                            <div class="form_container">
+                                <label for="perfil_turista">
+                                    Perfil do turista
+                                    <input type="checkbox" name="preferencias_dashboard_escolhas[]" id="perfil_turista">
+
+                                </label>
+                            </div>
+
+                            <div class="form_container">
+                                <label for="sazonalidade">
+                                    Sazonalidade
+                                    <input type="checkbox" name="preferencias_dashboard_escolhas[]" id="sazonalidade">
+
+                                </label>
+                            </div>
+
+                            <div class="form_container_button">
+                                <button class="btn_editar" type="button">
+                                    <i class="fa-solid fa-pen"></i> Alterar preferências
+                                </button>
+                                <button class="btn_salvar" type="submit">
+                                    <i class="fa-solid fa-check"></i> Salvar preferências
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+                <div class="right_container">
+                    <div class="container_passaporte">
+                        <div class="passaporte_fechado">
+                            <div>
+                                <img src="../common/assets/logo/logo_cinza_escuro.svg" alt="">
+                            </div>
+                            <h3>PASSAPORTE</h3>
+                        </div>
+                        <div class="passaporte_aberto">
+                            <div class="informacoes_usuario">
+                                <img src="assets/icon.svg" id="iconuser">
+                                <div class="informacoes">
+                                    <div>
+                                        <span class="titulobold">N. PASSAPORTE: </span>
+                                        <span>0000</span>
+                                    </div>
+                                    <div>
+                                        <span class="titulobold">NOME: </span>
+                                        <span>IAN PIMENTA</span>
+                                    </div>
+                                    <div>
+                                        <span class="titulobold">FUNÇÃO: </span>
+                                        <span>ADMINISTRADOR</span>
+                                    </div>
+                                    <div>
+                                        <span class="titulobold">E-MAIL: </span>
+                                        <span>ian@hotmail.com</span>
                                     </div>
                                 </div>
-                                <div class="campo-cinza"></div>
-                                <div class="campo-amarelo"></div>
                             </div>
+                            <div class="folha"></div>
+                            <div class="capa"></div>
                         </div>
-                        <button>ALTERAR FOTO DE PERFIL</button>
                     </div>
                 </div>
             </div>
-        </div>
+
     </main>
 </body>
 
