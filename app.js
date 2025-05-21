@@ -20,26 +20,27 @@ var app = express();
 var axios = require("axios");
 
 app.get("/estado", async (req, res) => {
-    try {
-        const ipResponse = await axios.get('https://api64.ipify.org?format=json');
-        const ip = ipResponse.data.ip;
-        console.log('IP público do usuário:', ip);
-    
-        const locationResponse = await axios.get(`http://ip-api.com/json/${ip}`);
-        console.log('Resposta da API:', locationResponse.data);
-    
-        res.json({ estado: locationResponse.data.regionName || 'BRASIL' });
-      } catch (error) {
-        console.error('Erro ao obter localização:', error);
-        res.status(500).json({ erro: 'Erro ao obter localização' });
-      }
+  try {
+    const ipResponse = await axios.get("https://api64.ipify.org?format=json");
+    const ip = ipResponse.data.ip;
+    console.log("IP público do usuário:", ip);
+
+    const locationResponse = await axios.get(`http://ip-api.com/json/${ip}`);
+    console.log("Resposta da API:", locationResponse.data);
+
+    res.json({ estado: locationResponse.data.regionName || "BRASIL" });
+  } catch (error) {
+    console.error("Erro ao obter localização:", error);
+    res.status(500).json({ erro: "Erro ao obter localização" });
+  }
 });
 
 // /PEGA INFORMAÇÕES DO IP DO USUÁRIO PARA DESCOBRIR O ESTADO
 
 var indexRouter = require("./src/routes/index");
-var usuarioRouter = require("./src/routes/usuarios");
+var usuarioRouter = require("./src/routes/usuario");
 var internalRoutes = require("./src/routes/internalRoutes");
+var sequelize = require('./src//database/sequelizeConfig');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -54,8 +55,16 @@ app.use("/internal", express.static(path.join(__dirname, "internal")));
 app.use(cors());
 
 app.use("/", indexRouter);
-app.use("/usuarios", usuarioRouter);
+app.use("/usuario", usuarioRouter);
 app.use("/internalRoutes", internalRoutes);
+
+
+sequelize.authenticate().then(() => {
+  console.log("Conectado ao banco com Sequelize");
+}).catch(err => {
+  console.error("Erro na conexão Sequelize:", err);
+});
+
 
 app.listen(PORTA_APP, function () {
   console.log(`

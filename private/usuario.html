@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -57,22 +57,22 @@
                             <div class="form_container">
                                 <label for="nome"><img src="/common/assets/icon/user_icon.svg">
                                     NOME:</label>
-                                <input type="text" id="nome" name="nome" value="Ian Pimenta">
+                                <input type="text" id="nome" name="nome" value="">
                             </div>
 
                             <div class="form_container">
                                 <label for="email"><i class="fa-solid fa-envelope"></i>E-MAIL:</label>
-                                <input type="text" id="email" name="email" value="ian@hotmail.com">
+                                <input type="text" id="email" name="email" value="">
                             </div>
 
                             <div class="form_container">
                                 <label for="funcao"> <i class="fa-solid fa-user"></i>FUNÇÃO:</label>
-                                <input type="text" id="funcao" name="funcao" value="Administrador">
+                                <input type="text" id="funcao" name="funcao" value="">
                             </div>
 
                             <div class="form_container">
                                 <label for="telefone"><i class="fa-solid fa-phone"></i>TELEFONE:</label>
-                                <input type="text" id="telefone" name="telefone" value="(11) 987654321">
+                                <input type="text" id="telefone" name="telefone" value="">
                             </div>
 
                             <div class="form_container_button">
@@ -132,7 +132,7 @@
                     </div>
 
                     <div class="left_container_container preferencias_dashboard">
-                        <h2>GERENCIAMENTO DASHBOARD</h2>
+                        <h2>VISUALIZAÇÃO DA DASHBOARD</h2>
                         <form action="">
                             <div class="form_container">
                                 <label for="panorama_geral">
@@ -163,7 +163,7 @@
                                     <i class="fa-solid fa-pen"></i> Alterar preferências
                                 </button>
                                 <button class="btn_salvar" type="submit">
-                                    <i class="fa-solid fa-check"></i> Salvar preferências
+                                    <i class="fa-solid fa-x"></i> Apagar preferências
                                 </button>
                             </div>
                         </form>
@@ -183,22 +183,20 @@
                             <div class="informacoes_usuario">
                                 <img src="assets/icon.svg" id="iconuser">
                                 <div class="informacoes">
-                                    <div>
+                                    <div class="div_span_numero_passaporte">
                                         <span class="titulobold">N. PASSAPORTE: </span>
-                                        <span>0000</span>
+                                        <span id="span-passaporte"></span>
                                     </div>
                                     <div>
                                         <span class="titulobold">NOME: </span>
-                                        <span>IAN PIMENTA</span>
+                                        <span id="span-nome"></span>
                                     </div>
                                     <div>
                                         <span class="titulobold">FUNÇÃO: </span>
-                                        <span>ADMINISTRADOR</span>
+                                        <span id="span-funcao"></span>
                                     </div>
-                                    <div>
-                                        <span class="titulobold">E-MAIL: </span>
-                                        <span>ian@hotmail.com</span>
-                                    </div>
+                                 
+
                                 </div>
                             </div>
                             <div class="folha"></div>
@@ -210,5 +208,7 @@
 
     </main>
 </body>
+
+
 
 </html>

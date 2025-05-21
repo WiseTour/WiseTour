@@ -14,7 +14,7 @@ function entrar() {
     console.log("FORM LOGIN: ", emailVar);
     console.log("FORM SENHA: ", senhaVar);
 
-    fetch("/usuarios/autenticar", {
+    fetch("/usuario/autenticar", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -33,13 +33,15 @@ function entrar() {
           sessionStorage.setItem("ID_USUARIO", json.id_usuario);
           sessionStorage.setItem("PERMISSAO", json.permissao);
 
+          localStorage.setItem("USUARIO_COMPLETO", JSON.stringify(json));
+
           if(json.permissao == "admin"){
 
             setTimeout(function () {
               window.location.href = "/internal/configuracao-cadastral-empresa.html";
             }, 1000);
 
-          }else if(json.permissao == "padrao"){
+          }else if(json.permissao == "padrão" || json.permissao == "gestor"){
 
             setTimeout(function () {
               window.location.href = "/private/index.html";
