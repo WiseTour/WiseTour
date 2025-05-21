@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>WiseTour</title>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <script src="https://kit.fontawesome.com/041dbc8823.js" crossorigin="anonymous"></script>
+  <script src="/common/js/nav-bar.js"></script>
+  <script src="js/cadastroEmpresa.js"></script>
+  <script src="js/excluirEmpresa.js"></script>
+  <script src="js/editarEmpresa.js"></script>
+
+</head>
+
+<body id="cadastro_body">
+
+  <img id="forma_esquerda" class="forma" src="assets/img/forma_bg.svg" alt="">
+  <img id="forma_direita" class="forma" src="assets/img/forma_bg.svg" alt="">
+
+
+  <header id="header_desktop" class="header">
+
+    <a class="seta desktop" href="../index.html"><i class="fa-solid fa-arrow-left"></i></a>
+    
+    <div class="container_menu">
+      <h1>Configuração Cadastral</h1>
+      <a class="menu_option active"  href="./configuracao-cadastral-empresa.html">Empresa</a>
+      <a class="menu_option" href="./configuracao-cadastral-funcionario-usuario.html">Funcionário e Usuário</a>
+    </div>
+    <img class="logo desktop" src="/common/assets/logo/logo_cinza_escuro.svg" alt="">
+
+  </header>
+
+
+
+  <!-- MAIN -->
+
+  <main>
+    <div class="container-main">
+    
+      <!-- EMPRESA -->
+
+      <div class="container_container_form">
+        <div class="container_form" id="cadastro-empresa">
+          <h2>Cadastrar Empresa</h2>
+          <form class="form" id="form-empresa">
+            <div class="container">
+              <input id="informacao_cadastro_id_input" type="text" placeholder="| Número de registro de contato">
+            </div>
+            <div class="container">
+              <input id="empresa_cnpj_input" type="text" placeholder="| CNPJ">
+            </div>
+            <div class="container">
+              <input id="empresa_nome_fantasia_input" type="text" placeholder="| Nome Fantasia">
+            </div>
+            <div class="container">
+              <input id="empresa_razao_social_input" type="text" placeholder="| Razão Social">
+            </div>
+            <div class="container">
+              <input id="empresa_cep_input" type="text" placeholder="| CEP">
+            </div>
+            <div class="container">
+              <input id="empresa_tipo_logradouro_input" type="text" placeholder="| Tipo Logradouro">
+            </div>
+            <div class="container">
+              <input id="empresa_nome_logradouro_input" type="text" placeholder="| Nome Logradouro">
+            </div>
+            <div class="container">
+              <input id="empresa_numero_input" type="text" placeholder="| Número">
+            </div>
+            <div class="container">
+              <input id="empresa_complemento_input" type="text" placeholder="| Complemento">
+            </div>
+            <div class="container">
+              <input id="empresa_bairro_input" type="text" placeholder="| Bairro">
+            </div>
+            <div class="container">
+              <input id="empresa_cidade_input" type="text" placeholder="| Cidade">
+            </div>
+            <div class="container">
+              <input id="empresa_sigla_uf_input" type="text" placeholder="| Sigla UF">
+            </div>
+            <div class="botoes">
+              <button class="btn" onclick="cadastrarEmpresa()" type="button">CADASTRAR</button>
+            </div>
+          </form>
+        </div>
+  
+        <div class="container_form" id="excluir_empresa">
+          <h2>Excluir Empresa</h2>
+          <form class="form" id="form_excluir_empresa">
+            <div class="container">
+              <input id="excluir_empresa_cnpj_input" type="text" placeholder="| CNPJ">
+            </div>
+            <div class="botoes">
+              <button class="btn" onclick="excluirEmpresa()" type="button">EXCLUIR</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      
+
+      <div class="container_container_form">
+        <div class="container_form" id="editar_informacoes_empresariais">
+          <h2>Editar informações empresariais</h2>
+          <form class="form" id="form_editar_informacoes_empresariais">
+            <p>Empresa:</p>
+            <div class="container">
+              <input id="editar_informacoes_empresariais_cnpj_input" type="text" placeholder="| CNPJ">
+            </div>
+            <p>Novas informações:</p>
+            <div class="container">
+              <input id="editar_informacoes_empresariais_novo_cnpj_input" type="text" placeholder="| CNPJ">
+            </div>
+            <div class="container">
+              <input id="editar_informacoes_empresariais_nome_fantasia_input" type="text" placeholder="| Nome Fantasia">
+            </div>
+            <div class="container">
+              <input id="editar_informacoes_empresariais_razao_social_input" type="text" placeholder="| Razão Social">
+            </div>
+            <div class="botoes">
+              <button class="btn" onclick="editarInformacoesEmpresariais()" type="button">Salvar</button>
+            </div>
+          </form>
+        </div>
+  
+        <div class="container_form" id="editar_endereco">
+          <h2>Editar endereço da empresa</h2>
+          <form class="form" id="form-empresa">
+            <p>Empresa:</p>
+            <div class="container">
+              <input id="editar_endereco_cnpj_input" type="text" placeholder="| CNPJ">
+            </div>
+            <p>Novas informações:</p>
+            <div class="container">
+              <input id="editar_endereco_cep_input" type="text" placeholder="| CEP">
+            </div>
+            <div class="container">
+              <input id="editar_endereco_tipo_logradouro_input" type="text" placeholder="| Tipo Logradouro">
+            </div>
+            <div class="container">
+              <input id="editar_endereco_nome_logradouro_input" type="text" placeholder="| Nome Logradouro">
+            </div>
+            <div class="container">
+              <input id="editar_endereco_numero_input" type="text" placeholder="| Numero">
+            </div>
+            <div class="container">
+              <input id="editar_endereco_complemento_input" type="text" placeholder="| Complemento">
+            </div>
+            <div class="container">
+              <input id="editar_endereco_bairro_input" type="text" placeholder="| Bairro">
+            </div>
+            <div class="container">
+              <input id="editar_endereco_cidade_input" type="text" placeholder="| Cidade">
+            </div>
+            <div class="container">
+              <input id="editar_endereco_sigla_uf_input" type="text" placeholder="| Sigla UF">
+            </div>
+            <div class="botoes">
+              <button class="btn" onclick="editarEnderecoEmpresa()" type="button">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      
+  </main>
+
+
+  <!-- /MAIN -->
+
+
+
+</body>
+
+</html>

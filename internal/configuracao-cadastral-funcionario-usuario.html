@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>WiseTour</title>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <script src="https://kit.fontawesome.com/041dbc8823.js" crossorigin="anonymous"></script>
+  <script src="/common/js/nav-bar.js"></script>
+  <script src="js/cadastroUsuario.js"></script>
+  <script src="js/cadastroFuncionario.js"></script>
+
+</head>
+
+<body id="cadastro_body">
+
+  <img id="forma_esquerda" class="forma" src="assets/img/forma_bg.svg" alt="">
+  <img id="forma_direita" class="forma" src="assets/img/forma_bg.svg" alt="">
+
+  <header id="header_desktop" class="header">
+
+    <a class="seta desktop" href="../index.html"><i class="fa-solid fa-arrow-left"></i></a>
+
+    <div class="container_menu">
+      <h1>Configuração Cadastral</h1>
+      <a class="menu_option" href="./configuracao-cadastral-empresa.html">Empresa</a>
+      <a class="menu_option active" href="./configuracao-cadastral-funcionario-usuario.html">Funcionário e Usuário</a>
+    </div>
+    <img class="logo desktop" src="/common/assets/logo/logo_cinza_escuro.svg" alt="">
+
+  </header>
+
+
+
+  <!-- MAIN -->
+
+  <main>
+    <div class="container-main">
+
+      <div class="container_container_form_funcionario_usuario">
+        <!-- RESPONSÁVEL -->
+        <div class="container_form funcionario_usuario" id="cadastro_funcionario">
+          <h2>Cadastrar Funcionário</h2>
+          <form class="form" id="form_funcionario_usuario">
+            <div class="container">
+              <input id="cadastro_funcionario_nome_input" type="text" placeholder="| Nome">
+            </div>
+            <div class="container">
+              <input id="cadastro_funcionario_cargo_input" type="text" placeholder="| Cargo">
+            </div>
+            <div class="container">
+              <input id="cadastro_funcionario_telefone_input" type="text" placeholder="| Telefone">
+            </div>
+            <div class="container">
+              <input id="cadastro_funcionario_cnpj_empresa_input" type="text" placeholder="| CNPJ Empresa">
+            </div>
+            <div class="container">
+              <input id="cadastro_funcionario_id_informacao_input" type="text" placeholder="| ID Informação  Cadastro">
+            </div>
+            <div class="container">
+              <input id="cadastro_funcionario_sigla_uf_input" type="text" placeholder="| Sigla UF">
+            </div>
+            <div class="botoes">
+              <button class="btn" onclick="cadastrarFuncionario()" type="button">CADASTRAR</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- RESPONSÁVEL -->
+        <div class="container_form responsavel-usuario" id="excluir_funcionario">
+          <h2>Excluir funcionário</h2>
+          <form class="form" id="form-excluir_funcionario">
+            <div class="container">
+              <input id="excluir_funcionario_nome_input" type="text" placeholder="| Nome">
+            </div>
+            <div class="container">
+              <input id="excluir_funcionario_cnpj_empresa_input" type="text" placeholder="| CNPJ Empresa">
+            </div>
+            <div class="botoes">
+              <button class="btn" onclick="excluirResponsavel()" type="button">EXCLUIR</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="container_form editar_funcionario" id="editar_funcionario">
+          <h2>Editar Funcionário</h2>
+          <form class="form" id="formeditar_funcionario">
+            <p>Funcionário:</p>
+            <div class="container">
+              <input id="editar_funcionario_nome_input" type="text" placeholder="| Nome">
+            </div>
+            <div class="container">
+              <input id="editar_funcionario_cnpj_novo_empresa_input" type="text" placeholder="| CNPJ Empresa">
+            </div>
+            <p>Novas informações:</p>
+            <div class="container">
+              <input id="editar_funcionario_nome_novo_input" type="text" placeholder="| Nome">
+            </div>
+            <div class="container">
+              <input id="editar_funcionario_cargo_input" type="text" placeholder="| Cargo">
+            </div>
+            <div class="container">
+              <input id="editar_funcionario_telefone_input" type="text" placeholder="| Telefone">
+            </div>
+            <div class="container">
+              <input id="editar_funcionario_cnpj__novo_empresa_input" type="text" placeholder="| CNPJ Empresa">
+            </div>
+            <div class="container">
+              <input id="editar_funcionario_id_informacao_input" type="text" placeholder="| ID Informação  Cadastro">
+            </div>
+            <div class="container">
+              <input id="editar_funcionario_sigla_uf_input" type="text" placeholder="| Sigla UF">
+            </div>
+            <div class="botoes">
+              <button class="btn" onclick="cadastrarResponsavel()" type="button">SALVAR</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+
+      <!-- USUÁRIO -->
+      <div class="container_container_form_funcionario_usuario">
+
+        <div class="container_form responsavel-usuario" id="cadastro-usuario">
+          <h2>Cadastrar Usuário</h2>
+          <form class="form" id="form-usuario">
+            <div class="container">
+              <input id="usuario_email_input" type="text" placeholder="| Email">
+            </div>
+            <div class="container">
+              <input id="usuario_id_responsavel_input" type="text" placeholder="| ID funcionário">
+            </div>
+            <div class="container">
+              <input id="usuario_senha_input" type="text" placeholder="| Senha">
+            </div>
+            <div class="container">
+              <input id="usuario_permissao_input" type="text" placeholder="| Permissão">
+            </div>
+            <div class="botoes">
+              <button class="btn" onclick="cadastrarUsuario()" type="button">CADASTRAR</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="container_form responsavel-usuario" id="excluir_usuario-usuario">
+          <h2>Excluir Usuário</h2>
+          <form class="form" id="form-excluir_usuario">
+            <div class="container">
+              <input id="excluir_usuario_email_input" type="text" placeholder="| Email">
+            </div>
+
+
+            <div class="botoes">
+              <button class="btn" onclick="excluirUsuario()" type="button">EXCLUIR</button>
+
+            </div>
+          </form>
+        </div>
+
+        <div class="container_form responsavel-usuario" id="editar_usuario">
+          <h2>Editar Usuário</h2>
+          <form class="form" id="form-editar_usuario">
+            <p>Usuário:</p>
+            <div class="container">
+              <input id="editar_usuario_email_input" type="text" placeholder="| Email">
+            </div>
+            <p>Novas informações:</p>
+            <div class="container">
+              <input id="editar_usuario_email_novo_input" type="text" placeholder="| Email">
+            </div>
+            <div class="container">
+              <input id="editar_usuario_id_responsavel_input" type="text" placeholder="| ID funcionário">
+            </div>
+            <div class="container">
+              <input id="editar_usuario_senha_input" type="text" placeholder="| Senha">
+            </div>
+            <div class="container">
+              <input id="editar_usuario_permissao_input" type="text" placeholder="| Permissão">
+            </div>
+            <div class="botoes">
+              <button class="btn" onclick="cadastrarUsuario()" type="button">SALVAR</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+  </main>
+
+
+  <!-- /MAIN -->
+
+
+
+</body>
+
+</html>
