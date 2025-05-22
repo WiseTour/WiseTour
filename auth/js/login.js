@@ -33,13 +33,13 @@ function entrar() {
           sessionStorage.setItem("ID_USUARIO", json.id_usuario);
           sessionStorage.setItem("PERMISSAO", json.permissao);
 
-          if(json.permissao == "admin"){
+          if(json.permissao == "Admin"){
 
             setTimeout(function () {
               window.location.href = "/internal/configuracao-cadastral-empresa.html";
             }, 1000);
 
-          }else if(json.permissao == "padrao"){
+          }else if(json.permissao == "Padrão"){
 
             setTimeout(function () {
               window.location.href = "/private/index.html";
