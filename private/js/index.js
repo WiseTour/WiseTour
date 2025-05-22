@@ -12,7 +12,7 @@ const estiloDoTextoDoGrafico = {
         weight: '500',
         family: "'Anybody', sans-serif",
         size: 12,
-        lineHeight: 1.5  
+        lineHeight: 1.5
     }
 };
 
@@ -41,7 +41,7 @@ new Chart(document.getElementById('myChart'), {
                 titleFont: estiloDoTextoDoGrafico.font,
                 bodyFont: estiloDoTextoDoGrafico.font,
                 callbacks: {
-                    label: function(context) {
+                    label: function (context) {
                         return ` ${context.parsed.y}%`;
                     }
                 }
@@ -89,7 +89,7 @@ new Chart(document.getElementById('presencaTuristaChart'), {
                 titleFont: estiloDoTextoDoGrafico.font,
                 bodyFont: estiloDoTextoDoGrafico.font,
                 callbacks: {
-                    label: function(context) {
+                    label: function (context) {
                         return ` ${context.parsed.y} turistas`;
                     }
                 }
@@ -112,40 +112,48 @@ new Chart(document.getElementById('presencaTuristaChart'), {
 });
 
 // 3. Gráfico de CHEGADAS (mantido com linha amarela ondulada)
-new Chart(document.getElementById('chegadasTuristasChart'), {
-    type: 'line',
-    data: {
-        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-        datasets: [{
-            data: [35000, 25000, 50000, 50000, 0, 80000, 35000, 70000, 51000, 20000, 20000, 53000],
-            borderColor: coresUsadas.amarelo,
-            borderWidth: 2,
-            tension: 0.4,
-            fill: false
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                titleFont: estiloDoTextoDoGrafico.font,
-                bodyFont: estiloDoTextoDoGrafico.font
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    ...estiloDoTextoDoGrafico,
-                    maxRotation: 0,
-                    minRotation: 0
-                }
+
+fetch('/grafico/dados')
+    .then(res => res.json())
+    .then(data => {
+        const labels = data.map(item => item.chegadas);
+        const valores = data.map(item => item.mes_nome);
+
+        new Chart(document.getElementById('chegadasTuristasChart'), {
+            type: 'line',
+            data: {
+                labels: valores,
+                datasets: [{
+                    data: labels,
+                    borderColor: coresUsadas.amarelo,
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: false
+                }]
             },
-            y: {
-                beginAtZero: true,
-                ticks: estiloDoTextoDoGrafico
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        titleFont: estiloDoTextoDoGrafico.font,
+                        bodyFont: estiloDoTextoDoGrafico.font
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            ...estiloDoTextoDoGrafico,
+                            maxRotation: 0,
+                            minRotation: 0
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: estiloDoTextoDoGrafico
+                    }
+                }
             }
-        }
-    }
-});
+        })
+    });

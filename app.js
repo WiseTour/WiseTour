@@ -40,6 +40,8 @@ app.get("/estado", async (req, res) => {
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var internalRoutes = require("./src/routes/internalRoutes");
+var graficoRouter = require('./src/routes/graficoRoute');
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -56,6 +58,7 @@ app.use(cors());
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/internalRoutes", internalRoutes);
+app.use("/grafico", graficoRouter);
 
 app.listen(PORTA_APP, function () {
   console.log(`
