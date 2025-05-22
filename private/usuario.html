@@ -1,0 +1,214 @@
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuário</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="/private/js/script.js"></script>
+    <script src="https://kit.fontawesome.com/041dbc8823.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <header id="header" class="header">
+        <div id="header_container" class="container">
+            <img class="logo" src="/common/assets/logo/logo_cinza_escuro.svg" alt="Logo WiseTour">
+
+            <nav class="menu_container_middle">
+                <a class="opcao" href="index.html">Panorama Geral</a>
+                <a class="opcao" href="perfilturista.html">Perfil do Turista</a>
+                <a class="opcao" href="sazonalidade.html">Sazonalidade</a>
+            </nav>
+
+            <nav class="menu_container_right">
+                <a class="opcao" href="gerenciamento.html">
+                    <i class="fa-solid fa-gear"></i>
+                </a>
+                <a class="opcao active" href="usuarios.html">
+                    <img src="/common/assets/icon/user_icon.svg">
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <h2>GERENCIAMENTO DE USUÁRIO</h2>
+        <div class="container_main">
+            <div class="cabecalho">
+                <button class="active">
+                    <img src="/common/assets/icon/user_icon.svg">
+                    INFORMAÇÕES PESSOAIS
+                </button>
+                <button>
+                    <i class="fa-solid fa-lock"></i>
+                    SENHA
+                </button>
+                <button>
+                    <i class="fa-solid fa-chart-line"></i>
+                    PREFERÊNCIAS DE VISUALIZAÇÃO DAS DASHBOARDS
+                </button>
+            </div>
+            <div class="container_gerenciamento_usuario">
+                <div class="left_container">
+                    <div class="left_container_container informacoes_pessoais">
+                        <h2>Bem-vindo!</h2>
+                        <form action="">
+                            <div class="form_container">
+                                <label for="nome"><img src="/common/assets/icon/user_icon.svg">
+                                    NOME:</label>
+                                <input type="text" id="nome" name="nome" value="">
+                            </div>
+
+                            <div class="form_container">
+                                <label for="email"><i class="fa-solid fa-envelope"></i>E-MAIL:</label>
+                                <input type="text" id="email" name="email" value="">
+                            </div>
+
+                            <div class="form_container">
+                                <label for="funcao"> <i class="fa-solid fa-user"></i>FUNÇÃO:</label>
+                                <input type="text" id="funcao" name="funcao" value="">
+                            </div>
+
+                            <div class="form_container">
+                                <label for="telefone"><i class="fa-solid fa-phone"></i>TELEFONE:</label>
+                                <input type="text" id="telefone" name="telefone" value="">
+                            </div>
+
+                            <div class="form_container_button">
+                                <button class="btn_editar" type="button"><i class="fa-solid fa-pen"></i>Editar</button>
+                                <button class="btn_salvar" type="submit"><i
+                                        class="fa-solid fa-check"></i>Salvar</button>
+                            </div>
+
+
+                        </form>
+
+
+                    </div>
+
+                    <div class="left_container_container gerenciamento_senha">
+                        <h2>GERENCIAMENTO SENHA</h2>
+                        <form action="">
+                            <div class="form_container">
+                                <label for="nome_gerenciamento_senha"><img src="/common/assets/icon/user_icon.svg">
+                                    NOME:</label>
+                                <input type="text" id="nome_gerenciamento_senha" name="nome_gerenciamento_senha"
+                                    value="Ian Pimenta">
+                            </div>
+
+                            <div class="form_container">
+                                <label for="email_gerenciamento_senha"><i
+                                        class="fa-solid fa-envelope"></i>E-MAIL:</label>
+                                <input type="text" id="email_gerenciamento_senha" name="email_gerenciamento_senha"
+                                    value="ian@hotmail.com">
+                            </div>
+
+                            <div class="form_container">
+                                <label for="senha_gerenciamento_senha"> <i class="fa-solid fa-lock"></i>SENHA:</label>
+                                <input type="password" id="senha_gerenciamento_senha" name="senha_gerenciamento_senha"
+                                    value="urubu100">
+                                <i class="fa-solid fa-eye-slash eye"></i>
+                            </div>
+
+                            <div class="form_container">
+                                <label for="nova_senha_gerenciamento_senha"><i class="fa-solid fa-lock"></i>NOVA
+                                    SENHA:</label>
+                                <input type="password" id="nova_senha_gerenciamento_senha"
+                                    name="nova_senha_gerenciamento_senha" value="urubu100">
+                                <i class="fa-solid fa-eye-slash eye"></i>
+                            </div>
+
+                            <div class="form_container_button">
+                                <button class="btn_editar" type="button"><i class="fa-solid fa-pen"></i>Alterar
+                                    senha</button>
+                                <button class="btn_salvar" type="submit"><i class="fa-solid fa-check"></i>Salvar
+                                    senha</button>
+
+                            </div>
+
+
+                        </form>
+                    </div>
+
+                    <div class="left_container_container preferencias_dashboard">
+                        <h2>VISUALIZAÇÃO DA DASHBOARD</h2>
+                        <form action="">
+                            <div class="form_container">
+                                <label for="panorama_geral">
+                                    Panorama geral
+                                    <input type="checkbox" name="preferencias_dashboard_escolhas[]" id="panorama_geral">
+
+                                </label>
+                            </div>
+
+                            <div class="form_container">
+                                <label for="perfil_turista">
+                                    Perfil do turista
+                                    <input type="checkbox" name="preferencias_dashboard_escolhas[]" id="perfil_turista">
+
+                                </label>
+                            </div>
+
+                            <div class="form_container">
+                                <label for="sazonalidade">
+                                    Sazonalidade
+                                    <input type="checkbox" name="preferencias_dashboard_escolhas[]" id="sazonalidade">
+
+                                </label>
+                            </div>
+
+                            <div class="form_container_button">
+                                <button class="btn_editar" type="button">
+                                    <i class="fa-solid fa-pen"></i> Alterar preferências
+                                </button>
+                                <button class="btn_salvar" type="submit">
+                                    <i class="fa-solid fa-x"></i> Apagar preferências
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+                <div class="right_container">
+                    <div class="container_passaporte">
+                        <div class="passaporte_fechado">
+                            <div>
+                                <img src="../common/assets/logo/logo_cinza_escuro.svg" alt="">
+                            </div>
+                            <h3>PASSAPORTE</h3>
+                        </div>
+                        <div class="passaporte_aberto">
+                            <div class="informacoes_usuario">
+                                <img src="assets/icon.svg" id="iconuser">
+                                <div class="informacoes">
+                                    <div class="div_span_numero_passaporte">
+                                        <span class="titulobold">N. PASSAPORTE: </span>
+                                        <span id="span-passaporte"></span>
+                                    </div>
+                                    <div>
+                                        <span class="titulobold">NOME: </span>
+                                        <span id="span-nome"></span>
+                                    </div>
+                                    <div>
+                                        <span class="titulobold">FUNÇÃO: </span>
+                                        <span id="span-funcao"></span>
+                                    </div>
+                                 
+
+                                </div>
+                            </div>
+                            <div class="folha"></div>
+                            <div class="capa"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </main>
+</body>
+
+
+
+</html>
