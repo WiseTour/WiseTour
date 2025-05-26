@@ -41,6 +41,7 @@ var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuario");
 var internalRoutes = require("./src/routes/internalRoutes");
 var sequelize = require('./src//database/sequelizeConfig');
+var graficoRouter = require("./src/routes/graficoRoute");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

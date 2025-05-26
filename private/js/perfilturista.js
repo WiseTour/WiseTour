@@ -1,3 +1,4 @@
+// perfilturista.js
 
 const coresUsadas = {
     amarelo: '#F8CA26',
@@ -8,9 +9,9 @@ const coresUsadas = {
     cimento: '#87826E',
     acinzentado: '#DDD8C5',
     cinza: '#E0E0E0',
-    marromForte: '#A98400'
+    marromForte: '#A98400',
+    esverdeado: '#6B8E23' // Adicionado 'esverdeado' para consistência
 };
-
 
 const opcoesPadrao = {
     responsive: true,
@@ -26,199 +27,298 @@ const opcoesPadrao = {
 };
 
 const estiloDoTextoDoGrafico = {
-    color: '#000000', 
+    color: '#000000',
     font: {
-        weight: '500', 
+        weight: '500',
         family: "'Anybody', sans-serif",
-        size: 12 
+        size: 12
     }
 };
 
+// Referências aos elementos de filtro (certifique-se de que esses IDs existem no seu HTML)
+const selectMes = document.getElementById('mes');
+const selectAno = document.getElementById('ano');
+const selectPais = document.getElementById('pais');
 
-const ctxMotivos = document.getElementById('graficoMotivos');
-new Chart(ctxMotivos, {
-    type: 'bar',
-    data: {
-        labels: ['Lazer', 'Negócios', 'Outros'],
-        datasets: [{
-            label: 'Motivos',
-            data: [65, 25, 10],
-            backgroundColor: [
-                coresUsadas.amarelo,
-                coresUsadas.marrom,
-                coresUsadas.marromBege
-            ],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        ...opcoesPadrao,
-        indexAxis: 'y',
-        plugins: {
-            legend: {
-                display: false
-            }
-        },
-        scales: {
-            x: {
-                beginAtZero: true,
-                grid: {
-                    display: false
+// Variáveis para armazenar as instâncias dos gráficos (importante para atualização)
+let graficoMotivosInstance;
+let graficoFontesInstance;
+let graficoComposicaoInstance;
+let graficoViasInstance;
+
+// Função assíncrona para carregar e atualizar todos os dados da dashboard
+async function carregarDadosDashboard() {
+    console.log('carregarDadosDashboard: Função iniciada.');
+    const mes = selectMes ? selectMes.value : ''; // Verifica se o elemento existe
+    const ano = selectAno ? selectAno.value : '';
+    const pais = selectPais ? selectPais.value : '';
+
+    // Constrói a string de query com os filtros presentes
+    const queryParams = new URLSearchParams();
+    if (mes) queryParams.append('mes', mes);
+    if (ano) queryParams.append('ano', ano);
+    if (pais) queryParams.append('pais', pais);
+
+    const queryString = queryParams.toString();
+    const basePath = '/grafico'; // Base path para suas APIs
+
+    // ----------------------------------------------------
+    // KPI: Gênero Mais Recorrente
+    // ----------------------------------------------------
+    try {
+        const res = await fetch(`${basePath}/genero?${queryString}`);
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.erro || `Erro HTTP: ${res.status}`);
+        }
+        const data = await res.json();
+        const kpiGeneroElement = document.getElementById('kpiGenero');
+        kpiGeneroElement.textContent = data.genero || 'N/A';
+    } catch (err) {
+        console.error('Erro ao buscar o gênero mais recorrente:', err);
+        document.getElementById('kpiGenero').textContent = 'Erro';
+    }
+
+    // ----------------------------------------------------
+    // KPI: Gasto Médio
+    // ----------------------------------------------------
+    try {
+        const res = await fetch(`${basePath}/gasto-medio?${queryString}`);
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.erro || `Erro HTTP: ${res.status}`);
+        }
+        const data = await res.json();
+        const kpiGastoMedioElement = document.getElementById('kpiGastoMedio');
+        kpiGastoMedioElement.textContent = data.gastoMedio || 'N/A';
+    } catch (err) {
+        console.error('Erro ao buscar o gasto médio:', err);
+        document.getElementById('kpiGastoMedio').textContent = 'Erro';
+    }
+
+    // ----------------------------------------------------
+    // KPI: Faixa Etária Mais Recorrente
+    // ----------------------------------------------------
+    try {
+        const res = await fetch(`${basePath}/faixa_etaria?${queryString}`);
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.mensagem || `Erro HTTP: ${res.status}`);
+        }
+        const data = await res.json();
+        const kpiFaixaEtariaElement = document.getElementById('kpiFaixaEtaria'); // Certifique-se de ter um elemento com este ID
+        kpiFaixaEtariaElement.textContent = data.faixa_etaria || 'N/A';
+    } catch (err) {
+        console.error('Erro ao buscar a faixa etária mais recorrente:', err);
+        document.getElementById('kpiFaixaEtaria').textContent = 'Erro';
+    }
+
+    // ----------------------------------------------------
+    // Gráfico: Motivos das Viagens Realizadas
+    // ----------------------------------------------------
+    try {
+        const res = await fetch(`${basePath}/motivo?${queryString}`);
+        const data = await res.json();
+
+        const labels = data.map(item => item.motivo);
+        const valores = data.map(item => item.percentual);
+        const ctxMotivos = document.getElementById('graficoMotivos');
+
+        if (graficoMotivosInstance) {
+            // Se o gráfico já existe, apenas atualiza os dados
+            graficoMotivosInstance.data.labels = labels;
+            graficoMotivosInstance.data.datasets[0].data = valores;
+            graficoMotivosInstance.update();
+        } else {
+            // Se o gráfico não existe, cria uma nova instância
+            graficoMotivosInstance = new Chart(ctxMotivos, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Motivos',
+                        data: valores,
+                        backgroundColor: [coresUsadas.amarelo, coresUsadas.marrom, coresUsadas.marromBege],
+                        borderWidth: 0
+                    }]
                 },
-                ticks: {
-                    ...estiloDoTextoDoGrafico,
-                    font: {
-                        ...estiloDoTextoDoGrafico.font,
-                        size: 15
+                options: {
+                    ...opcoesPadrao,
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: { display: false },
+                            ticks: { ...estiloDoTextoDoGrafico, font: { ...estiloDoTextoDoGrafico.font, size: 15 } }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { ...estiloDoTextoDoGrafico, font: { ...estiloDoTextoDoGrafico.font, size: 15 } }
+                        }
                     }
                 }
-            },
-            y: {
-                grid: {
-                    display: false
+            });
+        }
+    } catch (err) {
+        console.error('Erro ao buscar dados dos motivos de viagem:', err);
+    }
+
+    // ----------------------------------------------------
+    // Gráfico: Fontes de Informação
+    // ----------------------------------------------------
+    try {
+        const res = await fetch(`${basePath}/fontes?${queryString}`);
+        const data = await res.json();
+
+        const labels = data.map(item => item.fonte);
+        const valores = data.map(item => item.percentual);
+        const ctxFontes = document.getElementById('graficoFontes');
+
+        if (graficoFontesInstance) {
+            graficoFontesInstance.data.labels = labels;
+            graficoFontesInstance.data.datasets[0].data = valores;
+            graficoFontesInstance.update();
+        } else {
+            graficoFontesInstance = new Chart(ctxFontes, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Fontes',
+                        data: valores,
+                        backgroundColor: [
+                            coresUsadas.amarelo, coresUsadas.marrom, coresUsadas.marromBege,
+                            coresUsadas.amareloClaro, coresUsadas.marromForte, coresUsadas.esverdeado,
+                            coresUsadas.acinzentado, coresUsadas.cinza, '#D9C7A7'
+                        ],
+                        borderWidth: 0
+                    }]
                 },
-                ticks: {
-                    ...estiloDoTextoDoGrafico,
-                    font: {
-                        ...estiloDoTextoDoGrafico.font,
-                        size: 15
+                options: {
+                    ...opcoesPadrao,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { display: false },
+                            ticks: { ...estiloDoTextoDoGrafico, callback: function (value) { return value + '%'; } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { ...estiloDoTextoDoGrafico, font: { ...estiloDoTextoDoGrafico.font, size: 9 }, maxRotation: 0, minRotation: 0 }
+                        }
                     }
                 }
-            }
+            });
         }
+    } catch (err) {
+        console.error('Erro ao buscar dados das fontes de informação:', err);
     }
-});
 
+    // ----------------------------------------------------
+    // Gráfico: Composição do Grupo Turístico
+    // ----------------------------------------------------
+    try {
+        const res = await fetch(`${basePath}/composicao?${queryString}`);
+        const data = await res.json();
 
-const ctxFontes = document.getElementById('graficoFontes');
-new Chart(ctxFontes, {
-    type: 'bar',
-    data: {
-        labels: ['Amigos/Parentes', 'Escritórios', 'Feiras', 'Eventos', 'Agência', 'Outros', 'Internet', 'Guias', 'Corporativo'],
-        datasets: [{
-            label: 'Fontes',
-            data: [20, 15, 10, 8, 12, 5, 25, 3, 12],
-            backgroundColor: [
-                coresUsadas.amarelo,
-                coresUsadas.marrom,
-                coresUsadas.marromBege,
-                coresUsadas.amareloClaro,
-                coresUsadas.marromForte,
-                coresUsadas.esverdeado,
-                coresUsadas.acinzentado,
-                coresUsadas.cinza,
-                '#D9C7A7' 
-            ],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        ...opcoesPadrao,
-        plugins: {
-            legend: {
-                display: false
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: {
-                    display: false
+        const labels = data.map(item => item.composicao);
+        const valores = data.map(item => item.percentual);
+        const ctxComposicao = document.getElementById('graficoComposicao');
+
+        if (graficoComposicaoInstance) {
+            graficoComposicaoInstance.data.labels = labels;
+            graficoComposicaoInstance.data.datasets[0].data = valores;
+            graficoComposicaoInstance.update();
+        } else {
+            graficoComposicaoInstance = new Chart(ctxComposicao, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: valores,
+                        backgroundColor: [
+                            coresUsadas.amarelo, coresUsadas.marrom, coresUsadas.marromBege,
+                            coresUsadas.amareloClaro
+                        ],
+                        borderWidth: 0
+                    }]
                 },
-                ticks: {
-                    ...estiloDoTextoDoGrafico
-                }
-            },
-            x: {
-                grid: {
-                    display: false
-                },
-                ticks: {
-                    ...estiloDoTextoDoGrafico,
-                    font: {
-                        ...estiloDoTextoDoGrafico.font,
-                        size: 9
-                    },
-                    maxRotation: 0, 
-                    minRotation: 0  
-                }
-            }
-        }
-    }
-});
-
-
-const ctxComposicao = document.getElementById('graficoComposicao');
-new Chart(ctxComposicao, {
-    type: 'pie',
-    data: {
-        labels: ['Família', 'Amigos', 'Dupla', 'Sozinho'],
-        datasets: [{
-            data: [40, 30, 20, 10],
-            backgroundColor: [
-                coresUsadas.amarelo,
-                coresUsadas.marrom,
-                coresUsadas.marromBege,
-                coresUsadas.amareloClaro
-            ],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        ...opcoesPadrao,
-        plugins: {
-            legend: {
-                position: 'right',
-                labels: {
-                    ...estiloDoTextoDoGrafico,
-                    boxWidth: 35,
-                    boxHeight: 14,
-                    borderRadius: 50,
-                    padding: 5,
-                    font: {
-                        ...estiloDoTextoDoGrafico.font,
-                        size: 14
+                options: {
+                    ...opcoesPadrao,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                ...estiloDoTextoDoGrafico,
+                                boxWidth: 35, boxHeight: 14, borderRadius: 50, padding: 5,
+                                font: { ...estiloDoTextoDoGrafico.font, size: 14 }
+                            }
+                        }
                     }
                 }
-            }
+            });
         }
+    } catch (err) {
+        console.error('Erro ao buscar dados da composição:', err);
     }
-});
 
+    // ----------------------------------------------------
+    // Gráfico: Vias de Acesso
+    // ----------------------------------------------------
+    try {
+        const res = await fetch(`${basePath}/vias?${queryString}`);
+        const data = await res.json();
 
-const ctxVias = document.getElementById('graficoVias');
-new Chart(ctxVias, {
-    type: 'pie',
-    data: {
-        labels: ['Aérea', 'Terrestre', 'Fluvial', 'Marítima'],
-        datasets: [{
-            data: [60, 30, 5, 5],
-            backgroundColor: [
-                coresUsadas.avermelhado,
-                coresUsadas.cimento,
-                coresUsadas.acinzentado,
-                coresUsadas.cinza
-            ],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        ...opcoesPadrao,
-        plugins: {
-            legend: {
-                position: 'right',
-                labels: {
-                    ...estiloDoTextoDoGrafico,
-                    boxWidth: 35,
-                    boxHeight: 14,
-                    borderRadius: 50,
-                    padding: 5,
-                    font: {
-                        ...estiloDoTextoDoGrafico.font,
-                        size: 14
+        const labels = data.map(item => item.vias);
+        const valores = data.map(item => item.percentual);
+        const ctxVias = document.getElementById('graficoVias');
+
+        if (graficoViasInstance) {
+            graficoViasInstance.data.labels = labels;
+            graficoViasInstance.data.datasets[0].data = valores;
+            graficoViasInstance.update();
+        } else {
+            graficoViasInstance = new Chart(ctxVias, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: valores,
+                        backgroundColor: [
+                            coresUsadas.avermelhado, coresUsadas.cimento, coresUsadas.acinzentado,
+                            coresUsadas.cinza
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    ...opcoesPadrao,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                ...estiloDoTextoDoGrafico,
+                                boxWidth: 35, boxHeight: 14, borderRadius: 50, padding: 5,
+                                font: { ...estiloDoTextoDoGrafico.font, size: 14 }
+                            }
+                        }
                     }
                 }
-            }
+            });
         }
+    } catch (err) {
+        console.error('Erro ao buscar dados das vias:', err);
     }
-});
+}
+
+// Adiciona os event listeners aos selects para chamar a função de carregamento quando o filtro mudar
+// Verifica se os elementos existem antes de adicionar o listener
+if (selectMes) selectMes.addEventListener('change', carregarDadosDashboard);
+if (selectAno) selectAno.addEventListener('change', carregarDadosDashboard);
+if (selectPais) selectPais.addEventListener('change', carregarDadosDashboard);
+
+// Chama a função uma vez ao carregar a página para exibir os dados iniciais
+document.addEventListener('DOMContentLoaded', carregarDadosDashboard);
+console.log('perfilturista.js: Script carregado e listener DOMContentLoaded adicionado.');

@@ -1,399 +1,443 @@
-@import url("https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,95.4,529;1,95.4,529&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,95.4,529;1,95.4,529&display=swap');
 @import url("/common/css/style.css");
 
-:root {
-  --font_family_2: "Anybody", sans-serif;
-  --font_family_padrao: "Anybody", sans-serif;
+body,
+body * {
+    font-family: "Anybody", sans-serif !important;
 }
-
-span,
-a,
-input,
-select,
-label,
-button {
-  font-family: var(--font_family_2);
-}
-
-/* BODY */
-
-body {
-  max-width: 100vw;
-  max-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--cinza_medio);
-}
-
-/* /BODY */
 
 /* HEADER */
-
 header {
-  width: 100%;
+    width: 100vw;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background-color: var(--cor_base);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+}
+
+header .container {
+    width: 90%;
+    margin: 0 auto;
+    margin-inline: 5%;
+    display: flex
+;
+    align-items: center;
+    justify-content: space-between;
+    height: 120px;
+}
+
+.logo_container .logo {
+  height: 70px;
+}
+
+.menu_container {
+    display: flex;
+    align-items: center;
+    gap: 65px;
+}
+
+.menu_container .opcao {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: black;
+    border: 2px solid black;
+    border-radius: 50px;
+    text-decoration: none;
+    padding: 13px 31px;
+    transition: transform 0.3s ease;
+    font-size: 17px;
+    transition: all 0.8s ease;
+}
+
+.menu_container .opcao.active {
+    border: 2px solid black;
+    border-radius: 50px;
+    color: black;
+}
+
+.icon_container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icon_container .entrar {
+    display: flex;
+    align-items: center;
+    transition: 0.3s ease;
+}
+
+.icon_container img {
+    width: 50px;
+}
+
+.icon_container img {
+  transition: transform 0.6s ease;
+}
+
+.icon_container img:hover {
+  transform: scale(1.1);
+  
+}
+
+
+/* CONTEUDO */
+
+body{
+  max-width: 100vw;
+  
+}
+
+main {
+  background-color: #d6d1d1;
   height: fit-content;
-  background-color: var(--cor_base);
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
   display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
 }
 
-#header_container {
-  width: 92%;
-  padding-block: 20px;
-  display: flex;
+main .panorama_geral_linha_1 {
+  display: flex
+;
   align-items: center;
-  gap: 5%;
+  justify-content: space-between;
+  height: 70px;
+  width: 90%;
 }
 
-.logo {
-  height: 50px;
-}
+/* height: 400px;
+width: 200px; */
 
-.menu_container_middle {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 5%;
-}
-
-.menu_container_right {
-  display: flex;
-  gap: 10%;
-}
-
-.opcao {
-  font-weight: bold;
-  text-transform: uppercase;
-  border: 2px solid var(--cinza_escuro);
-  border-radius: 50px;
-  text-decoration: none;
-  padding: 10px 30px;
-  transition: transform 0.3s ease;
-  text-align: center;
-  font-size: 1.3rem;
-}
-
-.menu_container_right .opcao {
-  padding: 10px;
-  display: flex;
+main .panorama_geral_linha_1 .titulo {
+  display: flex
+;
+  font-size: 25px;
+  font-weight: bolder;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: center;
+  height: 100%;
+  width: 30%;
 }
 
-.opcao i,
-.opcao img {
-  line-height: 1em;
-  height: 1em;
-  width: 1em;
-  display: flex;
+main .panorama_geral_linha_1 .filtros {
+  /* background-color: blue; */
+  display: flex
+;
+  justify-content: flex-end;
   align-items: center;
-  justify-content: center;
-  font-size: 1em;
+  /* height: 100%; */
+  /* width: 70%; */
+  margin-right: 5px;
+}
+
+
+
+main .panorama_geral_linha_1 .filtros select {
+  font-size: 40px;
+  background-color: #F2F2F2;
   color: var(--cinza_escuro);
-  fill: var(--cinza_escuro);
-}
-
-.opcao img {
-  fill: var(--cinza_escuro);
-}
-
-/* EFEITOS */
-nav .active {
-  background: var(--cinza_claro);
-}
-
-.opcao:hover {
-  background: var(--cinza_claro);
-}
-
-/* /EFEITOS */
-
-/* /HEADER */
-
-/* MANI */
-
-.main {
-  background: none;
-  width: 92%;
-  height: 100%;
-  padding-block: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: baseline;
-  justify-content: baseline;
-  gap: 20px;
-  overflow: hidden;
-}
-
-.container_main {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  font-size: 13px;
+  width: 110px;
+  height: 33px;
   border-radius: 20px;
-  overflow: hidden;
-  background-color: var(--cinza_claro);
+  border: 2px solid gray;
+  padding: 5px;
+  gap: 10px;
+  margin-inline: 8px;
 }
 
-.container_main .cabecalho {
-  width: 100%;
-  height: fit-content;
-  background: var(--cor_base);
-  display: flex;
-  gap: 50px;
-  align-items: center;
-  justify-content: baseline;
-}
-
-.container_main .cabecalho button {
-  width: fit-content;
-  height: fit-content;
-  display: flex;
-  align-items: baseline;
+main .panorama_geral_linha_2 {
+  display: flex
+;
   justify-content: center;
-  gap: 10px;
-  font-size: 1.2rem;
-  line-height: 1em;
-  height: fit-content;
-  padding-bottom: 2px;
-  border-bottom: 2px solid var(--cor_base);
-}
-
-.container_main .cabecalho button img {
-  height: 1.2rem;
-}
-
-.container_main .cabecalho button:hover,
-.container_main .cabecalho .active {
-  border-bottom: 2px solid var(--cinza_escuro);
-}
-
-.container_main .cabecalho,
-.container_main .container_gerenciamento_usuario {
-  padding: 20px 30px;
-}
-
-.container_main .container_gerenciamento_usuario {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5%;
-  height: 100%;
-  padding: 30px;
-}
-
-.left_container {
-  width: 100%;
-  height: 100%;
-}
-
-.left_container_container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-
-.informacoes_pessoais, .gerenciamento_senha{
-  display: none;
-}
-
-.left_container_container form {
-  width: 100%;
-  height: 80%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.left_container_container form .form_container {
-  background-color: var(--cinza_medio);
-  width: 100%;
-  height: fit-content;
-  padding: 10px;
-  border-radius: 5px;
-  display: flex;
   align-items: center;
-  justify-content: baseline;
+  height: 500px;
+  width: 95%;
   gap: 10px;
 }
 
-.left_container_container form .form_container .eye {
-  margin-left: auto;
+main .panorama_geral_linha_2 .panorama_geral_coluna_1{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-right: 0.5%;
+  height: 97%;
+  width: 31.4%;
+}
+
+main .panorama_geral_linha_2 .panorama_geral_coluna_1 .principais_paises_origem{
+  /* background-color: green; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  justify-content: flex-end;
+  height: 48%;
+  width: 100%;
+}
+
+main .panorama_geral_linha_2 .panorama_geral_coluna_1 .presenca_turista_uf{
+  /* background-color: yellow; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  justify-content: flex-end;
+  height: 48%;
+  width: 100%;
+}
+
+main .panorama_geral_linha_2 .panorama_geral_coluna_2{
+  display: flex;
+  flex-direction: column;
+  margin-left: 0.5%;
+  height: 100%;
+  width: 64%;
+}
+
+main .panorama_geral_linha_2 .panorama_geral_coluna_2 .kpis {
+  display: flex
+;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-left: 37px;
+}
+
+main .panorama_geral_linha_2 .panorama_geral_coluna_2 .kpis .kpi{
+  height: 100%;
+  width: 32%;
+}
+
+main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrangeiros{
+  /* background-color: purple; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+  width: 100%;
+}
+
+main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrangeiros canvas{
+  height: 100%;
+  width: 100%;
+}
+
+.grafico {
+  background-color: white;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  height: 80%;
+  width: 100%;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.titulo_grafico {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  background-color: #e4dab6;
+  display: flex
+;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 43px;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* margin: 20px; */
+  padding: 20px;
+  text-align: center;
+}
+
+select:hover {
   cursor: pointer;
 }
 
-.left_container_container form input {
-  width: 80%;
+.card {
+  display: flex
+;
+  /* align-items: flex-start; */
+  /* border-radius: 20px; */
+  position: relative;
+  /* height: 100%; */
+  /* width: 100%; */
 }
 
-.preferencias_dashboard input[type="checkbox"] {
-   all: revert;
-}
-
-.preferencias_dashboard label{
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
-
-.left_container_container form .form_container label {
-  display: flex;
+.icon-box {
+  position: absolute;
+  /* left: -30px; */
+  z-index: 1;
+  background-color: #F8CA26;
+  padding: 25px;
+  border-radius: 30px;
+  height: 70px;
+  width: 140px;
+  display: flex
+;
   align-items: center;
-  gap: 10px;
+  /* justify-content: center; */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  /* transition: all 0.3s ease; */
+  margin-left: -15px;
+  margin-top: 5px;
 }
 
-.left_container_container form .form_container label img {
-  height: 1em;
+.icon-box img {
+    max-width: 40px;
+    max-height: 35px;
 }
 
-.left_container_container form .form_container_button {
-  display: flex;
-  justify-content: space-between;
+.icon-box i {
+  font-size: 25px;
 }
 
-.left_container_container form .form_container_button button {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.left_container_container form .form_container_button button {
-  display: flex;
-  width: 45%;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px;
-  border-radius: 10px;
-}
-
-.left_container_container form .form_container_button .btn_editar {
-  background-color: var(--cinza_escuro);
-  color: var(--cinza_claro);
-}
-
-.left_container_container form .form_container_button .btn_editar i {
-  color: var(--cinza_claro);
-}
-
-.left_container_container form .form_container_button .btn_salvar {
-  background-color: var(--cor_base);
-}
-
-.right_container {
-  width: 100%;
-  height: 100%;
-}
-
-.container_passaporte {
-  height: 100%;
-  display: grid;
-  grid-template-columns: 45% 47%;
-  justify-content: space-between;
-}
-
-.container_passaporte .passaporte_fechado {
-  display: flex;
+.info-box {
+  text-align: center;
+  border-radius: 20px;
+  background-color: white;
+  position: relative;
+  width: 170px;
+  left: 60px;
+  padding: 12px;
+  display: flex
+;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  gap: 20px;
-  height: 100%;
-  width: 100%;
-  background: var(--cor_base);
-  border-radius: 0 20px 20px 0;
-  padding: 30px;
-  box-shadow: rgba(0, 0, 0, 0.373) 10px 10px 20px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 2;
 }
 
-.container_passaporte .passaporte_fechado h3 {
-  font-size: 1.2rem;
+.info-box .number {
+  font-size: 23px;
   font-weight: bold;
 }
 
-.container_passaporte .passaporte_fechado div {
-  height: auto;
-  border-top: solid 2px var(--cinza_escuro);
-  border-bottom: solid 2px var(--cinza_escuro);
+.info-box .label {
+    font-size: 10px;
+    font-weight: bold;
+    line-height: 1.3;
+    text-align: center;
 }
 
-.container_passaporte .passaporte_fechado div img {
-  height: auto;
-  width: 200px;
-  padding-block: 40px;
+/* EFEITOS */
+.menu_container .opcao.active {
+  color: black;
+  border-radius: 50px;
+  background-color: #F2F2F2;
 }
 
-.container_passaporte .passaporte_aberto {
+.menu_container .opcao:hover {
+  background-color: #F2F2F2;
+  color: black;
+  border-radius: 50px;
+}
+
+.grafico-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 35px;
+  box-sizing: border-box;
+}
+
+.grafico-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  margin: 0 auto;
+}
+
+.chegadas_turistas_estrangeiros .grafico {
+  height: 360px !important; /* Altura fixa maior (ajuste o valor conforme necessidade) */
+}
+
+.chegadas_turistas_estrangeiros .grafico-container {
+  height: 100%;
+}
+
+.panorama_geral_coluna_2 .kpis {
+  margin-bottom: 10px; /* Espaço abaixo dos KPIs (ajuste este valor conforme necessidade) */
+}
+
+.grafico-container canvas {
+  font-stretch: semi-condensed;  
+  letter-spacing: -0.1px;   
+}
+
+#icon-not {
+  width: 25px; 
+  height: auto; 
+}
+
+
+/* FOOTER */
+footer {
+  background-color: var(--cinza);
+  color: var(--cinza_claro);
+  width: 100vw;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex_start;
+  gap: 50px;
+  padding: var(--padding_block) var(--padding_inline);
+}
+
+footer * {
+  color: var(--cinza_claro);
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+footer .container {
   height: 100%;
   width: 100%;
   display: grid;
-  grid-template-columns: auto 3% 3%;
-  gap: 2px;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: baseline;
+  justify-items: end;
 }
 
-.container_passaporte .passaporte_aberto .informacoes_usuario {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: column;
-  background-color: var(--cinza_medio);
-  border-radius: 20px 0 0 20px;
-  padding: 34px;
-  box-shadow: rgba(0, 0, 0, 0.373) 10px 10px 20px;
-}
-
-.container_passaporte .passaporte_aberto .informacoes_usuario img{
+footer .container .container {
+  width: fit-content;
   height: auto;
-  width: 80%;
+  color: var(--cinza_claro);
+  flex-direction: column;
+  display: flex;
+  align-items: baseline;
+  font-weight: 100;
 }
 
-.container_passaporte .passaporte_aberto .informacoes_usuario .informacoes{
-  height: fit-content;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+footer .container .slogan h6 {
+  font-family: var(--font_family_padrao);
+}
+
+footer .container .menu {
+  justify-self: center;
+  align-items: center;
   gap: 10px;
 }
 
-.container_passaporte .passaporte_aberto .informacoes_usuario .informacoes .titulobold{
-  font-weight: bold;
+footer .container .integrantes {
+  align-items: end;
 }
 
-.container_passaporte .passaporte_aberto .informacoes_usuario .informacoes div{
-  height: fit-content;
-  width: 100%;
-  display: flex;
- flex-direction: column;
- gap: 10px;
-  justify-content: space-between;
+footer .container .menu a:hover {
+  text-decoration: underline;
 }
 
-.container_passaporte .passaporte_aberto .informacoes_usuario .informacoes .div_span_numero_passaporte{
- flex-direction: row;
+footer .container b {
+  font-weight: 400;
 }
 
-.container_passaporte .passaporte_aberto .folha{
-  background-color: var(--cinza_medio);
-  border-radius: 5px;
-  box-shadow: rgba(0, 0, 0, 0.373) 10px 10px 20px;
-}
-
-.container_passaporte .passaporte_aberto .capa{
-  background-color: var(--cor_base);
-  border-radius: 5px;
-  box-shadow: rgba(0, 0, 0, 0.373) 10px 10px 20px;
-}
-
-
-/* /MAIN */
+/* /FOOTER */

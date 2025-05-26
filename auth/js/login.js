@@ -32,14 +32,14 @@ function entrar() {
           sessionStorage.setItem("EMAIL_USUARIO", json.email);
           sessionStorage.setItem("ID_USUARIO", json.id_usuario);
           sessionStorage.setItem("PERMISSAO", json.permissao);
+          localStorage.setItem("USUARIO_COMPLETO", JSON.stringify(json));
 
-          if(json.permissao == "Admin"){
+          if(json.permissao == "admin"){
 
             setTimeout(function () {
               window.location.href = "/internal/configuracao-cadastral-empresa.html";
             }, 1000);
-
-          }else if(json.permissao == "Padrão"){
+          }else if(json.permissao == "padrão" || json.permissao == "gestor"){
 
             setTimeout(function () {
               window.location.href = "/private/index.html";

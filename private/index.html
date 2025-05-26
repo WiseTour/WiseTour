@@ -46,23 +46,23 @@
     <main>
         <div class="panorama_geral_linha_1">
             <div class="titulo">
-                PANORAMA GERAL
+                PERFIL DO TURISTA
             </div>
             <div class="filtros">
                 <select name="mes" id="mes">
                     <option value="">MÊS:</option>
-                    <option value="janeiro">Janeiro</option>
-                    <option value="fevereiro">Fevereiro</option>
-                    <option value="marco">Março</option>
-                    <option value="abril">Abril</option>
-                    <option value="maio">Maio</option>
-                    <option value="junho">Junho</option>
-                    <option value="julho">Julho</option>
-                    <option value="agosto">Agosto</option>
-                    <option value="setembro">Setembro</option>
-                    <option value="outubro">Outubro</option>
-                    <option value="novembro">Novembro</option>
-                    <option value="dezembro">Dezembro</option>
+                    <option value="1">Janeiro</option>
+                    <option value="2">Fevereiro</option>
+                    <option value="3">Março</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Maio</option>
+                    <option value="6">Junho</option>
+                    <option value="7">Julho</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Setembro</option>
+                    <option value="10">Outubro</option>
+                    <option value="11">Novembro</option>
+                    <option value="12">Dezembro</option>
                 </select>
                 <select name="ano" id="ano">
                     <option value="">ANO:</option>
@@ -104,16 +104,21 @@
                 </select>
                 <select name="pais" id="pais">
                     <option value="">PAÍS:</option>
-                    <option value="argentina">Argentina</option>
-                    <option value="eua">Estados Unidos</option>
-                    <option value="chile">Chile</option>
-                    <option value="paraguai">Paraguai</option>
-                    <option value="uruguai">Uruguai</option>
-                    <option value="franca">França</option>
-                    <option value="portugal">Portugal</option>
-                    <option value="alemanha">Alemanha</option>
-                    <option value="reino-unido">Reino Unido</option>
-                    <option value="italia">Itália</option>
+                    <option value="1">Argentina</option>
+                    <option value="2">Estados Unidos</option>
+                    <option value="3">Alemanha</option>
+                    <option value="4">Chile</option>
+                    <option value="5">Paraguai</option>
+                    <option value="6">Uruguai</option>
+                    <option value="7">França</option>
+                    <option value="8">Portugal</option>
+                    <option value="9">Reino Unido</option>
+                    <option value="10">Itália</option>
+                    <option value="11">Espanha</option>
+                    <option value="12">México</option>
+                    <option value="13">Canadá</option>
+                    <option value="14">China</option>
+                    <option value="15">Colômbia</option>
                 </select>
             </div>
         </div>
@@ -151,8 +156,9 @@
                                 <img src="assets/kpi-img-5.svg" alt="">
                             </div>
                             <div class="info-box">
-                                <div class="number">8.987.064</div>
-                                <div class="label">TOTAL DE CHEGADAS <br><span>em 2023</span></div>
+                                <div class="number" id="kpiChegadasAnoAnterior"></div>
+                                <div class="label">TOTAL DE CHEGADAS <br><span id="labelAnoAnterior">em 2023</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -162,8 +168,8 @@
                                 <img src="assets/kpi-img-5.svg" alt="">
                             </div>
                             <div class="info-box">
-                                <div class="number">9.762,81</div>
-                                <div class="label">TOTAL DE CHEGADAS <br><span>em 2024</span></div>
+                                <div class="number" id="kpiChegadasAnoAtual"></div>
+                                <div class="label">TOTAL DE CHEGADAS <br><span id="labelAnoAtual">em 2024</span></div>
                             </div>
                         </div>
                     </div>
@@ -173,7 +179,7 @@
                                 <img src="assets/kpi-img-6.svg" alt="">
                             </div>
                             <div class="info-box">
-                                <div class="number">+8,63%</div>
+                                <div class="number" id="kpiPorcentagemComparativa"></div>
                                 <div class="label">PORCENTAGEM <br>COMPARATIVA</div>
                             </div>
                         </div>
@@ -191,6 +197,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </main>
 
