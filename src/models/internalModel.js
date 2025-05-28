@@ -33,7 +33,7 @@ function excluirEmpresa(cnpj) {
     console.log("ACESSEI O RESPONSÁVEL MODEL");
 
     var instrucaoSql = `
-        DELETE FROM empresa WHERE cnpj = '${cnpj}';
+        DELETE FROM Empresa WHERE cnpj = '${cnpj}';
     `;
 
     console.log("Executando a instrução SQL:\n" + instrucaoSql);
@@ -49,7 +49,7 @@ function editarInformacoesEmpresariaisEmpresa(
     console.log("ACESSEI O EMPRESA MODEL - editarEmpresa");
 
     var instrucaoSql = `
-        UPDATE empresa 
+        UPDATE Empresa 
         SET 
             cnpj = '${cnpjNovo}',
             nome_fantasia = '${nomeFantasia}',
@@ -76,7 +76,7 @@ function editarEnderecoEmpresa(
     console.log("ACESSEI O MODEL para editar endereço da empresa!");
 
     const instrucaoSql = `
-        UPDATE empresa SET
+        UPDATE Empresa SET
             cep = '${cep}',
             tipo_logradouro = '${tipoLogradouro}',
             nome_logradouro = '${nomeLogradouro}',

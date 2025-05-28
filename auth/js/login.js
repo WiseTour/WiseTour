@@ -14,40 +14,13 @@ function entrar() {
     console.log("FORM LOGIN: ", emailVar);
     console.log("FORM SENHA: ", senhaVar);
 
-<<<<<<< HEAD
     if(senhaVar == "admin123"){
-=======
-    fetch("/usuarios/autenticar", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        emailServer: emailVar,
-        senhaServer: senhaVar
-      })
-    }).then(function (resposta) {
-
-      if (resposta.ok) {
-        resposta.json().then(json => {
-          console.log(json);
-
-          sessionStorage.setItem("EMAIL_USUARIO", json.email);
-          sessionStorage.setItem("ID_USUARIO", json.id_usuario);
-          sessionStorage.setItem("PERMISSAO", json.permissao);
-
-          if(json.permissao == "Admin"){
->>>>>>> 22757ebdcab659a2c17aa596b1f8cc5e94ffb864
 
             setTimeout(function () {
               window.location.href = "/internal/configuracao-cadastral-empresa.html";
             }, 1000);
 
-<<<<<<< HEAD
           }else if(senhaVar == "urubu100"){
-=======
-          }else if(json.permissao == "Padrão"){
->>>>>>> 22757ebdcab659a2c17aa596b1f8cc5e94ffb864
 
             setTimeout(function () {
               window.location.href = "/private/index.html";
