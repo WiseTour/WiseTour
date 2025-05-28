@@ -1,18 +1,34 @@
 // controllers/graficoController.js
 const { Op, fn, col, literal } = require('sequelize');
-const PerfilEstimadoTurista = require('../models/graficoModel'); // Certifique-se de que este é o PerfilEstimadoTuristas real
-const Pais = require('../models/paisModel'); // Adicione esta linha
-const UnidadeFederativaBrasil = require('../models/unidadeFederativaBrasilModel'); // Adicione esta linha
+const PerfilEstimadoTurista = require('../models/graficoModel');
+const Pais = require('../models/paisModel');
+const UnidadeFederativaBrasil = require('../models/unidadeFederativaBrasilModel');
+// const Destinos = require('../models/destinoModel')
 
-// Definir associações (isso deve ser feito apenas uma vez, idealmente em um arquivo de configuração de modelos, mas pode ser aqui por enquanto)
-// Associações para PerfilEstimadoTurista
 PerfilEstimadoTurista.belongsTo(Pais, { foreignKey: 'fk_pais_origem', targetKey: 'id_pais' });
 Pais.hasMany(PerfilEstimadoTurista, { foreignKey: 'fk_pais_origem', sourceKey: 'id_pais' });
 
 PerfilEstimadoTurista.belongsTo(UnidadeFederativaBrasil, { foreignKey: 'fk_uf_entrada', targetKey: 'sigla' });
 UnidadeFederativaBrasil.hasMany(PerfilEstimadoTurista, { foreignKey: 'fk_uf_entrada', sourceKey: 'sigla' });
 
-// Função auxiliar para construir a cláusula WHERE com base nos filtros
+// Destinos.belongsTo(PerfilEstimadoTurista, {
+//     foreignKey: 'fk_perfil_estimado_turistas',
+//     targetKey: 'id_perfil_estimado_turistas'
+// });
+// PerfilEstimadoTurista.hasMany(Destinos, {
+//     foreignKey: 'fk_perfil_estimado_turistas',
+//     sourceKey: 'id_perfil_estimado_turistas'
+// });
+
+// Destinos.belongsTo(UnidadeFederativaBrasil, {
+//     foreignKey: 'fk_uf_destino',
+//     targetKey: 'sigla'
+// });
+// UnidadeFederativaBrasil.hasMany(Destinos, {
+//     foreignKey: 'fk_uf_destino',
+//     sourceKey: 'sigla'
+// });
+
 const construirWhereClause = (req) => {
     const { mes, ano, pais } = req.query;
     const where = {};
@@ -58,7 +74,7 @@ exports.listarMotivos = async (req, res) => {
             motivo: item.motivo_viagem,
             percentual: totalGeral > 0 ? (parseFloat(item.dataValues.total_turistas) / totalGeral * 100).toFixed(2) : "0.00"
         }));
-        
+
         res.json(dadosFormatados);
     } catch (error) {
         console.error("Erro ao buscar motivos de viagem:", error);
@@ -217,7 +233,16 @@ exports.calcularGastoMedio = async (req, res) => {
 // 1. Gráfico PRINCIPAIS PAÍSES DE ORIGEM
 exports.listarPrincipaisPaisesOrigem = async (req, res) => {
     try {
-        const where = construirWhereClause(req);
+        const { mes, ano } = req.query
+        const where = {}
+
+        if (mes) {
+            where.mes = parseInt(10)
+        }
+
+        if (ano) {
+            where.ano = parseInt(10)
+        }
 
         const resultados = await PerfilEstimadoTurista.findAll({
             attributes: [
@@ -229,14 +254,15 @@ exports.listarPrincipaisPaisesOrigem = async (req, res) => {
                 required: true // Garante que apenas perfis com país associado sejam retornados
             }],
             where,
-            group: ['Pais.pais'], // Agrupa pelo nome do país
-            order: [[literal('total_turistas'), 'DESC']]
+            group: ['Pai.pais', 'Pai.id_pais'], // Agrupa pelo nome do país
+            order: [[literal('total_turistas'), 'DESC']],
+            limit: 5
         });
 
         const totalGeral = resultados.reduce((sum, item) => sum + parseFloat(item.dataValues.total_turistas), 0);
 
         const dadosFormatados = resultados.map(item => ({
-            pais: item.Pa_is.pais, // Acessa o nome do país através da associação
+            pais: item.Pai.pais, // Acessa o nome do país através da associação
             percentual: totalGeral > 0 ? (parseFloat(item.dataValues.total_turistas) / totalGeral * 100).toFixed(2) : "0.00"
         }));
 
