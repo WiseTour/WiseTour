@@ -17,7 +17,7 @@ function cadastrarEmpresa(
     console.log("ACESSEI O EMPRESA MODEL");
 
     var instrucaoSql = `
-        INSERT INTO empresa (
+        INSERT INTO Empresa (
             cnpj, nome_fantasia, razao_social, fk_informacao_contato_cadastro, cep, tipo_logradouro,
             nome_logradouro, numero, complemento, bairro, cidade, fk_uf_sigla
         ) VALUES (
@@ -104,7 +104,7 @@ function cadastrarFuncionario(
     console.log("ACESSEI O RESPONSÁVEL MODEL");
 
     var instrucaoSql = `
-        INSERT INTO funcionario (
+        INSERT INTO Funcionario (
             nome, cargo, telefone, fk_cnpj, fk_informacao_contato_cadastro, fk_uf_sigla
         ) VALUES (
             '${nome}', '${cargo}', '${telefone}', '${cnpjEmpresa}', '${idInformacao}', '${siglaUf}'
@@ -119,7 +119,7 @@ function cadastrarUsuario(email, senha, permissao) {
     console.log("ACESSEI O USUÁRIO MODEL");
 
     var instrucaoSql = `
-        INSERT INTO usuario (
+        INSERT INTO Usuario (
             email, senha, permissao
         ) VALUES (
             '${email}', '${senha}', '${permissao}'
