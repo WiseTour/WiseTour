@@ -82,7 +82,7 @@ body {
 
 main {
     background-color: #d6d1d1;
-    min-height: 50vw
+    min-height: 42vw
 
 ;
     display: flex
@@ -110,7 +110,7 @@ main .panorama_geral_linha_1 .titulo {
     justify-content: flex-start;
     align-items: center;
     height: 100%;
-    width: 30%;
+    width: 60%;
 }
 
 main .panorama_geral_linha_1 .filtros {
