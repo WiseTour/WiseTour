@@ -1,5 +1,4 @@
 function cadastrarUsuario() {
-
     //Recupere o valor da nova input pelo nome do id
     // Agora vá para o método fetch logo abaixo
     var emailUsuarioVar = usuario_email_input.value;
@@ -18,7 +17,7 @@ function cadastrarUsuario() {
       return false;
     }
   
-    fetch("/internal/cadastrarUsuario", {
+    fetch("/internalRoutes/cadastrarUsuario", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,6 +34,7 @@ function cadastrarUsuario() {
         console.log("resposta: ", resposta);
   
         if (resposta.ok) {
+          alert("Cadastro do funcionário realizado com sucesso");
           cardErro.style.display = "block";
   
           mensagem_erro.innerHTML =
@@ -46,7 +46,8 @@ function cadastrarUsuario() {
   
           limparFormulario();
         } else {
-          throw "Houve um erro ao tentar realizar o cadastro!";
+          alert("Erro ao realizar cadastro do usuário! Verifique as informações passadas!")
+          throw "Houve um erro ao tentar realizar o cadastro do usuário!";
         }
       })
       .catch(function (resposta) {

@@ -1,5 +1,4 @@
 function editarInformacoesEmpresariais(){
-
     var cnpjVar = editar_informacoes_empresariais_cnpj_input.value;
     var cnpjNovoVar = editar_informacoes_empresariais_novo_cnpj_input.value;
     var nomeFantasiaVar = editar_informacoes_empresariais_nome_fantasia_input.value;
@@ -7,9 +6,9 @@ function editarInformacoesEmpresariais(){
     
 
     console.log("cnpj:", cnpjVar);
-console.log("cnpjNovo:", cnpjNovoVar);
-console.log("nomeFantasia:", nomeFantasiaVar);
-console.log("razaoSocial:", razaoSocialVar);
+    console.log("cnpjNovo:", cnpjNovoVar);
+    console.log("nomeFantasia:", nomeFantasiaVar);
+    console.log("razaoSocial:", razaoSocialVar);
   
     // Verificando se há algum campo em branco
     if (
@@ -110,6 +109,7 @@ console.log("razaoSocial:", razaoSocialVar);
           alert ("Endereco alterado com sucesso!!!")
           limparFormulario();
         } else {
+          
           return resposta.text().then(mensagem => {
             alert("Erro: " + mensagem);
         });

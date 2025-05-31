@@ -20,14 +20,28 @@ router.post("/editarEnderecoEmpresa", function (req, res) {
     internalController.editarEnderecoEmpresa(req, res);
 })
 
-
-
 router.post("/cadastrarFuncionario", function (req, res) {
     internalController.cadastrarFuncionario(req, res);
 })
 
 router.post("/cadastrarUsuario", function (req, res) {
     internalController.cadastrarUsuario(req, res);
+})
+
+router.post("/editarFuncionario", function (req, res) {
+    internalController.editarFuncionario(req, res);
+})
+
+router.post("/editarUsuario", function (req, res) {
+    internalController.editarUsuario(req, res);
+})
+
+router.post("/excluirFuncionario", function (req, res) {
+    internalController.excluirFuncionario(req, res);
+})
+
+router.post("/excluirUsuario", function (req, res) {
+    internalController.excluirUsuario(req, res);
 })
 
 

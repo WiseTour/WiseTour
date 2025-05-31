@@ -1,6 +1,6 @@
 function editarFuncionario() {
- var idVar = editar_funcionario_id_input.value;
-  var nomeFuncionarioVar = editar_funcionario_nome_novo_input.value;
+  var nomeFuncionarioVar = editar_funcionario_nome_input.value;
+  var nomeNovoFuncionarioVar = editar_funcionario_nome_novo_input.value;
   var cargoVar = editar_funcionario_cargo_input.value;
   var telefoneVar = editar_funcionario_telefone_input.value;
   var cnpjEmpresaVar = editar_funcionario_cnpj__novo_empresa_input.value;
@@ -8,8 +8,9 @@ function editarFuncionario() {
   var siglaUfVar = editar_funcionario_sigla_uf_input.value;
 
   // Verificando se há algum campo em branco
-  if (idVar == "" ||
+  if (
     nomeFuncionarioVar == "" ||
+    nomeNovoFuncionarioVar == "" ||
     cargoVar == "" ||
     telefoneVar == "" ||
     cnpjEmpresaVar == "" ||
@@ -26,8 +27,8 @@ function editarFuncionario() {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      idServer : idVar,
       nomeServer: nomeFuncionarioVar,
+      nomeNovoServer: nomeNovoFuncionarioVar,
       cargoServer: cargoVar,
       telefoneServer: telefoneVar,
       cnpjEmpresaServer: cnpjEmpresaVar,
@@ -43,7 +44,8 @@ function editarFuncionario() {
 
         limparFormulario();
       } else {
-        throw "Houve um erro ao tentar realizar a edição do cadastro!";
+        alert("Erro ao editar o funcionário! Verifique as informações passadas!")
+        throw "Houve um erro ao tentar realizar a edição do funcionário!";
       }
     })
     .catch(function (resposta) {

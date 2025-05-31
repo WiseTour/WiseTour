@@ -1,6 +1,4 @@
 function cadastrarEmpresa() {
-
-   
     var cnpjVar = empresa_cnpj_input.value;
     var nomeFantasiaVar = empresa_nome_fantasia_input.value;
     var razaoSocialVar = empresa_razao_social_input.value;
@@ -63,7 +61,8 @@ function cadastrarEmpresa() {
           alert ("Cadastro Empresa realizado com sucesso!!!")
           limparFormulario();
         } else {
-          throw "Houve um erro ao tentar realizar o cadastro!";
+          alert("Erro ao cadastrar empresa! Verifique as informações passadas!")
+          throw "Houve um erro ao tentar realizar o cadastro da empresa!";
         }
       })
       .catch(function (resposta) {
