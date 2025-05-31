@@ -14,7 +14,7 @@ function entrar() {
     console.log("FORM LOGIN: ", emailVar);
     console.log("FORM SENHA: ", senhaVar);
 
-    fetch("/usuario/autenticar", {
+    fetch("/usuarios/autenticar", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -39,7 +39,8 @@ function entrar() {
             setTimeout(function () {
               window.location.href = "/internal/configuracao-cadastral-empresa.html";
             }, 1000);
-          }else if(json.permissao == "padrão" || json.permissao == "gestor"){
+
+          }else if(json.permissao == "padrao"){
 
             setTimeout(function () {
               window.location.href = "/private/index.html";
@@ -72,6 +73,8 @@ function entrar() {
     });
 
     return false;
+
+
   }
 
   function sumirMensagem() {

@@ -2,7 +2,7 @@ function editarUsuario() {
 
     var emailUsuarioVar = editar_usuario_email_input.value;
     var emailNovoUsuarioVar = editar_usuario_email_novo_input.value;
-    var idFuncionarioVar = editar_usuario_id_funcionario_input.value;
+    var idFuncionarioVar = editar_usuario_id_responsavel_input.value;
     var senhaUsuarioVar = editar_usuario_senha_input.value;
     var permissaoUsuarioVar = editar_usuario_permissao_input.value;
      
@@ -42,7 +42,8 @@ function editarUsuario() {
 
         limparFormulario();
       } else {
-        throw "Houve um erro ao tentar realizar o cadastro!";
+        alert("Erro ao editar o usuário! Verifique as informações passadas!")
+        throw "Houve um erro ao tentar realizar a edição do usuário!";
       }
       })
       .catch(function (resposta) {

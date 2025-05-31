@@ -42,7 +42,8 @@ function cadastrarFuncionario() {
 
         limparFormulario();
       } else {
-        throw "Houve um erro ao tentar realizar o cadastro!";
+        alert("Erro ao realizar cadastro do funcionário! Verifique as informações passadas!")
+        throw "Houve um erro ao tentar realizar o cadastro do funcionário!";
       }
     })
     .catch(function (resposta) {

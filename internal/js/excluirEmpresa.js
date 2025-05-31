@@ -29,6 +29,7 @@ function excluirEmpresa() {
           alert ("Empresa excluída com sucesso!!!")
           limparFormulario();
         } else {
+
           return resposta.text().then(mensagem => {
             alert("Erro: " + mensagem);
         });
