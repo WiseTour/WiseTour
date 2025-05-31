@@ -1,51 +1,49 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../database/sequelizeConfig');
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../database/sequelizeConfig");
 
-const Funcionario = sequelize.define('Funcionario', {
+const Funcionario = sequelize.define("funcionario", {
   id_funcionario: {
     type: DataTypes.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
-    autoIncrement: true
   },
   nome: {
     type: DataTypes.STRING(255),
-    allowNull: false
+    allowNull: false,
   },
   cargo: {
-    type: DataTypes.STRING(70),
-    allowNull: false
+    type: DataTypes.STRING(45),
+    allowNull: false,
   },
   telefone: {
     type: DataTypes.STRING(11),
-    allowNull: false
+    allowNull: false,
   },
   fk_cnpj: {
     type: DataTypes.CHAR(14),
+    primaryKey: true,
     allowNull: false,
-    references: {
-      model: 'Empresa',
-      key: 'cnpj'
-    }
   },
   fk_informacao_contato_cadastro: {
     type: DataTypes.INTEGER,
-    allowNull: true,
-    references: {
-      model: 'Informacao_Contato_Cadastro',
-      key: 'id_informacao_contato_cadastro'
-    }
+    primaryKey: true,
+    allowNull: false,
   },
   fk_uf_sigla: {
     type: DataTypes.CHAR(2),
+    primaryKey: true,
     allowNull: true,
-    references: {
-      model: 'Unidade_Federativa_Brasil',
-      key: 'sigla'
-    }
-  }
-}, {
-  tableName: 'Funcionario',
-  timestamps: false
+  },
+  fk_endereco: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    allowNull: true,
+  },
+  fk_usuario: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    allowNull: true,
+  },
 });
 
 module.exports = Funcionario;

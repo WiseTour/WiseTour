@@ -1,26 +1,33 @@
-const Usuario = require("../models/Usuario");
-const Funcionario = require("../models/Funcionario");
+const { Op } = require("sequelize");
 
-const getUsuarioComFuncionario = async (req, res) => {
-  const idUsuario = req.params.id;
+const { Usuario, Funcionario } = require("../models");
+
+async function buscarUsuarioPorId(req, res) {
+  const { id_usuario } = req.params;
 
   try {
-    const usuario = await Usuario.findOne({
-      where: { id_usuario: idUsuario },
-      include: [{ model: Funcionario, as: 'funcionario' }]
+    const usuario = await Usuario.findByPk(id_usuario, {
+      include: [
+        {
+          model: Funcionario,
+        },
+      ],
     });
 
     if (!usuario) {
-      return res.status(404).json({ message: 'Usuário não encontrado' });
+      return res.status(404).json({ mensagem: "Usuário não encontrado" });
     }
 
-    return res.json(usuario);
+    res.json(usuario);
   } catch (error) {
-    console.error('Erro ao buscar usuário:', error);
-    return res.status(500).json({ message: 'Erro interno do servidor' });
+    console.error("Erro ao buscar usuário:", error);
+    res.status(500).json({ mensagem: "Erro interno no servidor" });
   }
-};
+}
 
+module.exports = {
+  buscarUsuarioPorId,
+};
 
 async function autenticar(req, res) {
   const { emailServer, senhaServer } = req.body;
@@ -30,29 +37,89 @@ async function autenticar(req, res) {
   }
 
   try {
-    const usuarios = await Usuario.findAll({
+    const usuario = await Usuario.findOne({
       where: {
         email: emailServer,
         senha: senhaServer,
       },
     });
 
-    if (usuarios.length === 1) {
-      const usuario = usuarios[0].get({ plain: true });
-      delete usuario.senha;
-      res.json(usuario);
-    } else if (usuarios.length > 1) {
-      res.status(403).send("Mais de um usuário com o mesmo login e senha!");
+    if (usuario) {
+      const usuarioPlain = usuario.get({ plain: true });
+      delete usuarioPlain.senha;
+      res.json(usuarioPlain);
     } else {
       res.status(403).send("Email e/ou senha inválido(s)");
     }
   } catch (erro) {
-    console.error("Erro ao autenticar:", erro);
+    console.error("Erro ao autenticar:", erro); // veja o erro detalhado
     res.status(500).send("Erro no servidor ao tentar autenticar.");
   }
 }
 
+// Alterar informações do usuário e funcionário vinculado
+const alterarInformacoesUsuario = async (req, res) => {
+  const { id_usuario, id_funcionario, nome, cargo, telefone, email } = req.body;
+
+  try {
+    // Verifica se o usuário existe
+    const usuario = await Usuario.findOne({
+      where: { id_usuario },
+      include: [
+        {
+          model: Funcionario,
+        },
+      ],
+    });
+
+    if (!usuario) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    // Verifica se o email já está cadastrado por outro usuário
+    if (email) {
+      const emailExistente = await Usuario.findOne({
+        where: {
+          email,
+          id_usuario: { [Op.ne]: id_usuario }, // outro usuário com mesmo email?
+        },
+      });
+
+      if (emailExistente) {
+        return res
+          .status(400)
+          .json({
+            message: "Este email já está cadastrado para outro usuário.",
+          });
+      }
+    }
+
+    // Atualiza os dados do usuário
+    await Usuario.update({ email }, { where: { id_usuario } });
+
+    // Atualiza os dados do funcionário vinculado
+    // Considerando que usuário pode ter mais de um funcionário, atualizamos o primeiro encontrado
+    if (usuario.funcionario) {
+       console.log("Atualizando dados do funcionário.");
+      const funcionarioId = usuario.funcionario.id_funcionario;
+      await Funcionario.update(
+        { nome, cargo, telefone },
+        { where: { id_funcionario: funcionarioId } }
+      );
+    } else {
+      // Se não tem funcionário vinculado, opcional: criar ou informar
+      console.log("Usuário não tem funcionário vinculado para atualizar.");
+    }
+
+    res.json({ message: "Dados atualizados com sucesso!" });
+  } catch (error) {
+    console.error("Erro ao atualizar usuário:", error);
+    res.status(500).json({ message: "Erro ao atualizar os dados do usuário" });
+  }
+};
+
 module.exports = {
-  getUsuarioComFuncionario,
+  buscarUsuarioPorId,
   autenticar,
+  alterarInformacoesUsuario,
 };

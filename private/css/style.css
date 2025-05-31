@@ -198,8 +198,8 @@ nav .active {
   justify-content: space-between;
 }
 
-
-.informacoes_pessoais, .gerenciamento_senha{
+.informacoes_pessoais,
+.gerenciamento_senha {
   display: none;
 }
 
@@ -229,19 +229,18 @@ nav .active {
 }
 
 .left_container_container form input {
-  width: 80%;
+  width: 60%;
 }
 
 .preferencias_dashboard input[type="checkbox"] {
-   all: revert;
+  all: revert;
 }
 
-.preferencias_dashboard label{
+.preferencias_dashboard label {
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
-
 
 .left_container_container form .form_container label {
   display: flex;
@@ -256,6 +255,7 @@ nav .active {
 .left_container_container form .form_container_button {
   display: flex;
   justify-content: space-between;
+  gap: 20px;
 }
 
 .left_container_container form .form_container_button button {
@@ -287,6 +287,10 @@ nav .active {
 
 .left_container_container form .form_container_button .btn_salvar {
   background-color: var(--cor_base);
+}
+
+.left_container_container form .form_container_button .btn_apagar {
+  background-color: rgb(238, 28, 28);
 }
 
 .right_container {
@@ -353,12 +357,12 @@ nav .active {
   box-shadow: rgba(0, 0, 0, 0.373) 10px 10px 20px;
 }
 
-.container_passaporte .passaporte_aberto .informacoes_usuario img{
+.container_passaporte .passaporte_aberto .informacoes_usuario img {
   height: auto;
   width: 80%;
 }
 
-.container_passaporte .passaporte_aberto .informacoes_usuario .informacoes{
+.container_passaporte .passaporte_aberto .informacoes_usuario .informacoes {
   height: fit-content;
   width: 100%;
   display: flex;
@@ -366,34 +370,41 @@ nav .active {
   gap: 10px;
 }
 
-.container_passaporte .passaporte_aberto .informacoes_usuario .informacoes .titulobold{
+.container_passaporte
+  .passaporte_aberto
+  .informacoes_usuario
+  .informacoes
+  .titulobold {
   font-weight: bold;
 }
 
-.container_passaporte .passaporte_aberto .informacoes_usuario .informacoes div{
+.container_passaporte .passaporte_aberto .informacoes_usuario .informacoes div {
   height: fit-content;
   width: 100%;
   display: flex;
- flex-direction: column;
- gap: 10px;
+  flex-direction: column;
+  gap: 10px;
   justify-content: space-between;
 }
 
-.container_passaporte .passaporte_aberto .informacoes_usuario .informacoes .div_span_numero_passaporte{
- flex-direction: row;
+.container_passaporte
+  .passaporte_aberto
+  .informacoes_usuario
+  .informacoes
+  .div_span_numero_passaporte {
+  flex-direction: row;
 }
 
-.container_passaporte .passaporte_aberto .folha{
+.container_passaporte .passaporte_aberto .folha {
   background-color: var(--cinza_medio);
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.373) 10px 10px 20px;
 }
 
-.container_passaporte .passaporte_aberto .capa{
+.container_passaporte .passaporte_aberto .capa {
   background-color: var(--cor_base);
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.373) 10px 10px 20px;
 }
-
 
 /* /MAIN */

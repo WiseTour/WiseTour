@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.style.opacity = '0';
     document.body.style.transition = 'opacity 0.01s ease-out';
 
-    fetch('http://localhost:3000/estado')
+    fetch(`http://localhost:${'3333'}/estado`)
       .then(response => response.json())
       .then(data => {
         const estadoElement = document.getElementById('estado');

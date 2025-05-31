@@ -44,40 +44,36 @@
                     <i class="fa-solid fa-lock"></i>
                     SENHA
                 </button>
-                <button>
-                    <i class="fa-solid fa-chart-line"></i>
-                    PREFERÊNCIAS DE VISUALIZAÇÃO DAS DASHBOARDS
-                </button>
             </div>
             <div class="container_gerenciamento_usuario">
                 <div class="left_container">
-                    <div class="left_container_container informacoes_pessoais">
+                    <div class="left_container_container informacoes_usuarios">
                         <h2>Bem-vindo!</h2>
                         <form action="">
                             <div class="form_container">
                                 <label for="nome"><img src="/common/assets/icon/user_icon.svg">
                                     NOME:</label>
-                                <input type="text" id="nome" name="nome" value="">
+                                <input class="input_gerenciamento_usuario" type="text" id="nome" name="nome" value="">
                             </div>
 
                             <div class="form_container">
                                 <label for="email"><i class="fa-solid fa-envelope"></i>E-MAIL:</label>
-                                <input type="text" id="email" name="email" value="">
+                                <input class="input_gerenciamento_usuario" type="text" id="email" name="email" value="">
                             </div>
 
                             <div class="form_container">
                                 <label for="funcao"> <i class="fa-solid fa-user"></i>FUNÇÃO:</label>
-                                <input type="text" id="funcao" name="funcao" value="">
+                                <input class="input_gerenciamento_usuario" type="text" id="funcao" name="funcao" value="">
                             </div>
 
                             <div class="form_container">
                                 <label for="telefone"><i class="fa-solid fa-phone"></i>TELEFONE:</label>
-                                <input type="text" id="telefone" name="telefone" value="">
+                                <input class="input_gerenciamento_usuario" type="text" id="telefone" name="telefone" value="">
                             </div>
 
                             <div class="form_container_button">
-                                <button class="btn_editar" type="button"><i class="fa-solid fa-pen"></i>Editar</button>
-                                <button class="btn_salvar" type="submit"><i
+                                <button class="btn_editar" id="btn_editar_informacoes_pessoais" type="button"><i class="fa-solid fa-pen"></i>Editar</button>
+                                <button class="btn_salvar" id="btn_salvar_informacoes_pessoais" type="button"><i
                                         class="fa-solid fa-check"></i>Salvar</button>
                             </div>
 
@@ -93,79 +89,41 @@
                             <div class="form_container">
                                 <label for="nome_gerenciamento_senha"><img src="/common/assets/icon/user_icon.svg">
                                     NOME:</label>
-                                <input type="text" id="nome_gerenciamento_senha" name="nome_gerenciamento_senha"
-                                    value="Ian Pimenta">
+                                <input class="input_gerenciamento_senha" type="text" id="nome_gerenciamento_senha" name="nome_gerenciamento_senha"
+                                    value="">
                             </div>
 
                             <div class="form_container">
                                 <label for="email_gerenciamento_senha"><i
                                         class="fa-solid fa-envelope"></i>E-MAIL:</label>
-                                <input type="text" id="email_gerenciamento_senha" name="email_gerenciamento_senha"
-                                    value="ian@hotmail.com">
+                                <input class="input_gerenciamento_senha" type="text" id="email_gerenciamento_senha" name="email_gerenciamento_senha"
+                                    value="">
                             </div>
 
                             <div class="form_container">
                                 <label for="senha_gerenciamento_senha"> <i class="fa-solid fa-lock"></i>SENHA:</label>
-                                <input type="password" id="senha_gerenciamento_senha" name="senha_gerenciamento_senha"
-                                    value="urubu100">
-                                <i class="fa-solid fa-eye-slash eye"></i>
+                                <input class="input_gerenciamento_senha" type="password" id="senha_gerenciamento_senha" name="senha_gerenciamento_senha"
+                                    value="">
+                                <i id="olho_senha" class="fa-solid fa-eye-slash eye"></i>
                             </div>
 
                             <div class="form_container">
                                 <label for="nova_senha_gerenciamento_senha"><i class="fa-solid fa-lock"></i>NOVA
                                     SENHA:</label>
-                                <input type="password" id="nova_senha_gerenciamento_senha"
-                                    name="nova_senha_gerenciamento_senha" value="urubu100">
-                                <i class="fa-solid fa-eye-slash eye"></i>
+                                <input class="input_gerenciamento_senha" type="password" id="nova_senha_gerenciamento_senha"
+                                    name="nova_senha_gerenciamento_senha" value="">
+                                <i id="olho_nova_senha" class="fa-solid fa-eye-slash eye"></i>
                             </div>
 
                             <div class="form_container_button">
-                                <button class="btn_editar" type="button"><i class="fa-solid fa-pen"></i>Alterar
+                                <button class="btn_editar" id="btn_editar_senha" type="button"><i class="fa-solid fa-pen"></i>Alterar
                                     senha</button>
-                                <button class="btn_salvar" type="submit"><i class="fa-solid fa-check"></i>Salvar
+                                <button class="btn_salvar" id="btn_salvar_senha" type="button"><i class="fa-solid fa-check"></i>Salvar
                                     senha</button>
 
                             </div>
 
 
-                        </form>
-                    </div>
-
-                    <div class="left_container_container preferencias_dashboard">
-                        <h2>VISUALIZAÇÃO DA DASHBOARD</h2>
-                        <form action="">
-                            <div class="form_container">
-                                <label for="panorama_geral">
-                                    Panorama geral
-                                    <input type="checkbox" name="preferencias_dashboard_escolhas[]" id="panorama_geral">
-
-                                </label>
-                            </div>
-
-                            <div class="form_container">
-                                <label for="perfil_turista">
-                                    Perfil do turista
-                                    <input type="checkbox" name="preferencias_dashboard_escolhas[]" id="perfil_turista">
-
-                                </label>
-                            </div>
-
-                            <div class="form_container">
-                                <label for="sazonalidade">
-                                    Sazonalidade
-                                    <input type="checkbox" name="preferencias_dashboard_escolhas[]" id="sazonalidade">
-
-                                </label>
-                            </div>
-
-                            <div class="form_container_button">
-                                <button class="btn_editar" type="button">
-                                    <i class="fa-solid fa-pen"></i> Alterar preferências
-                                </button>
-                                <button class="btn_salvar" type="submit">
-                                    <i class="fa-solid fa-x"></i> Apagar preferências
-                                </button>
-                            </div>
                         </form>
                     </div>
                 </div>
@@ -195,8 +153,6 @@
                                         <span class="titulobold">FUNÇÃO: </span>
                                         <span id="span-funcao"></span>
                                     </div>
-                                 
-
                                 </div>
                             </div>
                             <div class="folha"></div>
