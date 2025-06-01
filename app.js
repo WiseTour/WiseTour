@@ -23,17 +23,16 @@ app.get("/estado", async (req, res) => {
   try {
     const ipResponse = await axios.get("https://api64.ipify.org?format=json");
     const ip = ipResponse.data.ip;
-    console.log("IP público do usuário:", ip);
 
     const locationResponse = await axios.get(`http://ip-api.com/json/${ip}`);
-    console.log("Resposta da API:", locationResponse.data);
+    const estado = locationResponse.data.regionName || "BRASIL";
 
-    res.json({ estado: locationResponse.data.regionName || "BRASIL" });
+    res.json({ estado });
   } catch (error) {
-    console.error("Erro ao obter localização:", error);
     res.status(500).json({ erro: "Erro ao obter localização" });
   }
 });
+
 
 // /PEGA INFORMAÇÕES DO IP DO USUÁRIO PARA DESCOBRIR O ESTADO
 

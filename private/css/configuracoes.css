@@ -1,0 +1,479 @@
+@import url("https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,95.4,529;1,95.4,529&display=swap");
+@import url("/common/css/style.css");
+
+:root {
+  --font_family_2: "Anybody", sans-serif;
+  --font_family_padrao: "Anybody", sans-serif;
+}
+
+span,
+a,
+input,
+select,
+label,
+button {
+  font-family: var(--font_family_2);
+}
+
+/* BODY */
+
+body {
+  max-width: 100vw;
+  max-height: 100vh;
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  background-color: var(--cinza_medio);
+}
+
+/* /BODY */
+
+/* HEADER */
+
+header {
+  width: 100%;
+  height: fit-content;
+  background-color: var(--cor_base);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#header_container {
+  width: 92%;
+  padding-block: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5%;
+}
+
+.logo {
+  height: 50px;
+}
+
+.menu_container_middle {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 5%;
+}
+
+.menu_container_right {
+  display: flex;
+  gap: 10%;
+}
+
+.opcao {
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 2px solid var(--cinza_escuro);
+  border-radius: 50px;
+  text-decoration: none;
+  padding: 10px 30px;
+  transition: transform 0.3s ease;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.menu_container_right .opcao {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.opcao i,
+.opcao img {
+  line-height: 1em;
+  height: 1em;
+  width: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1em;
+  color: var(--cinza_escuro);
+  fill: var(--cinza_escuro);
+}
+
+.opcao img {
+  fill: var(--cinza_escuro);
+}
+
+/* EFEITOS */
+nav .active {
+  background: var(--cinza_claro);
+}
+
+.opcao:hover {
+  background: var(--cinza_claro);
+}
+
+/* /EFEITOS */
+
+/* /HEADER */
+
+/* MANI */
+
+.main {
+  background: none;
+  width: 100%;
+  height: 100%;
+  padding-block: 30px;
+  padding-inline: 4%;
+  display: grid;
+  grid-template-rows: min-content auto;
+  gap: 20px;
+  overflow: hidden;
+}
+
+.container_main {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: min-content auto;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: var(--cinza_claro);
+}
+
+.container_main .cabecalho {
+  width: 100%;
+  height: fit-content;
+  background: var(--cor_base);
+  display: flex;
+  gap: 50px;
+  align-items: center;
+  justify-content: baseline;
+}
+
+.container_main .cabecalho button {
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  line-height: 1em;
+  height: fit-content;
+  padding-bottom: 2px;
+  border-bottom: 2px solid var(--cor_base);
+}
+
+.container_main .cabecalho button img {
+  height: 1.2rem;
+}
+
+.container_main .cabecalho button:hover,
+.container_main .cabecalho .active {
+  border-bottom: 2px solid var(--cinza_escuro);
+}
+
+.container_main .cabecalho,
+.container_main .container_configuracoes {
+  padding: 20px 30px;
+}
+
+.container_main .container_configuracoes {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 5%;
+  height: 100%;
+  padding: 30px;
+}
+
+.container_configuracoes .left_container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.container_configuracoes .left_container .left_container_container {
+  width: 100%;
+  height: 55vh;
+  display: grid;
+  grid-template-rows: min-content auto min-content;
+  gap: 20px;
+}
+
+.container_configuracoes
+  .left_container
+  .left_container_container
+  .left_container_container_top {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form_container {
+  background-color: var(--cinza_medio);
+  width: 100%;
+  height: fit-content;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+
+
+.form_container label {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+#form_container_canal_padrao{
+  justify-content: left;
+}
+
+#form_container_canal_padrao label {
+  justify-content: left;
+  gap: 15px;
+  width: fit-content;
+  padding-right: 10px;
+}
+
+.container_configuracoes
+  .left_container
+  .left_container_container
+  .left_container_container_top
+  h4 {
+  font-size: 1.5rem;
+}
+
+.container_configuracoes
+  .left_container
+  .left_container_container
+  .left_container_container_main {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.container_configuracoes
+  .left_container
+  .notificacoes_slack
+  .left_container_container_main {
+  justify-content: space-between;
+  padding-right: 10px;
+}
+
+.container_configuracoes
+  .left_container
+  .left_container_container
+  .left_container_container_main
+  .form_container {
+  background-color: var(--cinza_medio);
+  width: 100%;
+  height: fit-content;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.container_configuracoes
+  .left_container
+  .left_container_container
+  .left_container_container_main
+  .form_container
+  div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.container_configuracoes
+  .left_container
+  .left_container_container
+  .left_container_container_main
+  .form_container
+  h4 {
+  font-size: 1.2rem;
+}
+
+.container_configuracoes
+  .left_container
+  .left_container_container
+  .left_container_container_main
+  .form_container
+  p {
+  font-size: 0.8rem;
+}
+
+
+.container_configuracoes input[type="checkbox"] {
+  all: revert;
+}
+
+.left_container_container_botton {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.left_container_container_botton button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.left_container_container_botton button {
+  display: flex;
+  width: 45%;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.left_container_container_botton .btn_editar {
+  background-color: var(--cinza_escuro);
+  color: var(--cinza_claro);
+}
+
+.left_container_container_botton .btn_editar i {
+  color: var(--cinza_claro);
+}
+
+.left_container_container_botton .btn_salvar {
+  background-color: var(--cor_base);
+}
+
+.left_container_container_botton .btn_apagar {
+  background-color: rgb(238, 28, 28);
+}
+
+.left_container_container .container_categoras_etapas .form_container {
+  width: 100%;
+}
+
+.right_container {
+  width: 100%;
+  height: 100%;
+}
+
+.container_passaporte {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 45% 47%;
+  justify-content: space-between;
+}
+
+.container_passaporte .passaporte_fechado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  height: 100%;
+  width: 100%;
+  background: var(--cor_base);
+  border-radius: 0 20px 20px 0;
+  padding: 30px;
+  box-shadow: rgba(0, 0, 0, 0.373) 10px 10px 20px;
+}
+
+.container_passaporte .passaporte_fechado h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.container_passaporte .passaporte_fechado div {
+  height: auto;
+  border-top: solid 2px var(--cinza_escuro);
+  border-bottom: solid 2px var(--cinza_escuro);
+}
+
+.container_passaporte .passaporte_fechado div img {
+  height: auto;
+  width: 200px;
+  padding-block: 40px;
+}
+
+.container_passaporte .passaporte_aberto {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 3% 3%;
+  gap: 2px;
+}
+
+.container_passaporte .passaporte_aberto .informacoes_usuario {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  background-color: var(--cinza_medio);
+  border-radius: 20px 0 0 20px;
+  padding: 34px;
+  box-shadow: rgba(0, 0, 0, 0.373) 10px 10px 20px;
+}
+
+.container_passaporte .passaporte_aberto .informacoes_usuario img {
+  height: auto;
+  width: 80%;
+}
+
+.container_passaporte .passaporte_aberto .informacoes_usuario .informacoes {
+  height: fit-content;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.container_passaporte
+  .passaporte_aberto
+  .informacoes_usuario
+  .informacoes
+  .titulobold {
+  font-weight: bold;
+}
+
+.container_passaporte .passaporte_aberto .informacoes_usuario .informacoes div {
+  height: fit-content;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.container_passaporte
+  .passaporte_aberto
+  .informacoes_usuario
+  .informacoes
+  .div_span_numero_passaporte {
+  flex-direction: row;
+}
+
+.container_passaporte .passaporte_aberto .folha {
+  background-color: var(--cinza_medio);
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.373) 10px 10px 20px;
+}
+
+.container_passaporte .passaporte_aberto .capa {
+  background-color: var(--cor_base);
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.373) 10px 10px 20px;
+}
+
+/* /MAIN */

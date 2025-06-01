@@ -1,0 +1,235 @@
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações</title>
+    <link rel="shortcut icon" href="../common/assets/logo/logo_padrao.svg" type="image/x-icon">
+    <link rel="stylesheet" href="css/configuracoes.css">
+    <script type="module" src="/private/js/configuracoes.js"></script>
+    <script src="https://kit.fontawesome.com/041dbc8823.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <header id="header" class="header">
+        <div id="header_container" class="container">
+            <img class="logo" src="/common/assets/logo/logo_cinza_escuro.svg" alt="Logo WiseTour">
+
+            <nav class="menu_container_middle">
+                <a class="opcao" href="index.html">Panorama Geral</a>
+                <a class="opcao" href="perfilturista.html">Perfil do Turista</a>
+                <a class="opcao" href="sazonalidade.html">Sazonalidade</a>
+            </nav>
+
+            <nav class="menu_container_right">
+                <a class="opcao active" href="configuracoes.html">
+                    <i class="fa-solid fa-gear"></i>
+                </a>
+                <a class="opcao" href="gerenciamento-usuario.html">
+                    <img src="/common/assets/icon/user_icon.svg">
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <h2>CONFIGURAÇÕES</h2>
+        <div class="container_main">
+            <div class="cabecalho">
+                <button class="active">
+                    <i class="fa-solid fa-chart-simple"></i>
+                    VISUALIZAÇÃO DA DASHBOARD
+                </button>
+                <button>
+                    <i class="fa-brands fa-slack"></i>
+                    NOTIFICAÇÕES VIA SLACK
+                </button>
+            </div>
+            <div class="container_configuracoes">
+                <div class="left_container">
+                    <div class="left_container_container visualizacao_dashboard">
+                        <div class="left_container_container_top">
+                            <h4>SELECIONE AS TELAS DA DASHBOARD QUE GOSTARIA DE VISUALIZAR:</h4>
+                        </div>
+                        <div class="left_container_container_main">
+                            <div class="form_container">
+                                <label for="panorama_geral">
+                                    <div>
+                                        <h4>PANORAMA GERAL</h4>
+                                        <p>Cenário macro do turismo no Brasil.</p>
+                                    </div>
+                                    <input class="input_visualizacao_dashboard" type="checkbox"
+                                        name="preferencias_dashboard_escolhas[]" id="panorama_geral">
+                                </label>
+
+                            </div>
+                            <div class="form_container">
+                                <label for="perfil_turista">
+                                    <div>
+                                        <h4>PERFIL DO TURISTA</h4>
+                                        <p>Informações detalhadas do perfil de turista por país.</p>
+                                    </div>
+                                    <input class="input_visualizacao_dashboard" type="checkbox"
+                                        name="preferencias_dashboard_escolhas[]" id="perfil_turista">
+                                </label>
+                            </div>
+
+                            <div class="form_container">
+                                <label for="sazonalidade">
+                                    <div>
+                                        <h4>SAZONALIDADE</h4>
+                                        <p>Informações sobre os períodos de sazonalidade no Brasil por peril de turista.
+                                        </p>
+                                    </div>
+                                    <input class="input_visualizacao_dashboard" type="checkbox"
+                                        name="preferencias_dashboard_escolhas[]" id="sazonalidade">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="left_container_container_botton">
+                            <button class="btn_editar" type="button" id="btn_editar_visualizacao_dashboard">
+                                <i class="fa-solid fa-pen"></i>Alterar
+                            </button>
+                            <button class="btn_salvar" type="button" id="btn_salvar_visualizacao_dashboard">
+                                <i class="fa-solid fa-check"></i>Salvar
+                            </button>
+                            <button class="btn_apagar" type="button" id="btn_apagar_visualizacao_dashboard">
+                                <i class="fa-solid fa-x"></i>Apagar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="left_container_container notificacoes_slack">
+                        <div class="left_container_container_top">
+                            <h4>SELECIONE SUAS PREFERÊNCIAS:</h4>
+                            <div class="form_container">
+                                <label for="ativar">
+                                    ATIVAR NOTIFICAÇÕES VIA SLACK
+                                    <input class="input_notificacao_slack" type="checkbox" name="ativar" id="ativar">
+                                </label>
+                            </div>
+                            <div class="form_container" id="form_container_canal_padrao">
+                                <label for="canal_padrao">
+                                    <i class="fa-solid fa-user"></i>
+                                    CANAL PADRÃO:</label>
+                                <input class="input_notificacao_slack" type="text" id="canal_padrao" name="canal_padrao"
+                                    value="">
+                            </div>
+
+                            <h4>ETAPAS</h4>
+                        </div>
+                        <div class="left_container_container_main">
+                            <div class="form_container">
+                                <label for="inicializacao">
+                                    INICIALIZAÇÃO
+                                    <input class="input_notificacao_slack" type="checkbox" name="inicializacao"
+                                        id="inicializacao">
+                                </label>
+                            </div>
+
+                            <div class="form_container">
+                                <label for="extracao">
+                                    EXTRAÇÃO
+                                    <input class="input_notificacao_slack" type="checkbox" name="extracao"
+                                        id="extracao">
+                                </label>
+                            </div>
+
+                            <div class="form_container">
+                                <label for="tratamento">
+                                    TRATAMENTO
+                                    <input class="input_notificacao_slack" type="checkbox" name="tratamento"
+                                        id="tratamento">
+                                </label>
+                            </div>
+
+                            <div class="form_container">
+                                <label for="transformacao">
+                                    TRANSFORMAÇÃO
+                                    <input class="input_notificacao_slack" type="checkbox" name="transformacao"
+                                        id="transformacao">
+                                </label>
+                            </div>
+
+                            <div class="form_container">
+                                <label for="carregamento">
+                                    CARREGAMENTO
+                                    <input class="input_notificacao_slack" type="checkbox" name="carregamento"
+                                        id="carregamento">
+                                </label>
+                            </div>
+
+                            <div class="form_container">
+                                <label for="conexao_s3">
+                                    CONEXÃO S3
+                                    <input class="input_notificacao_slack" type="checkbox" name="conexao_s3"
+                                        id="conexao_s3">
+                                </label>
+                            </div>
+
+                            <div class="form_container">
+                                <label for="finalizacao">
+                                    FINALIZAÇÃO
+                                    <input class="input_notificacao_slack" type="checkbox" name="finalizacao"
+                                        id="finalizacao">
+                                </label>
+                            </div>
+
+
+                        </div>
+                        <div class="left_container_container_botton">
+                            <button class="btn_editar" type="button" id="btn_editar_notificacao_slack">
+                                <i class="fa-solid fa-pen"></i>Alterar
+                            </button>
+                            <button class="btn_salvar" type="button" id="btn_salvar_notificacao_slack">
+                                <i class="fa-solid fa-check"></i>Salvar
+                            </button>
+                            <button class="btn_apagar" type="button" id="btn_apagar_notificacao_slack">
+                                <i class="fa-solid fa-x"></i>Apagar
+                            </button>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="right_container">
+                    <div class="container_passaporte">
+                        <div class="passaporte_fechado">
+                            <div>
+                                <img src="../common/assets/logo/logo_cinza_escuro.svg" alt="">
+                            </div>
+                            <h3>PASSAPORTE</h3>
+                        </div>
+                        <div class="passaporte_aberto">
+                            <div class="informacoes_usuario">
+                                <img src="assets/icon.svg" id="iconuser">
+                                <div class="informacoes">
+                                    <div class="div_span_numero_passaporte">
+                                        <span class="titulobold">N. PASSAPORTE: </span>
+                                        <span id="span-passaporte"></span>
+                                    </div>
+                                    <div>
+                                        <span class="titulobold">NOME: </span>
+                                        <span id="span-nome"></span>
+                                    </div>
+                                    <div>
+                                        <span class="titulobold">FUNÇÃO: </span>
+                                        <span id="span-funcao"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="folha"></div>
+                            <div class="capa"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </main>
+</body>
+
+
+
+</html>
