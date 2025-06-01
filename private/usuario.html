@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuário</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="/private/js/script.js"></script>
+    <link rel="stylesheet" href="css/usuario.css">
+    <script type="module" src="/private/js/usuario.js"></script>
     <script src="https://kit.fontawesome.com/041dbc8823.js" crossorigin="anonymous"></script>
 </head>
 
@@ -22,7 +22,7 @@
             </nav>
 
             <nav class="menu_container_right">
-                <a class="opcao" href="gerenciamento.html">
+                <a class="opcao" href="configuracao.html">
                     <i class="fa-solid fa-gear"></i>
                 </a>
                 <a class="opcao active" href="usuarios.html">
@@ -89,29 +89,28 @@
                             <div class="form_container">
                                 <label for="nome_gerenciamento_senha"><img src="/common/assets/icon/user_icon.svg">
                                     NOME:</label>
-                                <input class="input_gerenciamento_senha" type="text" id="nome_gerenciamento_senha" name="nome_gerenciamento_senha"
+                                <input class="" type="text" id="nome_gerenciamento_senha" name="nome_gerenciamento_senha"
                                     value="">
                             </div>
 
                             <div class="form_container">
                                 <label for="email_gerenciamento_senha"><i
                                         class="fa-solid fa-envelope"></i>E-MAIL:</label>
-                                <input class="input_gerenciamento_senha" type="text" id="email_gerenciamento_senha" name="email_gerenciamento_senha"
+                                <input  type="text" id="email_gerenciamento_senha" name="email_gerenciamento_senha"
                                     value="">
                             </div>
 
                             <div class="form_container">
                                 <label for="senha_gerenciamento_senha"> <i class="fa-solid fa-lock"></i>SENHA:</label>
-                                <input class="input_gerenciamento_senha" type="password" id="senha_gerenciamento_senha" name="senha_gerenciamento_senha"
-                                    value="">
+                                <input  type="password" id="senha_gerenciamento_senha" name="senha_gerenciamento_senha" autocomplete="current-password">
                                 <i id="olho_senha" class="fa-solid fa-eye-slash eye"></i>
                             </div>
+
 
                             <div class="form_container">
                                 <label for="nova_senha_gerenciamento_senha"><i class="fa-solid fa-lock"></i>NOVA
                                     SENHA:</label>
-                                <input class="input_gerenciamento_senha" type="password" id="nova_senha_gerenciamento_senha"
-                                    name="nova_senha_gerenciamento_senha" value="">
+                                <input class="input_gerenciamento_senha" type="password" id="nova_senha_gerenciamento_senha" name="nova_senha_gerenciamento_senha" autocomplete="new-password">
                                 <i id="olho_nova_senha" class="fa-solid fa-eye-slash eye"></i>
                             </div>
 
