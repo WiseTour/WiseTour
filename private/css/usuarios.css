@@ -1,11 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,95.4,529;1,95.4,529&display=swap');
 @import url("/common/css/style.css");
-@import url(./style.css);
 
+body,
+body * {
+    font-family: "Anybody", sans-serif !important;
+}
 
+/* HEADER */
+header {
+    width: 100vw;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background-color: var(--cor_base);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+}
 
-
-
-
+header .container {
+    width: 90%;
+    margin: 0 auto;
+    margin-inline: 5%;
+    display: flex
+;
+    align-items: center;
+    justify-content: space-between;
+    height: 120px;
+}
 
 .logo_container .logo {
   height: 70px;

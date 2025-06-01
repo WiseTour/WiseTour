@@ -430,68 +430,6 @@ select:hover {
 }
 
 #icon-not {
-    width: 25px; 
-    height: auto; 
-  }
-
-
-
-footer {
-    background-color: var(--cinza);
-    color: var(--cinza_claro);
-    width: 100vw;
-    height: fit-content;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex_start;
-    gap: 50px;
-    padding: var(--padding_block) var(--padding_inline);
-}
-
-footer * {
-    color: var(--cinza_claro);
-    font-weight: 400;
-    font-size: 1rem;
-}
-
-footer .container {
-    height: 100%;
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    align-items: baseline;
-    justify-items: end;
-}
-
-footer .container .container {
-    width: fit-content;
+    width: 25px;
     height: auto;
-    color: var(--cinza_claro);
-    flex-direction: column;
-    display: flex;
-    align-items: baseline;
-    font-weight: 100;
-}
-
-footer .container .slogan h6 {
-    font-family: var(--font_family_padrao);
-}
-
-footer .container .menu {
-    justify-self: center;
-    align-items: center;
-    gap: 10px;
-}
-
-footer .container .integrantes {
-    align-items: end;
-}
-
-footer .container .menu a:hover {
-    text-decoration: underline;
-}
-
-footer .container b {
-    font-weight: 400;
 }

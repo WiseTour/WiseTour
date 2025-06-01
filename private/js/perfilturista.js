@@ -322,3 +322,24 @@ if (selectPais) selectPais.addEventListener('change', carregarDadosDashboard);
 // Chama a função uma vez ao carregar a página para exibir os dados iniciais
 document.addEventListener('DOMContentLoaded', carregarDadosDashboard);
 console.log('perfilturista.js: Script carregado e listener DOMContentLoaded adicionado.');
+
+function atualizarDataHora() {
+    const agora = new Date();
+
+    const data = agora.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+
+    const hora = agora.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+
+    document.getElementById('dataHora').textContent = `${data} - ${hora}`;
+}
+
+atualizarDataHora();
+setInterval(atualizarDataHora, 1000);
