@@ -11,7 +11,7 @@ var express = require("express");
 var cors = require("cors");
 var path = require("path");
 var PORTA_APP = process.env.APP_PORT;
-var HOST_APP = process.env.APP_HOST;
+
 
 var app = express();
 
@@ -40,7 +40,11 @@ app.get("/estado", async (req, res) => {
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuario");
 var internalRoutes = require("./src/routes/internalRoutes");
-var sequelize = require('./src//database/sequelizeConfig');
+var funcionarioRoutes = require('./src/routes/funcionario');
+var preferenciasVisualizacaoDashboardRoutes = require('./src/routes/preferenciasVisualizacaoDashboardRoutes');
+var telaDashboardRoutes = require("./src/routes/telaDashboardRoutes");
+
+var sequelize = require('./src/database/sequelizeConfig');
 var graficoRouter = require("./src/routes/graficoRoute");
 
 app.use(express.json());
@@ -57,15 +61,23 @@ app.use(cors());
 
 app.use("/", indexRouter);
 app.use("/usuario", usuarioRouter);
+app.use('/funcionario', funcionarioRoutes);
+app.use("/preferenciasVisualizacaoDashboardRoutes", preferenciasVisualizacaoDashboardRoutes);
+app.use("/telaDashboardRoutes", telaDashboardRoutes);
 app.use("/internalRoutes", internalRoutes);
 app.use("/grafico", graficoRouter);
 
 
-sequelize.authenticate().then(() => {
-  console.log("Conectado ao banco com Sequelize");
-}).catch(err => {
-  console.error("Erro na conexão Sequelize:", err);
-});
+async function connectDB() {
+  try {
+    await sequelize.authenticate();
+    console.log('Conexão com banco estabelecida.');
+  } catch (error) {
+    console.error('Erro ao conectar no banco:', error);
+  }
+}
+
+connectDB();
 
 
 app.listen(PORTA_APP, function () {
