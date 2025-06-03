@@ -1,15 +1,16 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/sequelizeConfig');
 
-const PreferenciasVisualizacaoDashboard = sequelize.define('preferencias_visualizacao_dashboard', {
-  id_preferencias_visualizacao_dashboard: {
+const PreferenciaVisualizacaoDashboard = sequelize.define('preferencia_visualizacao_dashboard', {
+  fk_tela_dashboard: {
     type: DataTypes.INTEGER,
-    autoIncrement: true,
+    allowNull: false,
     primaryKey: true,
   },
   fk_usuario: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    primaryKey: true,
   },
   ativo: {
     type: DataTypes.CHAR(3),
@@ -18,13 +19,7 @@ const PreferenciasVisualizacaoDashboard = sequelize.define('preferencias_visuali
       isIn: [['sim', 'nao']],
     },
   },
-}, {
-  indexes: [
-    {
-      unique: true,
-      fields: ['id_preferencias_visualizacao_dashboard', 'fk_usuario'],
-    },
-  ],
 });
 
-module.exports = PreferenciasVisualizacaoDashboard;
+
+module.exports = PreferenciaVisualizacaoDashboard;

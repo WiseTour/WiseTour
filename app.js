@@ -40,8 +40,9 @@ var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuario");
 var internalRoutes = require("./src/routes/internalRoutes");
 var funcionarioRoutes = require('./src/routes/funcionario');
-var preferenciasVisualizacaoDashboardRoutes = require('./src/routes/preferenciasVisualizacaoDashboardRoutes');
+var preferenciaVisualizacaoDashboardRoutes = require('./src/routes/preferenciaVisualizacaoDashboard');
 var telaDashboardRoutes = require("./src/routes/telaDashboardRoutes");
+var configuracaoSlackRoutes = require("./src/routes/configuracaoSlack");
 
 var sequelize = require('./src/database/sequelizeConfig');
 
@@ -60,9 +61,10 @@ app.use(cors());
 app.use("/", indexRouter);
 app.use("/usuario", usuarioRouter);
 app.use('/funcionario', funcionarioRoutes);
-app.use("/preferenciasVisualizacaoDashboardRoutes", preferenciasVisualizacaoDashboardRoutes);
-app.use("/telaDashboardRoutes", telaDashboardRoutes);
+app.use("/preferenciaVisualizacaoDashboard", preferenciaVisualizacaoDashboardRoutes);
+app.use("/telaDashboard", telaDashboardRoutes);
 app.use("/internalRoutes", internalRoutes);
+app.use("/configuracaoSlackRoutes", configuracaoSlackRoutes)
 
 
 async function connectDB() {

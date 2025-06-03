@@ -7,7 +7,7 @@ const Log = require('../models/Log');
 const Usuario = require('../models/Usuario');
 const ConfiguracaoSlack = require('../models/ConfiguracaoSlack');
 const TipoNotificacao = require('../models/TipoNotificacao');
-const PreferenciasVisualizacaoDashboard = require('../models/PreferenciasVisualizacaoDashboard');
+const PreferenciaVisualizacaoDashboard = require('./PreferenciaVisualizacaoDashboard');
 const TelaDashboard = require('../models/TelaDashboard');
 const InformacaoContatoCadastro = require('../models/InformacaoContatoCadastro');
 const HistoricoContato = require('../models/HistoricoContato');
@@ -50,6 +50,53 @@ Empresa.hasMany(Funcionario, { foreignKey: 'fk_uf_sigla' });
 Funcionario.belongsTo(Usuario, { foreignKey: 'fk_usuario' });
 Usuario.hasOne(Funcionario, { foreignKey: 'fk_usuario' });
 
+// PreferenciasVisualizacaoDashboard -> Usuario
+PreferenciaVisualizacaoDashboard.belongsTo(Usuario, {
+  foreignKey: 'fk_usuario',
+  targetKey: 'id_usuario',
+});
+
+Usuario.hasMany(PreferenciaVisualizacaoDashboard, { foreignKey: 'fk_usuario' });
+
+// TelaDashboard -> PreferenciasVisualizacaoDashboard
+PreferenciaVisualizacaoDashboard.belongsTo(TelaDashboard, {
+  foreignKey: 'fk_tela_dashboard',
+  targetKey: 'id_tela_dashboard',
+});
+
+TelaDashboard.hasMany(PreferenciaVisualizacaoDashboard, {
+  foreignKey: 'fk_tela_dashboard',
+});
+
+// Etapa -> TipoNotificacao
+TipoNotificacao.belongsTo(Etapa, {
+  foreignKey: 'fk_etapa',
+  targetKey: 'id_etapa',
+});
+Etapa.hasMany(TipoNotificacao, {
+  foreignKey: 'fk_etapa',
+});
+
+// ConfiguracaoSlack -> TipoNotificacao
+TipoNotificacao.belongsTo(ConfiguracaoSlack, {
+  foreignKey: 'fk_configuracao_slack',
+  targetKey: 'id_configuracao_slack',
+});
+ConfiguracaoSlack.hasMany(TipoNotificacao, {
+  foreignKey: 'fk_configuracao_slack',
+});
+
+
+// Usuario -> ConfiguracaoSlack (já deve existir, mas caso não tenha)
+ConfiguracaoSlack.belongsTo(Usuario, {
+  foreignKey: 'fk_usuario',
+  targetKey: 'id_usuario',
+});
+Usuario.hasOne(ConfiguracaoSlack, {
+  foreignKey: 'fk_usuario',
+});
+
+
 
 // EXPORTAÇÃO
 
@@ -62,7 +109,7 @@ module.exports = {
   Usuario,
   ConfiguracaoSlack,
   TipoNotificacao,
-  PreferenciasVisualizacaoDashboard,
+  PreferenciaVisualizacaoDashboard,
   TelaDashboard,
   InformacaoContatoCadastro,
   HistoricoContato,
