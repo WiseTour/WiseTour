@@ -1,9 +1,30 @@
 @import url("/common/css/style.css");
 @import url("https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,95.4,529;1,95.4,529&display=swap");
 
-body,
-body * {
-    font-family: "Anybody", sans-serif !important;
+:root {
+    --font_family_2: "Anybody", sans-serif;
+    --font_family_padrao: "Anybody", sans-serif;
+}
+
+span,
+a,
+input,
+select,
+label,
+button {
+    font-family: var(--font_family_2);
+}
+
+html,
+body {
+    overflow-y: hidden;
+    /* Remove a barra de rolagem vertical */
+    height: 100%;
+    /* Garante que ocupem toda a altura */
+    margin: 0;
+    /* Remove margens padrão */
+    padding: 0;
+    /* Remove paddings padrão */
 }
 
 main {

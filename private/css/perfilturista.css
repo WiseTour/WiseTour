@@ -2,9 +2,30 @@
 @import url("/common/css/style.css");
 
 
-body,
-body * {
-    font-family: "Anybody", sans-serif !important;
+:root {
+    --font_family_2: "Anybody", sans-serif;
+    --font_family_padrao: "Anybody", sans-serif;
+}
+
+span,
+a,
+input,
+select,
+label,
+button {
+    font-family: var(--font_family_2);
+}
+
+html,
+body {
+    overflow-y: hidden;
+    /* Remove a barra de rolagem vertical */
+    height: 100%;
+    /* Garante que ocupem toda a altura */
+    margin: 0;
+    /* Remove margens padrão */
+    padding: 0;
+    /* Remove paddings padrão */
 }
 
 /* HEADER */
@@ -104,6 +125,8 @@ main {
     width: 100vw;
     padding: 5px;
     box-sizing: border-box;
+    height: calc(100vh - 70px);
+    /* Subtrai a altura do header */
 }
 
 main .panorama_geral_linha_1 {
