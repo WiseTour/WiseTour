@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuário</title>
+    <link rel="shortcut icon" href="../common/assets/logo/logo_padrao.svg" type="image/x-icon">
     <link rel="stylesheet" href="css/usuario.css">
-    <script type="module" src="/private/js/usuario.js"></script>
+    <script type="module" src="/private/js/gerenciamento-usuario.js"></script>
     <script src="https://kit.fontawesome.com/041dbc8823.js" crossorigin="anonymous"></script>
 </head>
 
@@ -22,10 +23,13 @@
             </nav>
 
             <nav class="menu_container_right">
-                <a class="opcao" href="configuracao.html">
+                <a class="opcao" href="configuracao_velho.html">
+                    <img src="assets/titulo-gerenciamento.svg" alt="">
+                </a>
+                <a class="opcao" href="configuracoes.html">
                     <i class="fa-solid fa-gear"></i>
                 </a>
-                <a class="opcao active" href="usuario.html">
+                <a class="opcao active" href="gerenciamento-usuario.html">
                     <img src="/common/assets/icon/user_icon.svg">
                 </a>
             </nav>
@@ -72,7 +76,7 @@
                             </div>
 
                             <div class="form_container_button">
-                                <button class="btn_editar" id="btn_editar_informacoes_pessoais" type="button"><i class="fa-solid fa-pen"></i>Editar</button>
+                                <button class="btn_editar" id="btn_editar_informacoes_pessoais" type="button"><i class="fa-solid fa-pen"></i>Alterar</button>
                                 <button class="btn_salvar" id="btn_salvar_informacoes_pessoais" type="button"><i
                                         class="fa-solid fa-check"></i>Salvar</button>
                             </div>

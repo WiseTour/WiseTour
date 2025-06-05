@@ -3,90 +3,95 @@
 
 body,
 body * {
-    font-family: "Anybody", sans-serif !important;
+  font-family: "Anybody", sans-serif !important;
 }
 
 /* HEADER */
 header {
-    width: 100vw;
-    position: sticky;
-    top: 0;
-    z-index: 9999;
-    background-color: var(--cor_base);
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+  width: 100%;
+  height: fit-content;
+  background-color: var(--cor_base);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-header .container {
-    width: 90%;
-    margin: 0 auto;
-    margin-inline: 5%;
-    display: flex
-;
-    align-items: center;
-    justify-content: space-between;
-    height: 120px;
+#header_container {
+  width: 92%;
+  padding-block: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5%;
 }
 
-.logo_container .logo {
-  height: 70px;
+.logo {
+  height: 50px;
 }
 
-.menu_container {
-    display: flex;
-    align-items: center;
-    gap: 65px;
+.menu_container_middle {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 5%;
 }
 
-.menu_container .opcao {
-    font-weight: bold;
-    text-transform: uppercase;
-    color: black;
-    border: 2px solid black;
-    border-radius: 50px;
-    text-decoration: none;
-    padding: 13px 31px;
-    transition: transform 0.3s ease;
-    font-size: 17px;
-    transition: all 0.8s ease;
+.menu_container_right {
+  display: flex;
+  gap: 10%;
 }
 
-.menu_container .opcao.active {
-    border: 2px solid black;
-    border-radius: 50px;
-    color: black;
+.opcao {
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 2px solid var(--cinza_escuro);
+  border-radius: 50px;
+  text-decoration: none;
+  padding: 10px 30px;
+  transition: transform 0.3s ease;
+  text-align: center;
+  font-size: 1.3rem;
 }
 
-.icon_container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+.menu_container_right .opcao {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.icon_container .entrar {
-    display: flex;
-    align-items: center;
-    transition: 0.3s ease;
+.opcao i,
+.opcao img {
+  line-height: 1em;
+  height: 1em;
+  width: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1em;
+  color: var(--cinza_escuro);
+  fill: var(--cinza_escuro);
 }
 
-.icon_container img {
-    width: 50px;
+.opcao img {
+  fill: var(--cinza_escuro);
 }
 
-.icon_container img {
-  transition: transform 0.6s ease;
+/* EFEITOS */
+nav .active {
+  background: var(--cinza_claro);
 }
 
-.icon_container img:hover {
-  transform: scale(1.1);
-  
+.opcao:hover {
+  background: var(--cinza_claro);
 }
 
 
 /* CONTEUDO */
 
-body{
+body {
   max-width: 100vw;
-  
+
 }
 
 main {
@@ -103,8 +108,7 @@ main {
 }
 
 main .panorama_geral_linha_1 {
-  display: flex
-;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   height: 70px;
@@ -115,8 +119,7 @@ main .panorama_geral_linha_1 {
 width: 200px; */
 
 main .panorama_geral_linha_1 .titulo {
-  display: flex
-;
+  display: flex;
   font-size: 25px;
   font-weight: bolder;
   justify-content: flex-start;
@@ -127,8 +130,7 @@ main .panorama_geral_linha_1 .titulo {
 
 main .panorama_geral_linha_1 .filtros {
   /* background-color: blue; */
-  display: flex
-;
+  display: flex;
   justify-content: flex-end;
   align-items: center;
   /* height: 100%; */
@@ -153,8 +155,7 @@ main .panorama_geral_linha_1 .filtros select {
 }
 
 main .panorama_geral_linha_2 {
-  display: flex
-;
+  display: flex;
   justify-content: center;
   align-items: center;
   height: 500px;
@@ -162,48 +163,17 @@ main .panorama_geral_linha_2 {
   gap: 10px;
 }
 
-main .panorama_geral_linha_2 .panorama_geral_coluna_1{
+main .panorama_geral_linha_2 .panorama_geral_coluna_1 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-right: 0.5%;
+  height: 97%;
+  width: 31.4%;
 }
 
-.informacoes_pessoais,
-.gerenciamento_senha {
-  display: none;
-}
-
-.left_container_container form {
-  width: 100%;
-  height: 80%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  justify-content: baseline;
-  gap: 10px;
-}
-
-.left_container_container form .form_container .eye {
-  margin-left: auto;
-  cursor: pointer;
-}
-
-.left_container_container form input {
-  width: 60%;
-}
-
-.preferencias_dashboard input[type="checkbox"] {
-  all: revert;
-}
-
-.preferencias_dashboard label {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.left_container_container form .form_container label {
+main .panorama_geral_linha_2 .panorama_geral_coluna_1 .principais_paises_origem {
+  /* background-color: green; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -213,7 +183,18 @@ main .panorama_geral_linha_2 .panorama_geral_coluna_1{
   width: 100%;
 }
 
-main .panorama_geral_linha_2 .panorama_geral_coluna_2{
+main .panorama_geral_linha_2 .panorama_geral_coluna_1 .presenca_turista_uf {
+  /* background-color: yellow; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  justify-content: flex-end;
+  height: 48%;
+  width: 100%;
+}
+
+main .panorama_geral_linha_2 .panorama_geral_coluna_2 {
   display: flex;
   flex-direction: column;
   margin-left: 0.5%;
@@ -222,58 +203,19 @@ main .panorama_geral_linha_2 .panorama_geral_coluna_2{
 }
 
 main .panorama_geral_linha_2 .panorama_geral_coluna_2 .kpis {
-  display: flex
-;
+  display: flex;
   justify-content: space-between;
-  gap: 20px;
-}
-
-.left_container_container form .form_container_button button {
-  display: flex;
-  width: 100%;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.left_container_container form .form_container_button button {
-  display: flex;
-  width: 45%;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px;
-  border-radius: 10px;
-}
-
-.left_container_container form .form_container_button .btn_editar {
-  background-color: var(--cinza_escuro);
-  color: var(--cinza_claro);
-}
-
-.left_container_container form .form_container_button .btn_editar i {
-  color: var(--cinza_claro);
-}
-
-.left_container_container form .form_container_button .btn_salvar {
-  background-color: var(--cor_base);
-}
-
-.left_container_container form .form_container_button .btn_apagar {
-  background-color: rgb(238, 28, 28);
-}
-
-.right_container {
   width: 100%;
   margin-left: 37px;
 }
 
-main .panorama_geral_linha_2 .panorama_geral_coluna_2 .kpis .kpi{
+main .panorama_geral_linha_2 .panorama_geral_coluna_2 .kpis .kpi {
   height: 100%;
   width: 32%;
 }
 
-main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrangeiros{
+main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrangeiros {
   /* background-color: purple; */
   display: flex;
   flex-direction: column;
@@ -283,7 +225,7 @@ main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrang
   width: 100%;
 }
 
-main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrangeiros canvas{
+main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrangeiros canvas {
   height: 100%;
   width: 100%;
 }
@@ -303,8 +245,7 @@ main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrang
   font-size: 13px;
   font-weight: bold;
   background-color: #e4dab6;
-  display: flex
-;
+  display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -321,8 +262,7 @@ select:hover {
 }
 
 .card {
-  display: flex
-;
+  display: flex;
   /* align-items: flex-start; */
   /* border-radius: 20px; */
   position: relative;
@@ -339,25 +279,32 @@ select:hover {
   border-radius: 30px;
   height: 70px;
   width: 140px;
-  display: flex
-;
+  display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-direction: column;
-  background-color: var(--cinza_medio);
-  border-radius: 20px 0 0 20px;
-  padding: 34px;
-  box-shadow: rgba(0, 0, 0, 0.373) 10px 10px 20px;
+  /* justify-content: center; */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  /* transition: all 0.3s ease; */
+  margin-left: -15px;
+  margin-top: 5px;
 }
 
-.container_passaporte .passaporte_aberto .informacoes_usuario img {
-  height: auto;
-  width: 80%;
+.icon-box img {
+  max-width: 40px;
+  max-height: 35px;
 }
 
-.container_passaporte .passaporte_aberto .informacoes_usuario .informacoes {
-  height: fit-content;
-  width: 100%;
+.icon-box i {
+  font-size: 25px;
+}
+
+.info-box {
+  text-align: center;
+  border-radius: 20px;
+  background-color: white;
+  position: relative;
+  width: 170px;
+  left: 60px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -365,41 +312,66 @@ select:hover {
   z-index: 2;
 }
 
-.container_passaporte
-  .passaporte_aberto
-  .informacoes_usuario
-  .informacoes
-  .titulobold {
+.info-box .number {
+  font-size: 23px;
   font-weight: bold;
 }
 
-.container_passaporte .passaporte_aberto .informacoes_usuario .informacoes div {
-  height: fit-content;
+.info-box .label {
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 1.3;
+  text-align: center;
+}
+
+/* EFEITOS */
+.menu_container .opcao.active {
+  color: black;
+  border-radius: 50px;
+  background-color: #F2F2F2;
+}
+
+.menu_container .opcao:hover {
+  background-color: #F2F2F2;
+  color: black;
+  border-radius: 50px;
+}
+
+.grafico-container {
+  position: relative;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  justify-content: space-between;
+  height: 100%;
+  padding: 35px;
+  box-sizing: border-box;
 }
 
-.container_passaporte
-  .passaporte_aberto
-  .informacoes_usuario
-  .informacoes
-  .div_span_numero_passaporte {
-  flex-direction: row;
+.grafico-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  margin: 0 auto;
 }
 
-.container_passaporte .passaporte_aberto .folha {
-  background-color: var(--cinza_medio);
-  border-radius: 5px;
-  box-shadow: rgba(0, 0, 0, 0.373) 10px 10px 20px;
+.chegadas_turistas_estrangeiros .grafico {
+  height: 360px !important;
+  /* Altura fixa maior (ajuste o valor conforme necessidade) */
 }
 
-.container_passaporte .passaporte_aberto .capa {
-  background-color: var(--cor_base);
-  border-radius: 5px;
-  box-shadow: rgba(0, 0, 0, 0.373) 10px 10px 20px;
+.chegadas_turistas_estrangeiros .grafico-container {
+  height: 100%;
 }
 
-/* /MAIN */
+.panorama_geral_coluna_2 .kpis {
+  margin-bottom: 10px;
+  /* Espaço abaixo dos KPIs (ajuste este valor conforme necessidade) */
+}
+
+.grafico-container canvas {
+  font-stretch: semi-condensed;
+  letter-spacing: -0.1px;
+}
+
+#icon-not {
+  width: 25px;
+  height: auto;
+}

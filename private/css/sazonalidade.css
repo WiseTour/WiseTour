@@ -17,69 +17,82 @@ main {
 }
 
 header {
-    width: 100vw;
-    position: sticky;
-    top: 0;
-    z-index: 9999;
+    width: 100%;
+    height: fit-content;
     background-color: var(--cor_base);
     box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
-}
-
-header .container {
-    width: 90%;
-    margin: 0 auto;
-    margin-inline: 5%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    height: 120px;
+    justify-content: center;
 }
 
-.logo_container .logo {
-    height: 70px;
-}
-
-.menu_container {
+#header_container {
+    width: 92%;
+    padding-block: 20px;
     display: flex;
     align-items: center;
-    gap: 65px;
+    gap: 5%;
 }
 
-.menu_container .opcao {
+.logo {
+    height: 50px;
+}
+
+.menu_container_middle {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5%;
+}
+
+.menu_container_right {
+    display: flex;
+    gap: 10%;
+}
+
+.opcao {
     font-weight: bold;
     text-transform: uppercase;
-    color: black;
-    border: 2px solid black;
+    border: 2px solid var(--cinza_escuro);
     border-radius: 50px;
     text-decoration: none;
-    padding: 13px 31px;
+    padding: 10px 30px;
     transition: transform 0.3s ease;
-    font-size: 17px;
-    transition: all 0.8s ease;
+    text-align: center;
+    font-size: 1.3rem;
 }
 
-.menu_container .opcao.active {
-    background-color: #F2F2F2;
-}
-
-.icon_container {
+.menu_container_right .opcao {
+    padding: 10px;
     display: flex;
     align-items: center;
-    gap: 15px;
+    justify-content: center;
 }
 
-.icon_container .entrar {
+.opcao i,
+.opcao img {
+    line-height: 1em;
+    height: 1em;
+    width: 1em;
     display: flex;
     align-items: center;
+    justify-content: center;
+    font-size: 1em;
+    color: var(--cinza_escuro);
+    fill: var(--cinza_escuro);
 }
 
-.icon_container img {
-    width: 50px;
-    transition: transform 0.3s ease;
+.opcao img {
+    fill: var(--cinza_escuro);
 }
 
-.icon_container img:hover {
-    transform: scale(1.05);
+/* EFEITOS */
+nav .active {
+    background: var(--cinza_claro);
+}
+
+.opcao:hover {
+    background: var(--cinza_claro);
 }
 
 .sazonalidade_linha_1 {

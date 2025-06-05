@@ -44,7 +44,7 @@ function entrar() {
             }, 1000);
           } else if (json.permissao == "padrao" || json.permissao == "admin") {
             setTimeout(function () {
-              window.location.href = "/private/usuario.html";
+              window.location.href = "/private/index.html";
             }, 1000);
           } else {
             alert("Houve um erro ao tentar realizar o login!");

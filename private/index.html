@@ -8,34 +8,34 @@
 
     <link rel="shortcut icon" href="../common/assets/logo/logo_padrao.svg" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://kit.fontawesome.com/041dbc8823.js" crossorigin="anonymous"></script>
     <script src="/common/js/nav-bar.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/index.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body id="panorama_geral_body">
     <header id="header" class="header">
         <div id="header_container" class="container">
+            <img class="logo" src="/common/assets/logo/logo_cinza_escuro.svg" alt="Logo WiseTour">
 
-            <div class="logo_container">
-                <img class="logo" src="/common/assets/logo/logo_cinza_escuro.svg" alt="Logo WiseTour">
-            </div>
-
-            <nav class="menu_container">
-                <a class="opcao active" href="index.html">Panorama Geral</a>
+            <nav class="menu_container_middle">
+                <a class="opcao" href="index.html">Panorama Geral</a>
                 <a class="opcao" href="perfilturista.html">Perfil do Turista</a>
                 <a class="opcao" href="sazonalidade.html">Sazonalidade</a>
             </nav>
 
-            <div class="icon_container">
-                <a class="opcao entrar" href="gerenciamento.html">
-                    <img src="assets/ger-icon.png" alt="">
+            <nav class="menu_container_right">
+                <a class="opcao" href="configuracao_velho.html">
+                    <img src="assets/titulo-gerenciamento.svg" alt="">
                 </a>
-                <a class="opcao entrar" href="usuario.html">
-                    <img src="assets/user-icon.png" alt="">
+                <a class="opcao" href="configuracoes.html">
+                    <i class="fa-solid fa-gear"></i>
                 </a>
-            </div>
+                <a class="opcao" href="gerenciamento-usuario.html">
+                    <img src="/common/assets/icon/user_icon.svg">
+                </a>
+            </nav>
         </div>
     </header>
 
@@ -44,7 +44,8 @@
 
         <div class="panorama_geral_linha_1">
             <div class="titulo">
-                PANORAMA GERAL <span id="resumo_filtros" style="display: none; font-size: 20px; color: #555; margin-left: 10px;"></span>
+                PANORAMA GERAL <span id="resumo_filtros"
+                    style="display: none; font-size: 20px; color: #555; margin-left: 10px;"></span>
             </div>
             <div class="filtros">
                 <div class="descricao" style="font-size: 14px;">
@@ -68,7 +69,7 @@
                 <div class="descricao" style="font-size: 14px; margin-left: 20px;">
                     Ano:
                 </div>
-                 <select name="ano" id="ano">
+                <select name="ano" id="ano">
                     <option value="">ANO:</option>
                     <option value="2024">2024</option>
                     <option value="2023">2023</option>
@@ -122,7 +123,7 @@
                     <option value="reino-unido">Reino Unido</option>
                     <option value="italia">Itália</option>
                 </select>
-                  <div class="funil">
+                <div class="funil">
                     <img src="assets/funil.png" alt="funil" style="height: 20px; width: 20px; margin-left: 20px;">
                 </div>
             </div>
@@ -207,41 +208,41 @@
     </main>
 
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const mes = document.getElementById('mes');
-    const ano = document.getElementById('ano');
-    const pais = document.getElementById('pais');
-    const resumo = document.getElementById('resumo_filtros');
+        document.addEventListener('DOMContentLoaded', function () {
+            const mes = document.getElementById('mes');
+            const ano = document.getElementById('ano');
+            const pais = document.getElementById('pais');
+            const resumo = document.getElementById('resumo_filtros');
 
-    function atualizarResumo() {
-        const selecionados = [];
+            function atualizarResumo() {
+                const selecionados = [];
 
-        if (mes.value) {
-            selecionados.push(mes.options[mes.selectedIndex].text);
-        }
-        if (ano.value) {
-            selecionados.push(ano.options[ano.selectedIndex].text);
-        }
-        if (pais.value) {
-            selecionados.push(pais.options[pais.selectedIndex].text);
-        }
+                if (mes.value) {
+                    selecionados.push(mes.options[mes.selectedIndex].text);
+                }
+                if (ano.value) {
+                    selecionados.push(ano.options[ano.selectedIndex].text);
+                }
+                if (pais.value) {
+                    selecionados.push(pais.options[pais.selectedIndex].text);
+                }
 
-        resumo.style.display = 'inline';
+                resumo.style.display = 'inline';
 
-        if (selecionados.length > 0) {
-            resumo.textContent = '• ' + selecionados.join(' • ');
-        } else {
-            resumo.textContent = '• TODOS';
-        }
-    }
+                if (selecionados.length > 0) {
+                    resumo.textContent = '• ' + selecionados.join(' • ');
+                } else {
+                    resumo.textContent = '• TODOS';
+                }
+            }
 
-    mes.addEventListener('change', atualizarResumo);
-    ano.addEventListener('change', atualizarResumo);
-    pais.addEventListener('change', atualizarResumo);
+            mes.addEventListener('change', atualizarResumo);
+            ano.addEventListener('change', atualizarResumo);
+            pais.addEventListener('change', atualizarResumo);
 
-    atualizarResumo();
-});
-</script>
+            atualizarResumo();
+        });
+    </script>
 
 </body>
 
