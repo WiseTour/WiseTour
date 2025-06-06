@@ -1,5 +1,6 @@
 // perfilturista.js
 
+// Definição de cores padronizadas para os gráficos.
 const coresUsadas = {
     amarelo: '#F8CA26',
     marrom: '#735900',
@@ -10,9 +11,10 @@ const coresUsadas = {
     acinzentado: '#DDD8C5',
     cinza: '#E0E0E0',
     marromForte: '#A98400',
-    esverdeado: '#6B8E23' // Adicionado 'esverdeado' para consistência
+    esverdeado: '#6B8E23'
 };
 
+// Opções padrão para os gráficos Chart.js.
 const opcoesPadrao = {
     responsive: true,
     maintainAspectRatio: false,
@@ -26,6 +28,7 @@ const opcoesPadrao = {
     }
 };
 
+// Estilo de texto padrão para ticks e legendas dos gráficos.
 const estiloDoTextoDoGrafico = {
     color: '#000000',
     font: {
@@ -35,36 +38,37 @@ const estiloDoTextoDoGrafico = {
     }
 };
 
-// Referências aos elementos de filtro (certifique-se de que esses IDs existem no seu HTML)
+// Referências aos elementos de filtro no HTML.
 const selectMes = document.getElementById('mes');
 const selectAno = document.getElementById('ano');
 const selectPais = document.getElementById('pais');
 
-// Variáveis para armazenar as instâncias dos gráficos (importante para atualização)
+// Variáveis para armazenar as instâncias dos gráficos Chart.js para atualização.
 let graficoMotivosInstance;
 let graficoFontesInstance;
 let graficoComposicaoInstance;
 let graficoViasInstance;
 
-// Função assíncrona para carregar e atualizar todos os dados da dashboard
+/**
+ * Carrega e atualiza todas as KPIs e gráficos da dashboard com base nos filtros.
+ */
 async function carregarDadosDashboard() {
     console.log('carregarDadosDashboard: Função iniciada.');
-    const mes = selectMes ? selectMes.value : ''; // Verifica se o elemento existe
+
+    // Coleta os valores dos filtros.
+    const mes = selectMes ? selectMes.value : '';
     const ano = selectAno ? selectAno.value : '';
     const pais = selectPais ? selectPais.value : '';
 
-    // Constrói a string de query com os filtros presentes
+    // Constrói a query string com os filtros.
     const queryParams = new URLSearchParams();
     if (mes) queryParams.append('mes', mes);
     if (ano) queryParams.append('ano', ano);
     if (pais) queryParams.append('pais', pais);
-
     const queryString = queryParams.toString();
-    const basePath = '/grafico'; // Base path para suas APIs
+    const basePath = '/grafico'; // Caminho base para as APIs do backend.
 
-    // ----------------------------------------------------
     // KPI: Gênero Mais Recorrente
-    // ----------------------------------------------------
     try {
         const res = await fetch(`${basePath}/genero?${queryString}`);
         if (!res.ok) {
@@ -72,16 +76,13 @@ async function carregarDadosDashboard() {
             throw new Error(errorData.erro || `Erro HTTP: ${res.status}`);
         }
         const data = await res.json();
-        const kpiGeneroElement = document.getElementById('kpiGenero');
-        kpiGeneroElement.textContent = data.genero || 'N/A';
+        document.getElementById('kpiGenero').textContent = data.genero || 'N/A';
     } catch (err) {
         console.error('Erro ao buscar o gênero mais recorrente:', err);
         document.getElementById('kpiGenero').textContent = 'Erro';
     }
 
-    // ----------------------------------------------------
     // KPI: Gasto Médio
-    // ----------------------------------------------------
     try {
         const res = await fetch(`${basePath}/gasto-medio?${queryString}`);
         if (!res.ok) {
@@ -89,16 +90,13 @@ async function carregarDadosDashboard() {
             throw new Error(errorData.erro || `Erro HTTP: ${res.status}`);
         }
         const data = await res.json();
-        const kpiGastoMedioElement = document.getElementById('kpiGastoMedio');
-        kpiGastoMedioElement.textContent = data.gastoMedio || 'N/A';
+        document.getElementById('kpiGastoMedio').textContent = data.gastoMedio || 'N/A';
     } catch (err) {
         console.error('Erro ao buscar o gasto médio:', err);
         document.getElementById('kpiGastoMedio').textContent = 'Erro';
     }
 
-    // ----------------------------------------------------
     // KPI: Faixa Etária Mais Recorrente
-    // ----------------------------------------------------
     try {
         const res = await fetch(`${basePath}/faixa_etaria?${queryString}`);
         if (!res.ok) {
@@ -106,16 +104,13 @@ async function carregarDadosDashboard() {
             throw new Error(errorData.mensagem || `Erro HTTP: ${res.status}`);
         }
         const data = await res.json();
-        const kpiFaixaEtariaElement = document.getElementById('kpiFaixaEtaria'); // Certifique-se de ter um elemento com este ID
-        kpiFaixaEtariaElement.textContent = data.faixa_etaria || 'N/A';
+        document.getElementById('kpiFaixaEtaria').textContent = data.faixa_etaria || 'N/A';
     } catch (err) {
         console.error('Erro ao buscar a faixa etária mais recorrente:', err);
         document.getElementById('kpiFaixaEtaria').textContent = 'Erro';
     }
 
-    // ----------------------------------------------------
-    // Gráfico: Motivos das Viagens Realizadas
-    // ----------------------------------------------------
+    // Gráfico: Motivos das Viagens Realizadas (Barra horizontal)
     try {
         const res = await fetch(`${basePath}/motivo?${queryString}`);
         const data = await res.json();
@@ -125,12 +120,10 @@ async function carregarDadosDashboard() {
         const ctxMotivos = document.getElementById('graficoMotivos');
 
         if (graficoMotivosInstance) {
-            // Se o gráfico já existe, apenas atualiza os dados
             graficoMotivosInstance.data.labels = labels;
             graficoMotivosInstance.data.datasets[0].data = valores;
             graficoMotivosInstance.update();
         } else {
-            // Se o gráfico não existe, cria uma nova instância
             graficoMotivosInstance = new Chart(ctxMotivos, {
                 type: 'bar',
                 data: {
@@ -164,9 +157,7 @@ async function carregarDadosDashboard() {
         console.error('Erro ao buscar dados dos motivos de viagem:', err);
     }
 
-    // ----------------------------------------------------
-    // Gráfico: Fontes de Informação
-    // ----------------------------------------------------
+    // Gráfico: Fontes de Informação (Barra vertical)
     try {
         const res = await fetch(`${basePath}/fontes?${queryString}`);
         const data = await res.json();
@@ -216,9 +207,7 @@ async function carregarDadosDashboard() {
         console.error('Erro ao buscar dados das fontes de informação:', err);
     }
 
-    // ----------------------------------------------------
-    // Gráfico: Composição do Grupo Turístico
-    // ----------------------------------------------------
+    // Gráfico: Composição do Grupo Turístico (Pizza)
     try {
         const res = await fetch(`${basePath}/composicao?${queryString}`);
         const data = await res.json();
@@ -264,9 +253,7 @@ async function carregarDadosDashboard() {
         console.error('Erro ao buscar dados da composição:', err);
     }
 
-    // ----------------------------------------------------
-    // Gráfico: Vias de Acesso
-    // ----------------------------------------------------
+    // Gráfico: Vias de Acesso (Pizza)
     try {
         const res = await fetch(`${basePath}/vias?${queryString}`);
         const data = await res.json();
@@ -313,12 +300,11 @@ async function carregarDadosDashboard() {
     }
 }
 
-// Adiciona os event listeners aos selects para chamar a função de carregamento quando o filtro mudar
-// Verifica se os elementos existem antes de adicionar o listener
+// Adiciona event listeners aos filtros para recarregar a dashboard ao mudar.
 if (selectMes) selectMes.addEventListener('change', carregarDadosDashboard);
 if (selectAno) selectAno.addEventListener('change', carregarDadosDashboard);
 if (selectPais) selectPais.addEventListener('change', carregarDadosDashboard);
 
-// Chama a função uma vez ao carregar a página para exibir os dados iniciais
+// Chama a função de carregamento ao carregar a página.
 document.addEventListener('DOMContentLoaded', carregarDadosDashboard);
-console.log('perfilturista.js: Script carregado e listener DOMContentLoaded adicionado.');
+console.log('perfilturista.js: Script carregado.');

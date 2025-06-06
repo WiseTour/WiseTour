@@ -103,6 +103,64 @@ exports.buscarDadosParaDashboard = async (req, res) => {
     }
 }
 
+exports.obterDadosVisitasPorEstado = async (req, res) => { // OU exports.listarVisitasPorEstadoParaMapa
+    try {
+        const { mes, ano, pais } = req.query; // Pega os filtros do frontend
+
+        let whereConditions = `WHERE 1=1`;
+        const replacements = {};
+
+        if (mes) {
+            whereConditions += ` AND P.mes = :mes`;
+            replacements.mes = parseInt(mes, 10);
+        }
+        if (ano) {
+            whereConditions += ` AND P.ano = :ano`;
+            replacements.ano = parseInt(ano, 10);
+        }
+        if (pais) {
+            whereConditions += ` AND P.fk_pais_origem = :pais`;
+            replacements.pais = parseInt(pais, 10);
+        }
+
+        // ... (dentro de exports.obterDadosVisitasPorEstado) ...
+
+        const querySQL = `
+    SELECT
+        CONCAT('br-', LOWER(UF.sigla)) AS 'hc-key', -- Nome da coluna ajustado para Highcharts
+        SUM(P.quantidade_turistas) AS value -- Nome da coluna ajustado para Highcharts
+    FROM
+        perfil_estimado_turistas AS P
+    JOIN
+        destinos AS D ON P.id_perfil_estimado_turistas = D.fk_perfil_estimado_turistas
+                     AND P.fk_pais_origem = D.fk_pais_origem
+                     AND P.fk_uf_entrada = D.fk_uf_entrada
+    JOIN
+        unidade_federativa_brasil AS UF ON D.fk_uf_destino = UF.sigla
+    ${whereConditions}
+    GROUP BY
+        UF.sigla
+    ORDER BY
+        value DESC;
+`;
+
+        const resultados = await sequelize.query(querySQL, {
+            replacements: replacements,
+            type: sequelize.QueryTypes.SELECT
+        });
+
+        if (resultados.length === 0) {
+            return res.status(200).json([]); // Retorna um array vazio em vez de 404 para não quebrar o frontend
+        }
+
+        res.json(resultados); // Vai retornar um array de objetos como [{ "hc-key": "br-sp", "value": 85000 }, ...]
+
+    } catch (error) {
+        console.error("Erro ao obter dados de visitação por estado:", error);
+        res.status(500).json({ erro: "Erro interno ao obter dados de visitação por estado." });
+    }
+};
+
 exports.listarTopEstadosVisitadosSazonalidade = async (req, res) => {
     try {
         const { mes, ano, pais } = req.query; // Pega os filtros do frontend

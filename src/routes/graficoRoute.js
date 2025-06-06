@@ -20,6 +20,7 @@ router.get('/chegadas-comparativas', graficoController.calcularChegadasComparati
 
 // --- NOVAS ROTAS PARA SAZONALIDADE (sazonalidade.js) ---
 // Rota para a KPI "TOP 3 Estados Mais Visitados"
+router.get('/visitas-por-estado', graficoController.obterDadosVisitasPorEstado);
 router.get('/dashboard-data', graficoController.buscarDadosParaDashboard);
 router.get('/sazonalidade/top-estados', graficoController.listarTopEstadosVisitadosSazonalidade);
 
