@@ -1,9 +1,14 @@
-// controllers/graficoController.js
+// src/controllers/graficoController.js
+
 const { Op, fn, col, literal } = require('sequelize');
 const PerfilEstimadoTurista = require('../models/graficoModel');
 const Pais = require('../models/paisModel');
 const UnidadeFederativaBrasil = require('../models/unidadeFederativaBrasilModel');
-// const Destinos = require('../models/destinoModel')
+const Destinos = require('../models/destinoModel');
+const sequelize = require('../database/sequelize');
+
+
+// --- Associações (CRUCIAL para os JOINs funcionarem corretamente) ---
 
 PerfilEstimadoTurista.belongsTo(Pais, { foreignKey: 'fk_pais_origem', targetKey: 'id_pais' });
 Pais.hasMany(PerfilEstimadoTurista, { foreignKey: 'fk_pais_origem', sourceKey: 'id_pais' });
@@ -11,23 +16,26 @@ Pais.hasMany(PerfilEstimadoTurista, { foreignKey: 'fk_pais_origem', sourceKey: '
 PerfilEstimadoTurista.belongsTo(UnidadeFederativaBrasil, { foreignKey: 'fk_uf_entrada', targetKey: 'sigla' });
 UnidadeFederativaBrasil.hasMany(PerfilEstimadoTurista, { foreignKey: 'fk_uf_entrada', sourceKey: 'sigla' });
 
+
+// --- ASSOCIAÇÕES AJUSTADAS PARA CHAVES PRIMÁRIAS COMPOSTAS ---
+
+// ESTAS SÃO AS LINHAS QUE ESTÃO DANDO ERRO. COMENTE-AS/REMVOA-AS.
 // Destinos.belongsTo(PerfilEstimadoTurista, {
-//     foreignKey: 'fk_perfil_estimado_turistas',
-//     targetKey: 'id_perfil_estimado_turistas'
-// });
-// PerfilEstimadoTurista.hasMany(Destinos, {
-//     foreignKey: 'fk_perfil_estimado_turistas',
-//     sourceKey: 'id_perfil_estimado_turistas'
+//     foreignKey: ['fk_perfil_estimado_turistas', 'fk_pais_origem', 'fk_uf_entrada'],
+//     targetKey: ['id_perfil_estimado_turistas', 'fk_pais_origem', 'fk_uf_entrada']
 // });
 
-// Destinos.belongsTo(UnidadeFederativaBrasil, {
-//     foreignKey: 'fk_uf_destino',
-//     targetKey: 'sigla'
+// PerfilEstimadoTurista.hasMany(Destinos, {
+//     foreignKey: ['fk_perfil_estimado_turistas', 'fk_pais_origem', 'fk_uf_entrada'],
+//     sourceKey: ['id_perfil_estimado_turistas', 'fk_pais_origem', 'fk_uf_entrada']
 // });
-// UnidadeFederativaBrasil.hasMany(Destinos, {
-//     foreignKey: 'fk_uf_destino',
-//     sourceKey: 'sigla'
-// });
+
+Destinos.belongsTo(UnidadeFederativaBrasil, {
+    foreignKey: 'fk_uf_destino',
+    targetKey: 'sigla'
+});
+
+//modificações
 
 const construirWhereClause = (req) => {
     const { mes, ano, pais } = req.query;
@@ -51,6 +59,108 @@ const nomesDosMeses = [
     'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
 ];
+
+
+// --- FUNÇÕES DE KPI PARA SAZONALIDADE ---
+
+exports.buscarDadosParaDashboard = async (req, res) => {
+    try {
+        const querySQL = `
+            SELECT
+                p.id_perfil_estimado_turistas,
+                p.ano,
+                p.mes,
+                p.quantidade_turistas,
+                d.permanencia_media,
+                uf_destino.nome AS nome_uf_destino,
+                uf_origem.nome AS nome_uf_origem_entrada,
+                pais.nome AS nome_pais_origem
+            FROM
+                perfil_estimado_turistas AS p
+            JOIN
+                destinos AS d ON p.id_perfil_estimado_turistas = d.fk_perfil_estimado_turistas
+                             AND p.fk_pais_origem = d.fk_pais_origem
+                             AND p.fk_uf_entrada = d.fk_uf_entrada
+            JOIN
+                unidade_federativa_brasil AS uf_destino ON d.fk_uf_destino = uf_destino.sigla
+            JOIN
+                unidade_federativa_brasil AS uf_origem ON p.fk_uf_entrada = uf_origem.sigla
+            JOIN
+                pais AS pais ON p.fk_pais_origem = pais.id_pais
+            WHERE
+                p.ano = 2023 -- Exemplo de filtro: adapte ou remova
+            ORDER BY p.ano, p.mes
+            LIMIT 100; -- Limite para não sobrecarregar em testes
+        `;
+
+        const [results, metadata] = await sequelize.query(querySQL);
+        console.log("Dados do dashboard (JOIN manual):", results);
+        return results;
+
+    } catch (error) {
+        console.error("Erro ao buscar dados do dashboard com JOIN manual:", error);
+        throw error;
+    }
+}
+
+exports.listarTopEstadosVisitadosSazonalidade = async (req, res) => {
+    try {
+        const { mes, ano, pais } = req.query; // Pega os filtros do frontend
+
+        // Construindo a cláusula WHERE dinamicamente para o SQL
+        let whereConditions = `WHERE 1=1`; // Começa com uma condição sempre verdadeira
+        const replacements = {}; // Objeto para armazenar os valores para substituição segura
+
+        if (mes) {
+            whereConditions += ` AND P.mes = :mes`;
+            replacements.mes = parseInt(mes, 10);
+        }
+        if (ano) {
+            whereConditions += ` AND P.ano = :ano`;
+            replacements.ano = parseInt(ano, 10);
+        }
+        if (pais) {
+            whereConditions += ` AND P.fk_pais_origem = :pais`;
+            replacements.pais = parseInt(pais, 10);
+        }
+
+        const querySQL = `
+            SELECT
+                UF.unidade_federativa AS unidade_federativa,
+                SUM(P.quantidade_turistas) AS total_turistas_uf
+            FROM
+                perfil_estimado_turistas AS P
+            JOIN
+                destinos AS D ON P.id_perfil_estimado_turistas = D.fk_perfil_estimado_turistas
+                             AND P.fk_pais_origem = D.fk_pais_origem
+                             AND P.fk_uf_entrada = D.fk_uf_entrada
+            JOIN
+                unidade_federativa_brasil AS UF ON D.fk_uf_destino = UF.sigla
+            ${whereConditions} -- Inclui as condições dinâmicas do WHERE
+            GROUP BY
+                UF.unidade_federativa
+            ORDER BY
+                total_turistas_uf DESC
+            LIMIT 3;
+        `;
+
+        const resultados = await sequelize.query(querySQL, {
+            replacements: replacements,
+            type: sequelize.QueryTypes.SELECT
+        });
+
+        // Mapeia os resultados para extrair APENAS o nome da UF
+        const topEstadosNomes = resultados.map(item => item.unidade_federativa);
+
+        // Envia apenas o array de strings
+        res.json(topEstadosNomes); // Isso enviaria ["São Paulo", "Rio de Janeiro", "Minas Gerais"]
+
+    } catch (error) {
+        console.error("Erro ao buscar top estados visitados para sazonalidade:", error);
+        res.status(500).json({ erro: "Erro interno ao buscar top estados visitados." });
+    }
+};
+
 
 // ====================================================================================
 // Funções para a dashboard do Perfil do Turista (perfilturista.js)
