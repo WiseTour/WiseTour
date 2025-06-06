@@ -1,6 +1,6 @@
 var usuarioModel = require("../models/usuarioModel");
 
-function autenticar(req, res) {
+/*function autenticar(req, res) {
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
 
@@ -34,7 +34,7 @@ function autenticar(req, res) {
                 res.status(500).json(erro.sqlMessage);
             });
     }
-}
+}*/
 
 function cadastrar(req, res) {
     var nome = req.body.nomeServer;
@@ -62,6 +62,6 @@ function cadastrar(req, res) {
 
 
 module.exports = {
-    autenticar,
+    // autenticar,
     cadastrar
 };

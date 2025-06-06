@@ -38,7 +38,7 @@ app.get("/estado", async (req, res) => {
 // /PEGA INFORMAÇÕES DO IP DO USUÁRIO PARA DESCOBRIR O ESTADO
 
 var indexRouter = require("./src/routes/index");
-var usuarioRouter = require("./src/routes/usuario");
+var usuarioRouter = require("./src/routes/usuarioRoute");
 var internalRoutes = require("./src/routes/internalRoutes");
 var sequelize = require('./src//database/sequelizeConfig');
 var graficoRouter = require("./src/routes/graficoRoute");
@@ -56,7 +56,7 @@ app.use("/internal", express.static(path.join(__dirname, "internal")));
 app.use(cors());
 
 app.use("/", indexRouter);
-app.use("/usuario", usuarioRouter);
+app.use("/usuarioRoute", usuarioRouter);
 app.use("/internalRoutes", internalRoutes);
 app.use("/grafico", graficoRouter);
 

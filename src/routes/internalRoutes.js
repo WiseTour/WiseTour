@@ -1,8 +1,7 @@
 var express = require("express");
 var router = express.Router();
 
-var internalController = require("../controllers/internalController");
-
+var internalController = require("../controllers/internalController2");
 
 router.post("/cadastrarEmpresa", function (req, res) {
     internalController.cadastrarEmpresa(req, res);

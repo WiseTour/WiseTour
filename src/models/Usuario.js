@@ -1,20 +1,12 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../database/sequelizeConfig');
-const Funcionario = require('./Funcionario');
+// const Funcionario = require('./Funcionario');
 
-const Usuario = sequelize.define('Usuario', {
+const Usuario = sequelize.define('usuario', {
   id_usuario: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
-  },
-  fk_funcionario: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: Funcionario,
-      key: 'id_funcionario'
-    }
   },
   email: {
     type: DataTypes.STRING(255),
@@ -33,19 +25,30 @@ const Usuario = sequelize.define('Usuario', {
     }
   }
 }, {
-  tableName: 'Usuario',
+  tableName: 'usuario',
   timestamps: false
 });
 
 // Associação (Usuário pertence a um Funcionário)
-Usuario.belongsTo(Funcionario, {
+/*Usuario.belongsTo(Funcionario, {
   foreignKey: 'fk_funcionario',
   as: 'funcionario'
 });
+*/
 
-Funcionario.hasOne(Usuario, {
+/*Funcionario.hasOne(Usuario, {
   foreignKey: 'fk_funcionario',
   as: 'usuario'
 });
+
+  fk_funcionario: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: Funcionario,
+      key: 'id_funcionario'
+    }
+  },
+*/
 
 module.exports = Usuario;

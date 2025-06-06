@@ -26,7 +26,7 @@ async function autenticar(req, res) {
   const { emailServer, senhaServer } = req.body;
 
   if (!emailServer || !senhaServer) {
-    return res.status(400).send("Email ou senha não fornecidos");
+    return res.status(400).send("Ema  il ou senha não fornecidos");
   }
 
   try {
