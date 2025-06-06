@@ -1,7 +1,6 @@
 var internalModel = require("../models/internalModel");
 
 function cadastrarEmpresa(req, res) {
-    console.log ("cheguei cadastrar empresa")
     var cnpj = req.body.cnpjServer;
     var nomeFantasia = req.body.nomeFantasiaServer;
     var razaoSocial = req.body.razaoSocialServer;
@@ -66,8 +65,6 @@ function cadastrarEmpresa(req, res) {
 }
 
 function editarEnderecoEmpresa(req, res) {
-    console.log("cheguei cadastrar empresa");
-
     var cnpj = req.body.cnpjServer;
     var cep = req.body.cepServer;
     var tipoLogradouro = req.body.tipoLogradouroServer;
@@ -129,42 +126,6 @@ function excluirEmpresa(req, res) {
     }
 }
 
-function editarInformacoesEmpresariaisEmpresa(req, res) {
-    var cnpj = req.body.cnpjServer;
-    var cnpjNovo = req.body.cnpjNovoServer;
-    var nomeFantasia = req.body.nomeFantasiaServer;
-    var razaoSocial = req.body.razaoSocialServer;
-
-    if (cnpj == undefined) {
-        res.status(400).send("O CNPJ está undefined!");
-    } else if (cnpjNovo == undefined) {
-        res.status(400).send("O novo CNPJ está undefined!");
-    } else if (nomeFantasia == undefined) {
-        res.status(400).send("O nome fantasia está undefined!");
-    } else if (razaoSocial == undefined) {
-        res.status(400).send("A razão social está undefined!");
-    } else {
-        internalModel.editarInformacoesEmpresariaisEmpresa(
-            cnpj,
-            cnpjNovo,
-            nomeFantasia,
-            razaoSocial
-        )
-        .then(function (resultado) {
-            if (resultado.affectedRows === 0) {
-                res.status(404).send("Nenhuma empresa foi encontrada com o CNPJ informado.");
-            } else {
-                res.json({ mensagem: "Informações empresariais atualizadas com sucesso!" });
-            }
-        })
-        .catch(function (erro) {
-            console.log(erro);
-            console.log("\nHouve um erro ao realizar a alteração das informações empresariais! Erro: ", erro.sqlMessage);
-            res.status(500).json(erro.sqlMessage);
-        });
-    }    
-}
-
 function cadastrarFuncionario(req, res) {
     var nome = req.body.nomeServer;
     var cargo = req.body.cargoServer;
@@ -205,13 +166,10 @@ function cadastrarFuncionario(req, res) {
     }
 }
 
-
-
-
 function cadastrarUsuario(req, res) {
-    var email = req.body.emailServer;
-    var senha = req.body.senhaServer;
-    var permissao = req.body.permissaoServer;
+    var email = req.body.emailUsuarioServer;
+    var senha = req.body.senhaUsuarioServer;
+    var permissao = req.body.permissaoUsuarioServer;
 
     if (email == undefined) {
         res.status(400).send("O email está undefined!");
@@ -236,6 +194,187 @@ function cadastrarUsuario(req, res) {
     }
 }
 
+function editarUsuario(req, res){
+    var emailUsuario = req.body.emailUsuarioServer;
+    var emailNovoUsuario = req.body.emailNovoUsuarioServer;
+    var idFuncionario = req.body.idFuncionarioServer;
+    var senha = req.body.senhaUsuarioServer;
+    var permissao = req.body.permissaoUsuarioServer;
+    
+    if (!emailUsuario || !emailNovoUsuario || !idFuncionario || !senha || !permissao)
+        res.status(400).send("Campos obrigatórios não foram preenchidos!"); 
+    else
+    {
+         internalModel.editarUsuario(emailUsuario, emailNovoUsuario, idFuncionario, senha, permissao).then(function (resultado) {
+            if (resultado.affectedRows === 0) {
+                res.status(404).send("Nenhum usuário encontrado.");
+            } else {
+                res.status(200).json({ mensagem: "Funcionário atualizado com sucesso!" });
+            }
+        })
+        .catch(function (erro) {
+            console.log(erro);
+            console.log("Erro do funcionário:", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+        });
+    }
+}
+
+
+function editarFuncionario(req, res) {
+    var nomeFuncionario = req.body.nomeServer;
+    var nomeNovoFuncionario = req.body.nomeNovoServer;
+    var cargo = req.body.cargoServer;
+    var telefone = req.body.telefoneServer;
+    var cnpj = req.body.cnpjEmpresaServer;
+    var idInformacao = req.body.idInformacaoServer;
+    var sigla = req.body.siglaUfServer;
+
+    if (!nomeNovoFuncionario || !nomeFuncionario || !cargo || !telefone || !cnpj || !idInformacao || !sigla)
+        res.status(400).send("Campos obrigatórios não foram preenchidos!"); 
+    else 
+    {
+        internalModel.editarFuncionario(nomeFuncionario, nomeNovoFuncionario, cargo, telefone, cnpj, idInformacao, sigla).then(function (resultado) {
+            if (resultado.affectedRows === 0) {
+                res.status(404).send("Nenhum funcionário encontrado.");
+            } else {
+                res.status(200).json({ mensagem: "Funcionário atualizado com sucesso!" });
+            }
+        })
+        .catch(function (erro) {
+            console.log(erro);
+            console.log("Erro do funcionário:", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+        });
+    }
+}
+
+function editarEnderecoEmpresa(req, res) {
+    var cnpj = req.body.cnpjServer;
+    var cep = req.body.cepServer;
+    var tipoLogradouro = req.body.tipoLogradouroServer;
+    var nomeLogradouro = req.body.nomeLogradouroServer;
+    var numero = req.body.numeroServer;
+    var complemento = req.body.complementoServer;
+    var bairro = req.body.bairroServer;
+    var cidade = req.body.cidadeServer;
+    var siglaUf = req.body.siglaUfServer;
+
+    if (!cnpj || !cep || !tipoLogradouro || !nomeLogradouro || !numero || !complemento || !bairro || !cidade || !siglaUf) {
+        res.status(400).send("Campos obrigatórios não foram preenchidos!");
+    } else {
+        internalModel.editarEnderecoEmpresa(
+            cnpj,
+            cep,
+            tipoLogradouro,
+            nomeLogradouro,
+            numero,
+            complemento,
+            bairro,
+            cidade,
+            siglaUf
+        )
+        .then(function (resultado) {
+            if (resultado.affectedRows === 0) {
+                res.status(404).send("Nenhuma empresa foi encontrada com o CNPJ informado.");
+            } else {
+                res.json({ mensagem: "Endereço atualizado com sucesso!" });
+            }
+        })
+        .catch(function (erro) {
+            console.log(erro);
+            console.log("Erro ao atualizar endereço da empresa:", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+        });
+    }
+}
+
+function editarInformacoesEmpresariaisEmpresa(req, res) {
+    var cnpj = req.body.cnpjServer;
+    var cnpjNovo = req.body.cnpjNovoServer;
+    var nomeFantasia = req.body.nomeFantasiaServer;
+    var razaoSocial = req.body.razaoSocialServer;
+
+    if (cnpj == undefined) {
+        res.status(400).send("O CNPJ está undefined!");
+    } else if (cnpjNovo == undefined) {
+        res.status(400).send("O novo CNPJ está undefined!");
+    } else if (nomeFantasia == undefined) {
+        res.status(400).send("O nome fantasia está undefined!");
+    } else if (razaoSocial == undefined) {
+        res.status(400).send("A razão social está undefined!");
+    } else {
+        internalModel.editarInformacoesEmpresariaisEmpresa(
+            cnpj,
+            cnpjNovo,
+            nomeFantasia,
+            razaoSocial
+        )
+        .then(function (resultado) {
+            if (resultado.affectedRows === 0) {
+                res.status(404).send("Nenhuma empresa foi encontrada com o CNPJ informado.");
+            } else {
+                res.json({ mensagem: "Informações empresariais atualizadas com sucesso!" });
+            }
+        })
+        .catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao realizar a alteração das informações empresariais! Erro: ", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+        });
+    }    
+}
+
+function excluirFuncionario(req, res){
+    var nomeFuncionario = req.body.nomeFuncionarioServer
+    var cnpj = req.body.cnpjEmpresaServer;
+    
+    if (nomeFuncionario == undefined)
+    {
+        res.status(400).send("O nome do funcionário está undefined!");
+    } else if (cnpj == undefined) {
+        res.status(400).send("O CNPJ está undefined!");
+    } else {
+        internalModel.excluirFuncionario(nomeFuncionario, cnpj)
+        .then(function (resultado) {
+            if (resultado.affectedRows === 0) {
+                res.status(404).send("Nenhum funcionário foi encontrado.");
+            } else {
+                res.json({ mensagem: "Funcionário excluído com sucesso!" });
+            }
+        })
+        .catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao realizar a exclusão da funcionário! Erro: ", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+        });
+    }
+}
+
+function excluirUsuario(req, res){
+    var email = req.body.emailUsuarioServer
+    
+    if (email == undefined)
+    {
+        res.status(400).send("O email do usuário está undefined!");
+    } else {
+        internalModel.excluirUsuario(email)
+        .then(function (resultado) {
+            if (resultado.affectedRows === 0) {
+                res.status(404).send("Nenhum usuário foi encontrado.");
+            } else {
+                res.json({ mensagem: "Usuário excluído com sucesso!" });
+            }
+        })
+        .catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao realizar a exclusão do usuário! Erro: ", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+        });
+    }
+}
+
+
 
 module.exports = {
     cadastrarEmpresa,
@@ -243,6 +382,9 @@ module.exports = {
     editarInformacoesEmpresariaisEmpresa,
     editarEnderecoEmpresa,
     cadastrarFuncionario,
-    cadastrarUsuario
-    
+    cadastrarUsuario,
+    editarFuncionario,
+    editarUsuario,
+    excluirFuncionario,
+    excluirUsuario
 };
