@@ -1,4 +1,4 @@
-var database = require("../database/config")
+/*var database = require("../database/config")
 
 function cadastrarEmpresa(cnpj, idInformacaoCadastro, idEndereco, siglaUf) {
     console.log("ACESSEI O MODEL - cadastrarEmpresa");
@@ -203,3 +203,4 @@ module.exports = {
     excluirFuncionario,
     excluirUsuario
 };
+*/
