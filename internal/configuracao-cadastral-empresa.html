@@ -15,6 +15,8 @@
   <script src="https://kit.fontawesome.com/041dbc8823.js" crossorigin="anonymous"></script>
   <script src="/common/js/nav-bar.js"></script>
   <script src="js/cadastroEmpresa.js"></script>
+  <script src="js/cadastroEnderecoEmpresa.js"></script>
+  <script src="js/cadastroEmpresaCompleta.js"></script>
   <script src="js/excluirEmpresa.js"></script>
   <script src="js/editarEmpresa.js"></script>
 
@@ -55,6 +57,9 @@
             <div class="container">
               <input id="informacao_cadastro_id_input" type="text" placeholder="| Número de registro de contato">
             </div>
+             <div class="container">
+              <input id="endereco_id_input" type="text" placeholder="| Número de registro do endereco">
+            </div>
             <div class="container">
               <input id="empresa_cnpj_input" type="text" placeholder="| CNPJ">
             </div>
@@ -89,7 +94,7 @@
               <input id="empresa_sigla_uf_input" type="text" placeholder="| Sigla UF">
             </div>
             <div class="botoes">
-              <button class="btn" onclick="cadastrarEmpresa()" type="button">CADASTRAR</button>
+              <button class="btn" onclick="cadastrarEmpresaCompleta()" type="button">CADASTRAR</button>
             </div>
           </form>
         </div>

@@ -4,10 +4,9 @@ const { sequelize } = require('../database/sequelizeConfig');
 const Empresa = sequelize.define('empresa', {
   cnpj: {
     type: DataTypes.STRING(14),
-    autoIncrement: true,
     primaryKey: true,
   },
-  nome_fanatasia: {
+  nome_fantasia: {
     type: DataTypes.STRING(255),
     allowNull: false,
   },
@@ -21,7 +20,7 @@ const Empresa = sequelize.define('empresa', {
   },
   fk_endereco: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
   },
   fk_uf_sigla: {
     type: DataTypes.CHAR(2),

@@ -1,6 +1,83 @@
 var internalModel = require("../models/internalModel");
+async function cadastrarEnderecoEmpresa(req, res) {
+    const {
+        nomeFantasiaServer,
+        razaoSocialServer,
+        cepServer,
+        tipoLogradouroServer,
+        nomeLogradouroServer,
+        numeroServer,
+        complementoServer,
+        bairroServer,
+        cidadeServer,
+        siglaUfServer
+    } = req.body;
 
-function cadastrarEmpresa(req, res) {
+    if (!nomeFantasiaServer || !razaoSocialServer || !cepServer || !tipoLogradouroServer ||
+        !nomeLogradouroServer || !numeroServer || complementoServer === undefined ||
+        !bairroServer || !cidadeServer || !siglaUfServer) {
+        return res.status(400).send("Um ou mais campos de endereço estão undefined!");
+    }
+
+    try {
+        const resultado = await internalModel.cadastrarEnderecoEmpresa(
+            nomeFantasiaServer,
+            razaoSocialServer,
+            cepServer,
+            tipoLogradouroServer,
+            nomeLogradouroServer,
+            numeroServer,
+            complementoServer,
+            bairroServer,
+            cidadeServer,
+            siglaUfServer
+        );
+
+        const idEndereco = resultado.insertId;
+
+        res.status(200).json({
+            mensagem: "Endereço cadastrado com sucesso!",
+            idEndereco,
+            siglaUf: siglaUfServer
+        });
+    } catch (erro) {
+        console.error("Erro ao cadastrar endereço:", erro);
+        res.status(500).json({ erro: erro.sqlMessage || erro.message });
+    }
+}
+
+async function cadastrarEmpresa(req, res) {
+    const {
+        cnpjServer,
+        idInformacaoCadastroServer,
+        idEndereco,
+        siglaUfServer
+    } = req.body;
+
+    if (!cnpjServer || !idInformacaoCadastroServer || !idEndereco || !siglaUfServer) {
+        return res.status(400).send("Um ou mais campos de empresa estão undefined!");
+    }
+
+    try {
+        const resultado = await internalModel.cadastrarEmpresa(
+            cnpjServer,
+            idInformacaoCadastroServer,
+            idEndereco,
+            siglaUfServer
+        );
+
+        res.status(200).json({
+            mensagem: "Empresa cadastrada com sucesso!",
+            resultado
+        });
+    } catch (erro) {
+        console.error("Erro ao cadastrar empresa:", erro);
+        res.status(500).json({ erro: erro.sqlMessage || erro.message });
+    }
+}
+
+
+/*function cadastrarEmpresa(req, res) {
     var cnpj = req.body.cnpjServer;
     var nomeFantasia = req.body.nomeFantasiaServer;
     var razaoSocial = req.body.razaoSocialServer;
@@ -63,7 +140,7 @@ function cadastrarEmpresa(req, res) {
         });
     }    
 }
-
+*/
 function editarEnderecoEmpresa(req, res) {
     var cnpj = req.body.cnpjServer;
     var cep = req.body.cepServer;
@@ -378,6 +455,7 @@ function excluirUsuario(req, res){
 
 module.exports = {
     cadastrarEmpresa,
+    cadastrarEnderecoEmpresa,
     excluirEmpresa,
     editarInformacoesEmpresariaisEmpresa,
     editarEnderecoEmpresa,

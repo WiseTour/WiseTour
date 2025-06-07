@@ -115,4 +115,5 @@ module.exports = {
   HistoricoContato,
   Empresa,
   Funcionario,
+  Endereco
 };

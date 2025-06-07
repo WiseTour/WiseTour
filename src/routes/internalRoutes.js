@@ -8,6 +8,10 @@ router.post("/cadastrarEmpresa", function (req, res) {
     internalController.cadastrarEmpresa(req, res);
 })
 
+router.post("/cadastrarEnderecoEmpresa", function(req, res){
+    internalController.cadastrarEnderecoEmpresa(req, res);
+})
+
 router.post("/excluirEmpresa", function (req, res) {
     internalController.excluirEmpresa(req, res);
 })

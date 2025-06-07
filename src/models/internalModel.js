@@ -1,39 +1,43 @@
 var database = require("../database/config")
 
-function cadastrarEmpresa(
-    cnpj,
-    nomeFantasia,
-    razaoSocial,
-    idInformacaoCadastro,
-    cep,
-    tipoLogradouro,
-    nomeLogradouro,
-    numero,
-    complemento,
-    bairro,
-    cidade,
-    siglaUf
-) {
-    console.log("ACESSEI O EMPRESA MODEL");
+function cadastrarEmpresa(cnpj, idInformacaoCadastro, idEndereco, siglaUf) {
+    console.log("ACESSEI O MODEL - cadastrarEmpresa");
 
-    var instrucaoSql = `
-        INSERT INTO Empresa (
-            cnpj, nome_fantasia, razao_social, fk_informacao_contato_cadastro, cep, tipo_logradouro,
+    const instrucaoSql = `
+        INSERT INTO empresa (
+            cnpj, fk_informacao_contato_cadastro, fk_endereco, fk_uf_sigla
+        ) VALUES (
+            '${cnpj}', '${idInformacaoCadastro}', '${idEndereco}', '${siglaUf}'
+        );
+    `;
+
+    console.log("Executando a instrução SQL (empresa):\n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+
+function cadastrarEmpresaEndereco(nomeFantasia, razaoSocial, cep, tipoLogradouro, nomeLogradouro, numero, complemento, bairro, cidade, siglaUf) {
+    console.log("ACESSEI O MODEL - cadastrarEmpresaEndereco");
+
+    const instrucaoSql = `
+        INSERT INTO endereco (
+            nome_fantasia, razao_social, cep, tipo_logradouro,
             nome_logradouro, numero, complemento, bairro, cidade, fk_uf_sigla
         ) VALUES (
-            '${cnpj}', '${nomeFantasia}', '${razaoSocial}', '${idInformacaoCadastro}', '${cep}', '${tipoLogradouro}',
+            '${nomeFantasia}', '${razaoSocial}', '${cep}', '${tipoLogradouro}',
             '${nomeLogradouro}', '${numero}', '${complemento}', '${bairro}', '${cidade}', '${siglaUf}'
         );
     `;
-    console.log("Executando a instrução SQL:\n" + instrucaoSql);
-    return database.executar(instrucaoSql);
+    
+    console.log("Executando a instrução SQL (endereço):\n" + instrucaoSql);
+    return database.executar(instrucaoSql); // Retorna um objeto com insertId
 }
 
 function excluirEmpresa(cnpj) {
     console.log("ACESSEI O RESPONSÁVEL MODEL");
 
     var instrucaoSql = `
-        DELETE FROM Empresa WHERE cnpj = '${cnpj}';
+        DELETE FROM empresa WHERE cnpj = '${cnpj}';
     `;
 
     console.log("Executando a instrução SQL:\n" + instrucaoSql);
@@ -51,7 +55,7 @@ function cadastrarFuncionario(
     console.log("ACESSEI O RESPONSÁVEL MODEL");
 
     var instrucaoSql = `
-        INSERT INTO Funcionario (
+        INSERT INTO funcionario (
             nome, cargo, telefone, fk_cnpj, fk_informacao_contato_cadastro, fk_uf_sigla
         ) VALUES (
             '${nome}', '${cargo}', '${telefone}', '${cnpjEmpresa}', '${idInformacao}', '${siglaUf}'
@@ -65,7 +69,7 @@ function cadastrarUsuario(email, senha, permissao) {
     console.log("ACESSEI O USUÁRIO MODEL");
 
     var instrucaoSql = `
-        INSERT INTO Usuario (
+        INSERT INTO usuario (
             email, senha, permissao
         ) VALUES (
             '${email}', '${senha}', '${permissao}'
@@ -90,7 +94,7 @@ function editarEnderecoEmpresa(
     console.log("ACESSEI O MODEL para editar endereço da empresa!");
 
     const instrucaoSql = `
-        UPDATE Empresa SET
+        UPDATE endereco SET
             cep = '${cep}',
             tipo_logradouro = '${tipoLogradouro}',
             nome_logradouro = '${nomeLogradouro}',
@@ -115,7 +119,7 @@ function editarInformacoesEmpresariaisEmpresa(
     console.log("ACESSEI O EMPRESA MODEL - editarEmpresa");
 
     var instrucaoSql = `
-        UPDATE Empresa 
+        UPDATE empresa 
         SET 
             cnpj = '${cnpjNovo}',
             nome_fantasia = '${nomeFantasia}',
@@ -133,7 +137,7 @@ function editarFuncionario(nomeFuncionario,nomeNovoFuncionario, cargo, telefone,
     console.log("ACESSEI O MODEL para editar o funcionário!");
 
     const instrucaoSql = `
-        UPDATE Funcionario SET
+        UPDATE funcionario SET
             nome = '${nomeNovoFuncionario}',
             cargo = '${cargo}',
             telefone = '${telefone}',
@@ -151,7 +155,7 @@ function editarUsuario(emailUsuario, emailNovoUsuario, idFuncionario, senha, per
     console.log("ACESSEI O MODEL para editar endereço do usuário!");
 
     const instrucaoSql = `
-        UPDATE Usuario SET
+        UPDATE usuario SET
             email = '${emailNovoUsuario}',
             fk_funcionario = ${idFuncionario},
             senha = '${senha}',
@@ -167,7 +171,7 @@ function excluirFuncionario(nomeFuncionario, cnpj)
     console.log("ACESSEI O RESPONSÁVEL MODEL");
 
     var instrucaoSql = `
-        DELETE FROM Funcionario WHERE nome = '${nomeFuncionario}' AND fk_cnpj = '${cnpj}';
+        DELETE FROM funcionario WHERE nome = '${nomeFuncionario}' AND fk_cnpj = '${cnpj}';
     `;
 
     console.log("Executando a instrução SQL:\n" + instrucaoSql);
@@ -179,7 +183,7 @@ function excluirUsuario(email)
     console.log("ACESSEI O RESPONSÁVEL MODEL");
 
     var instrucaoSql = `
-        DELETE FROM Usuario WHERE email = '${email}';
+        DELETE FROM usuario WHERE email = '${email}';
     `;
     console.log("Executando a instrução SQL:\n" + instrucaoSql);
     return database.executar(instrucaoSql);
@@ -188,6 +192,7 @@ function excluirUsuario(email)
 
 module.exports = {
     cadastrarEmpresa,
+    cadastrarEmpresaEndereco,
     excluirEmpresa,
     editarInformacoesEmpresariaisEmpresa,
     editarEnderecoEmpresa,

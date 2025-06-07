@@ -43,6 +43,8 @@ var funcionarioRoutes = require('./src/routes/funcionario');
 var preferenciaVisualizacaoDashboardRoutes = require('./src/routes/preferenciaVisualizacaoDashboard');
 var telaDashboardRoutes = require("./src/routes/telaDashboardRoutes");
 var configuracaoSlackRoutes = require("./src/routes/configuracaoSlack");
+var empresaRouter = require("./src/routes/empresaRoutes");
+var enderecoRouter= require("./src/routes/enderecoRoutes");
 
 var sequelize = require('./src/database/sequelizeConfig');
 
@@ -65,8 +67,9 @@ app.use("/preferenciaVisualizacaoDashboard", preferenciaVisualizacaoDashboardRou
 app.use("/telaDashboard", telaDashboardRoutes);
 app.use("/internalRoutes", internalRoutes);
 app.use("/configuracaoSlackRoutes", configuracaoSlackRoutes)
-
-
+app.use("/empresa", empresaRouter);
+app.use("/endereco", enderecoRouter);
+  
 async function connectDB() {
   try {
     await sequelize.authenticate();
