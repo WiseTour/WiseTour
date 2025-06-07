@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 
-const { Usuario, Funcionario } = require("../models");
+const { Usuario, Funcionario, InformacaoContatoCadastro } = require("../models");
 
 async function autenticar(req, res) {
   const { emailServer, senhaServer } = req.body;
@@ -25,8 +25,100 @@ async function autenticar(req, res) {
       res.status(403).send("Email e/ou senha inválido(s)");
     }
   } catch (erro) {
-    console.error("Erro ao autenticar:", erro); // veja o erro detalhado
+    console.error("Erro ao autenticar:", erro); 
     res.status(500).send("Erro no servidor ao tentar autenticar.");
+  }
+}
+
+async function cadastrarInfoContato(req, res) {
+  const { nomeServer, emailServer, numeroUsuarioServer } = req.body;
+
+
+  if (!nomeServer || !emailServer || !numeroUsuarioServer) {
+    return res.status(400).json({
+      mensagem: "Todos os campos são obrigatórios (nome, email, número)"
+    });
+  }
+
+  try {
+
+    const usuarioExistente = await InformacaoContatoCadastro.findOne({
+      where: { email: emailServer }
+    });
+
+    if (usuarioExistente) {
+      return res.status(400).json({
+        mensagem: "Este email já está cadastrado"
+      });
+    }
+
+
+    const novoUsuario = await InformacaoContatoCadastro.create({
+      nome: nomeServer,
+      email: emailServer,
+      telefone: numeroUsuarioServer
+
+    });
+
+
+    const usuarioResponse = novoUsuario.get({ plain: true });
+    if (usuarioResponse.senha) {
+      delete usuarioResponse.senha;
+    }
+
+    res.status(201).json(usuarioResponse);
+
+  } catch (erro) {
+    console.error("Erro ao cadastrar usuário:", erro);
+    res.status(500).json({
+      mensagem: "Erro interno no servidor ao tentar cadastrar"
+    });
+  }
+}
+
+async function cadastrarFuncionario(req, res) {
+  const { nomeServer, cargoServer, numeroUsuarioServer, cnpjServer, idInfoContato, siglaServer  } = req.body;
+
+
+  if (!nomeServer || !emailServer || !numeroUsuarioServer) {
+    return res.status(400).json({
+      mensagem: "Todos os campos são obrigatórios (nome, email, número)"
+    });
+  }
+
+  try {
+
+    const usuarioExistente = await Funcionario.findOne({
+      where: { email: emailServer }
+    });
+
+    if (usuarioExistente) {
+      return res.status(400).json({
+        mensagem: "Este email já está cadastrado"
+      });
+    }
+
+
+    const novoUsuario = await InformacaoContatoCadastro.create({
+      nome: nomeServer,
+      email: emailServer,
+      telefone: numeroUsuarioServer
+
+    });
+
+
+    const usuarioResponse = novoUsuario.get({ plain: true });
+    if (usuarioResponse.senha) {
+      delete usuarioResponse.senha;
+    }
+
+    res.status(201).json(usuarioResponse);
+
+  } catch (erro) {
+    console.error("Erro ao cadastrar usuário:", erro);
+    res.status(500).json({
+      mensagem: "Erro interno no servidor ao tentar cadastrar"
+    });
   }
 }
 
@@ -75,12 +167,12 @@ async function buscarSenhaUsuarioPorId(req, res) {
 }
 
 
-// Alterar informações do usuário e funcionário vinculado
+
 const alterarInformacoesUsuario = async (req, res) => {
   const { id_usuario, id_funcionario, nome, cargo, telefone, email } = req.body;
 
   try {
-    // Verifica se o usuário existe
+
     const usuario = await Usuario.findOne({
       where: { id_usuario },
       include: [
@@ -94,12 +186,12 @@ const alterarInformacoesUsuario = async (req, res) => {
       return res.status(404).json({ message: "Usuário não encontrado" });
     }
 
-    // Verifica se o email já está cadastrado por outro usuário
+
     if (email) {
       const emailExistente = await Usuario.findOne({
         where: {
           email,
-          id_usuario: { [Op.ne]: id_usuario }, // outro usuário com mesmo email?
+          id_usuario: { [Op.ne]: id_usuario }, 
         },
       });
 
@@ -112,11 +204,9 @@ const alterarInformacoesUsuario = async (req, res) => {
       }
     }
 
-    // Atualiza os dados do usuário
+
     await Usuario.update({ email }, { where: { id_usuario } });
 
-    // Atualiza os dados do funcionário vinculado
-    // Considerando que usuário pode ter mais de um funcionário, atualizamos o primeiro encontrado
     if (usuario.funcionario) {
        console.log("Atualizando dados do funcionário.");
       const funcionarioId = usuario.funcionario.id_funcionario;
@@ -125,7 +215,7 @@ const alterarInformacoesUsuario = async (req, res) => {
         { where: { id_funcionario: funcionarioId } }
       );
     } else {
-      // Se não tem funcionário vinculado, opcional: criar ou informar
+
       console.log("Usuário não tem funcionário vinculado para atualizar.");
     }
 
@@ -150,7 +240,6 @@ async function alterarSenhaUsuario(req, res) {
       return res.status(404).json({ mensagem: "Usuário não encontrado" });
     }
 
-    // Atualiza a senha
     usuario.senha = senha;
     await usuario.save();
 
@@ -168,4 +257,5 @@ module.exports = {
   autenticar,
   alterarInformacoesUsuario,
   alterarSenhaUsuario,
+  cadastrarInfoContato,
 };

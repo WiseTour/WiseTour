@@ -37,10 +37,39 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         atualizarTabela();
+        cadastrarFuncionario(cadastrarInfoContato(usuario))
         formUsuario.reset();
         formCadastro.style.display = "none";
         editandoIndex = null;
     });
+
+    function cadastrarInfoContato(usuario) {
+        fetch("/usuario/cadastrar_info_contato", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                nomeServer: usuario.nome,
+                emailServer: usuario.email,
+                numeroUsuarioServer: usuario.telefone,
+            }),
+        })
+            .then(function (resposta) {
+                console.log("resposta: ", resposta);
+
+                if (resposta.ok) {
+                    return resposta.json()
+                } else {
+                    throw "Houve um erro ao tentar realizar o cadastro!";
+                }
+            })
+            .catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
+        return false;
+    }
+
 
     function atualizarTabela() {
         corpoTabela.innerHTML = "";

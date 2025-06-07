@@ -1,30 +1,43 @@
+// src/controllers/funcionario.js
 const Funcionario = require('../models/Funcionario');
 const Usuario = require('../models/Usuario');
 
 const getFuncionarioByFkUsuario = async (req, res) => {
   try {
     const { fkUsuario } = req.params;
+    console.log('Buscando funcionário para fkUsuario:', fkUsuario);
 
     const funcionario = await Funcionario.findOne({
       where: { fk_usuario: fkUsuario },
-      include: {
+      include: [{
         model: Usuario,
-        as: 'usuario', // mesma alias usada no belongsTo
-        attributes: ['id_usuario', 'email', 'permissao'] // ajuste os campos que quiser trazer do usuário
-      }
+        as: 'usuario',
+        attributes: ['id_usuario', 'email', 'permissao']
+      }]
     });
 
     if (!funcionario) {
-      return res.status(404).json({ message: 'Funcionário não encontrado para o usuário informado.' });
+      console.log('Nenhum funcionário encontrado para fkUsuario:', fkUsuario);
+      return res.status(404).json({ 
+        success: false,
+        message: 'Funcionário não encontrado.' 
+      });
     }
 
-    res.json(funcionario);
+    console.log('Funcionário encontrado:', JSON.stringify(funcionario, null, 2));
+    res.json({
+      success: true,
+      data: funcionario
+    });
   } catch (error) {
-    console.error('Erro ao buscar funcionário por fkUsuario:', error);
-    res.status(500).json({ message: 'Erro no servidor.' });
+    console.error('Erro ao buscar funcionário:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Erro no servidor.',
+      error: error.message 
+    });
   }
 };
-
 
 module.exports = {
   getFuncionarioByFkUsuario
