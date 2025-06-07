@@ -4,7 +4,7 @@ const {
 } = require("../models");
 
 async function buscarPreferenciasUsuario(req, res) {
-  const { id_usuario } = req.params;
+  const { id_usuario } = req.query;
 
   console.log("id_usuario:" + id_usuario);
   try {

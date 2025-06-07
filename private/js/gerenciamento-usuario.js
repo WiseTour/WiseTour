@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Buscar e preencher dados do usuário
   const usuario = JSON.parse(localStorage.getItem("usuario"));
   if (usuario) {
-    fetch(`/usuario/${usuario.id}`)
+    fetch(`/usuario/${usuario.id_usuario}`)
       .then((response) => {
         if (!response.ok) throw new Error("Erro ao buscar usuário");
         return response.json();
@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Buscar e preencher dados de senha do usuário
   if (usuario) {
-    fetch(`/usuario/${usuario.id}/senha`)
+    fetch(`/usuario/${usuario.id_usuario}/senha`)
       .then((response) => {
         if (!response.ok) throw new Error("Erro ao buscar dados de senha");
         return response.json();
@@ -165,13 +165,13 @@ function preencherCamposGerenciamentoSenha(data, senha) {
 function alterarInformacoesUsuario() {
   const usuario = JSON.parse(sessionStorage.getItem("usuario"));
 
-  if (!usuario || !usuario.id_usuario) {
+  if (!usuario || !usuario.id_usuario_usuario) {
     alert("Usuário não encontrado.");
     return;
   }
 
   const informacoes = {
-    id_usuario: usuario.id_usuario,
+    id_usuario: usuario.id_usuario_usuario,
     id_funcionario: usuario.funcionario.id_funcionario,
     nome: document.getElementById("nome").value,
     cargo: document.getElementById("funcao").value,
