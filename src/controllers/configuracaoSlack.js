@@ -46,7 +46,7 @@ async function atualizarConfiguracaoSlack(req, res) {
 
     await ConfiguracaoSlack.update(
       {
-        canal_padrao: configuracao_slack.canal_padrao,
+        webhook_canal_padrao: configuracao_slack.canal_padrao,
         ativo: configuracao_slack.ativo,
       },
       {

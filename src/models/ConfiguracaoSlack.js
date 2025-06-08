@@ -11,7 +11,7 @@ const ConfiguracaoSlack = sequelize.define('configuracao_slack', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  canal_padrao: {
+  webhook_canal_padrao: {
     type: DataTypes.STRING(255),
     allowNull: true,
   },

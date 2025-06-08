@@ -44,7 +44,7 @@ var preferenciaVisualizacaoDashboardRoutes = require('./src/routes/preferenciaVi
 var telaDashboardRoutes = require("./src/routes/telaDashboardRoutes");
 var configuracaoSlackRoutes = require("./src/routes/configuracaoSlack");
 
-var sequelize = require('./src/database/sequelizeConfig');
+const { sequelize } = require('./src/database/sequelizeConfig');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

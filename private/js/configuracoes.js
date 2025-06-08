@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("ativar-slack").checked =
           config.ativo === "sim";
         document.getElementById("canal_padrao").value =
-          config.canal_padrao || "";
+          config.webhook_canal_padrao || "";
 
         const etapas = [
           "inicializacao",
