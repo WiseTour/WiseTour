@@ -82,11 +82,8 @@ body {
 
 main {
     background-color: #d6d1d1;
-    min-height: 50vw
-
-;
-    display: flex
-;
+    min-height: 50vw;
+    display: flex;
     flex-direction: column;
     align-items: center;
     width: 100vw;
@@ -95,8 +92,7 @@ main {
 }
 
 main .panorama_geral_linha_1 {
-    display: flex
-;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     height: 60px;
@@ -167,8 +163,7 @@ select:hover {
 
 .coluna-kpis {
     width: 95%;
-    display: flex
-;
+    display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
     /* gap: 10px; */
@@ -295,6 +290,9 @@ select:hover {
     margin-right: -20px;
     margin-top: -20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .titulo-grafico-container .titulo-grafico {
@@ -302,7 +300,6 @@ select:hover {
     font-size: 13px;
     font-weight: bold;
     margin-bottom: 0;
-    text-align: center;
 }
 
 .grafico-planejamento-em-cima {
@@ -353,13 +350,36 @@ canvas {
 
 .icon_container img:hover {
     transform: scale(1.1);
-    
+
 }
 
 #icon-not {
-    width: 25px; 
-    height: auto; 
-  }
+    width: 25px;
+    height: auto;
+}
+
+.sort-buttons {
+    display: flex;
+    gap: 3px;
+    margin-left: 10px;
+}
+
+.sort-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sort-btn:hover {
+    background-color: #d4c89c;
+}
 
 
 
