@@ -16,20 +16,6 @@ Pais.hasMany(PerfilEstimadoTurista, { foreignKey: 'fk_pais_origem', sourceKey: '
 PerfilEstimadoTurista.belongsTo(UnidadeFederativaBrasil, { foreignKey: 'fk_uf_entrada', targetKey: 'sigla' });
 UnidadeFederativaBrasil.hasMany(PerfilEstimadoTurista, { foreignKey: 'fk_uf_entrada', sourceKey: 'sigla' });
 
-
-// --- ASSOCIAÇÕES AJUSTADAS PARA CHAVES PRIMÁRIAS COMPOSTAS ---
-
-// ESTAS SÃO AS LINHAS QUE ESTÃO DANDO ERRO. COMENTE-AS/REMVOA-AS.
-// Destinos.belongsTo(PerfilEstimadoTurista, {
-//     foreignKey: ['fk_perfil_estimado_turistas', 'fk_pais_origem', 'fk_uf_entrada'],
-//     targetKey: ['id_perfil_estimado_turistas', 'fk_pais_origem', 'fk_uf_entrada']
-// });
-
-// PerfilEstimadoTurista.hasMany(Destinos, {
-//     foreignKey: ['fk_perfil_estimado_turistas', 'fk_pais_origem', 'fk_uf_entrada'],
-//     sourceKey: ['id_perfil_estimado_turistas', 'fk_pais_origem', 'fk_uf_entrada']
-// });
-
 Destinos.belongsTo(UnidadeFederativaBrasil, {
     foreignKey: 'fk_uf_destino',
     targetKey: 'sigla'
@@ -59,6 +45,17 @@ const nomesDosMeses = [
     'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
 ];
+
+// --- FUNÇÃO AUXILIAR PARA GERAR CORES ALEATÓRIAS (NECESSÁRIA AQUI) ---
+// Esta função é usada para gerar as cores das linhas do gráfico de nacionalidade.
+function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
 
 
 // --- FUNÇÕES DE KPI PARA SAZONALIDADE ---
@@ -577,5 +574,135 @@ exports.calcularChegadasComparativas = async (req, res) => {
     } catch (error) {
         console.error("Erro ao calcular chegadas comparativas:", error);
         res.status(500).json({ erro: "Erro interno ao calcular chegadas comparativas." });
+    }
+};
+
+// --- NOVA FUNÇÃO PARA PICO DE VISITAS POR NACIONALIDADE ---
+exports.listarPicoVisitasSazonalidade = async (req, res) => {
+    try {
+        const { ano, pais } = req.query;
+        const where = {};
+
+        if (ano) {
+            where.ano = parseInt(ano, 10);
+        }
+        if (pais) {
+            where.fk_pais_origem = parseInt(pais, 10);
+        }
+
+        const resultados = await PerfilEstimadoTurista.findAll({
+            attributes: [
+                'mes',
+                [fn('SUM', col('quantidade_turistas')), 'chegadas']
+            ],
+            where, // Aplica os filtros condicionalmente
+            group: ['mes'],
+            order: [['mes', 'ASC']]
+        });
+
+        const dadosCompletosPorMes = nomesDosMeses.map((nomeMes, index) => {
+            const mesNumero = index + 1;
+            const encontrado = resultados.find(item => item.mes === mesNumero);
+            return {
+                mes_nome: nomeMes,
+                chegadas: encontrado ? parseFloat(encontrado.dataValues.chegadas) : 0
+            };
+        });
+
+        res.json(dadosCompletosPorMes);
+    } catch (error) {
+        console.error("Erro ao buscar dados de pico de visitas para sazonalidade (linha única):", error);
+        res.status(500).json({ erro: "Erro interno ao buscar dados de pico de visitas para sazonalidade." });
+    }
+};
+
+// controllers/graficoController.js
+
+// ... (seus requires, nomesDosMeses e outras funções) ...
+
+// controllers/graficoController.js (Trecho relevante da função getKPITotalTuristasSazonalidade)
+exports.getKPITotalTuristasSazonalidade = async (req, res) => {
+    try {
+        const { mes, ano, pais } = req.query;
+        const where = {};
+        if (mes) { where.mes = parseInt(mes, 10); }
+        if (ano) { where.ano = parseInt(ano, 10); }
+        if (pais) { where.fk_pais_origem = parseInt(pais, 10); }
+        const total = await PerfilEstimadoTurista.sum('quantidade_turistas', { where });
+        res.json({ total: total || 0 });
+    } catch (error) { /* ... */ }
+};
+
+exports.getKPIVariacaoTuristasSazonalidade = async (req, res) => {
+    try {
+        const { mes, ano, pais } = req.query;
+        const anoAtual = ano ? parseInt(ano, 10) : null;
+        const mesAtual = mes ? parseInt(mes, 10) : null;
+
+        let chegadasAtual = 0;
+        let chegadasAnterior = 0;
+        let mesNome = 'período';
+        let anoComparado = 'anterior';
+        let variacao = 0;
+        let podeCalcular = false; // Flag para indicar se temos filtros suficientes para calcular
+
+        // Construir a parte da condição 'where' comum para ambos os anos
+        const commonWhereConditions = {};
+        if (pais) {
+            commonWhereConditions.fk_pais_origem = parseInt(pais, 10);
+        }
+
+        if (anoAtual) { // Cenário 1: Ano está selecionado (com ou sem mês)
+            podeCalcular = true;
+
+            // Condições para o período atual
+            const whereAtual = { ...commonWhereConditions, ano: anoAtual };
+            if (mesAtual) {
+                whereAtual.mes = mesAtual;
+                mesNome = nomesDosMeses[mesAtual - 1]; // Nome do mês selecionado
+            } else {
+                mesNome = 'o ano'; // Se não há mês, é o ano completo
+            }
+
+            // Condições para o período anterior
+            const whereAnterior = { ...commonWhereConditions, ano: anoAtual - 1 };
+            if (mesAtual) {
+                whereAnterior.mes = mesAtual;
+            }
+            anoComparado = anoAtual - 1;
+
+            // Busca as chegadas
+            chegadasAtual = await PerfilEstimadoTurista.sum('quantidade_turistas', { where: whereAtual });
+            chegadasAnterior = await PerfilEstimadoTurista.sum('quantidade_turistas', { where: whereAnterior });
+
+        } else { // Cenário 2: Ano NÃO está selecionado
+            // Não podemos calcular uma variação de porcentagem significativa sem um ano de referência.
+            // A flag 'podeCalcular' permanece false.
+        }
+
+        if (podeCalcular) {
+            if (chegadasAnterior > 0) {
+                variacao = ((chegadasAtual - chegadasAnterior) / chegadasAnterior) * 100;
+            } else if (chegadasAtual > 0) {
+                variacao = 100; // Houve chegadas agora, mas nenhuma no período anterior (aumento de 100%)
+            } else {
+                variacao = 0; // Nenhuma chegada em nenhum dos períodos
+            }
+        } else {
+            // Se não pode calcular, definir valores de retorno para indicar isso
+            variacao = null; // Ou um valor que o frontend possa interpretar como "N/A"
+            mesNome = null;
+            anoComparado = null;
+        }
+
+        res.json({
+            variacao: variacao !== null ? variacao.toFixed(2) : null,
+            mesNome: mesNome,
+            anoComparado: anoComparado
+        });
+
+    } catch (error) {
+        console.error('Erro ao buscar KPI Variação Turistas Sazonalidade:', error);
+        res.status(500).json({ erro: 'Erro interno ao buscar KPI Variação Turistas Sazonalidade.' });
     }
 };

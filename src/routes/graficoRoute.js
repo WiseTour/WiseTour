@@ -23,5 +23,9 @@ router.get('/chegadas-comparativas', graficoController.calcularChegadasComparati
 router.get('/visitas-por-estado', graficoController.obterDadosVisitasPorEstado);
 router.get('/dashboard-data', graficoController.buscarDadosParaDashboard);
 router.get('/sazonalidade/top-estados', graficoController.listarTopEstadosVisitadosSazonalidade);
+router.get('/sazonalidade/pico-visitas-unica-linha', graficoController.listarPicoVisitasSazonalidade);
+
+router.get('/sazonalidade/total-turistas', graficoController.getKPITotalTuristasSazonalidade);
+router.get('/sazonalidade/variacao-turistas', graficoController.getKPIVariacaoTuristasSazonalidade);
 
 module.exports = router;

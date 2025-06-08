@@ -135,21 +135,18 @@
                     <img src="assets/kpi-img-7.svg" alt="">
                 </div>
                 <div class="card-kpi kpilonga">
-                    <h1 id="totalTuristasKPI">6.435,87</h1>
+                    <h1 id="totalTuristasSazonalidade"></h1>
                     <h3>QUANTIDADE TOTAL DE TURISTAS</h3>
                 </div>
             </div>
-
-
-
 
             <div class="card">
                 <div class="card-amarelo-fundo">
                     <img src="assets/kpi-img-6.svg" alt="">
                 </div>
                 <div class="card-kpi kpilonga">
-                    <h1 id="variacaoTuristasKPI">+10%</h1>
-                    <h3 id="variacaoDescKPI">DE VARIAÇÃO DE TURISTAS EM RELAÇÃO À MAIO DO ANO ANTERIOR</h3>
+                    <h1 id="variacaoTuristasKPI"></h1>
+                    <h3 id="variacaoDescKPI"></h3>
                 </div>
             </div>
 
@@ -165,10 +162,10 @@
                             <h3>ESTADOS MAIS VISITADOS</h3>
                         </div>
                         <div class="states-over-image">
-                        <span class="state" id="estadoVisitado1">Carregando...</span>
-                        <span class="state" id="estadoVisitado2"></span>
-                        <span class="state" id="estadoVisitado3"></span>
-                        <img src="assets/top3.svg" alt="Ilustração dos top 3 estados">
+                            <span class="state" id="estadoVisitado2">Carregando...</span>
+                            <span class="state" id="estadoVisitado1"></span>
+                            <span class="state" id="estadoVisitado3"></span>
+                            <img src="assets/top3.svg" alt="Ilustração dos top 3 estados">
                         </div>
                     </div>
                 </div>
@@ -185,7 +182,15 @@
                     PICO DE VISITAS POR NACIONALIDADE
                 </div>
                 <div class="grafico">
-                    <canvas id="picoVisitasChart"></canvas>
+                    <!-- O container para o gráfico e a mensagem de "sem dados" -->
+                    <div id="picoVisitasChartContainer" style="position: relative; width: 100%; height: 300px;">
+                        <canvas id="picoVisitasChart"></canvas>
+                        <!-- Este div será usado para exibir mensagens de carregamento ou "sem dados" -->
+                        <div id="picoVisitasNoDataMessage"
+                            style="display: none; text-align: center; padding: 20px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; background-color: rgba(255, 255, 255, 0.9);">
+                            <!-- O texto da mensagem será inserido aqui pelo JavaScript -->
+                        </div>
+                    </div>
                 </div>
             </div>
 
