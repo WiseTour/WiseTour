@@ -5,6 +5,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const botoesSalvar = document.querySelectorAll(".btn_salvar");
   const inputs = document.querySelectorAll("input");
 
+  inputs.forEach((input) => {
+    input.disabled = true;
+    input.style.opacity = "0.5";
+  });
+  botoesSalvar.forEach((btn) => {
+    btn.disabled = true;
+    btn.style.cursor = "default";
+    btn.style.opacity = "0.5";
+  });
+
+  containers.forEach((container, index) => {
+    container.style.display = index === 0 ? "grid" : "none";
+  });
+
   let usuario = JSON.parse(localStorage.getItem("usuario"));
 
   if (usuario) {
@@ -15,19 +29,19 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .then((data) => {
         localStorage.setItem("usuario", JSON.stringify(data));
+
+        document.getElementById("span-passaporte").innerText =
+          data.id_usuario || "";
+        document.getElementById("span-nome").innerText =
+          data.funcionario.nome || "";
+        document.getElementById("span-funcao").innerText =
+          data.funcionario.cargo || "";
       })
       .catch((error) => {
         console.error("Erro:", error);
         alert("Não foi possível carregar os dados do usuário");
       });
   }
-
-  usuario = JSON.parse(localStorage.getItem("usuario"));
-
-  document.getElementById("span-passaporte").innerText = usuario.id_usuario || "";
-  document.getElementById("span-nome").innerText = usuario.funcionario.nome || "";
-  document.getElementById("span-funcao").innerText =
-    usuario.funcionario.cargo || "";
 
   // === CONFIGURAÇÃO INICIAL ===
   function desabilitarInputs(inputsList) {
@@ -57,7 +71,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // === CARREGAMENTO DAS PREFERÊNCIAS DO USUÁRIO ===
   if (usuario?.id_usuario) {
     // Preferências de visualização de dashboard
-    fetch(`/preferenciaVisualizacaoDashboard/usuario/preferencias-visualizacao-dashboard?id_usuario=${usuario.id_usuario}`)
+    fetch(
+      `/preferenciaVisualizacaoDashboard/usuario/preferencias-visualizacao-dashboard?id_usuario=${usuario.id_usuario}`
+    )
       .then((res) => {
         if (!res.ok) throw new Error("Erro ao buscar preferências do usuário");
         return res.json();

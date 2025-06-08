@@ -230,14 +230,17 @@ nav .active {
 }
 
 #form_container_canal_padrao{
-  justify-content: left;
+  width: 100%;
+  display: grid;
+  grid-template-columns: min-content auto;
 }
 
 #form_container_canal_padrao label {
   justify-content: left;
   gap: 15px;
-  width: fit-content;
+  width: 100%;
   padding-right: 10px;
+  white-space: nowrap;
 }
 
 .container_configuracoes
