@@ -1,5 +1,5 @@
 function editarFuncionario() {
-  var nomeFuncionarioVar = editar_funcionario_nome_input.value;
+  var id_funcionario = editar_id_funcionario_input.value;
   var nomeNovoFuncionarioVar = editar_funcionario_nome_novo_input.value;
   var cargoVar = editar_funcionario_cargo_input.value;
   var telefoneVar = editar_funcionario_telefone_input.value;
@@ -9,7 +9,7 @@ function editarFuncionario() {
 
   // Verificando se há algum campo em branco
   if (
-    nomeFuncionarioVar == "" ||
+    id_funcionario == "" ||
     nomeNovoFuncionarioVar == "" ||
     cargoVar == "" ||
     telefoneVar == "" ||
@@ -21,19 +21,20 @@ function editarFuncionario() {
     return false;
   }
 
-  fetch("/internalRoutes/editarFuncionario", {
-    method: "POST",
+  fetch(`/funcionario/${id_funcionario}`, {
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      nomeServer: nomeFuncionarioVar,
-      nomeNovoServer: nomeNovoFuncionarioVar,
-      cargoServer: cargoVar,
-      telefoneServer: telefoneVar,
-      cnpjEmpresaServer: cnpjEmpresaVar,
-      idInformacaoServer: idInformacaoVar,
-      siglaUfServer: siglaUfVar
+      nome: nomeNovoFuncionarioVar,
+      cargo: cargoVar,
+      telefone: telefoneVar,
+      fk_cnpj: cnpjEmpresaVar,
+      fk_informacao_contato_cadastro: idInformacaoVar,
+      fk_uf_sigla: siglaUfVar,
+      fk_endereco: 2,
+      fk_usuario: 2
     }),
   })
     .then(function (resposta) {

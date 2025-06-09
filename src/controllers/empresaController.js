@@ -76,6 +76,7 @@ const EmpresaController = {
     return res.status(500).json({ error: 'Erro ao excluir empresa.' });
   }
 }
+
 };
 
 module.exports = EmpresaController;

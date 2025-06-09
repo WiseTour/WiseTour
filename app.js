@@ -37,9 +37,9 @@ app.get("/estado", async (req, res) => {
 // /PEGA INFORMAÇÕES DO IP DO USUÁRIO PARA DESCOBRIR O ESTADO
 
 var indexRouter = require("./src/routes/index");
-var usuarioRouter = require("./src/routes/usuario");
+var usuarioRouter = require("./src/routes/usuarioRoutes");
 var internalRoutes = require("./src/routes/internalRoutes");
-var funcionarioRoutes = require('./src/routes/funcionario');
+var funcionarioRoutes = require('./src/routes/funcionarioRoutes');
 var preferenciaVisualizacaoDashboardRoutes = require('./src/routes/preferenciaVisualizacaoDashboard');
 var telaDashboardRoutes = require("./src/routes/telaDashboardRoutes");
 var configuracaoSlackRoutes = require("./src/routes/configuracaoSlack");

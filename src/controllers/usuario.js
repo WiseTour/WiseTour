@@ -161,6 +161,63 @@ async function alterarSenhaUsuario(req, res) {
   }
 }
 
+async function criarUsuario(req, res) {
+  const { email, senha, permissao } = req.body;
+
+  if (!email || !senha || !permissao) {
+    return res.status(400).json({ mensagem: "Campos obrigatórios não informados." });
+  }
+
+  try {
+    const usuarioExistente = await Usuario.findOne({ where: { email } });
+
+    if (usuarioExistente) {
+      return res.status(400).json({ mensagem: "Email já cadastrado." });
+    }
+
+    console.log("BODY USUARIO RECEBIDO:", req.body)
+
+    const novoUsuario = await Usuario.create({ email, senha, permissao });
+
+    res.status(201).json(novoUsuario);
+  } catch (error) {
+    console.error("Erro ao criar usuário:", error);
+    res.status(500).json({ mensagem: "Erro interno no servidor" });
+  }
+}
+
+// PUT /usuario/:id_usuario
+async function atualizarUsuario(req, res) {
+  const { id_usuario } = req.params;
+  const { email, senha, permissao } = req.body;
+
+  if (!email && !senha && !permissao) {
+    return res.status(400).json({ mensagem: "Nenhum dado para atualizar foi enviado." });
+  }
+
+  try {
+    const usuario = await Usuario.findByPk(id_usuario);
+
+    if (!usuario) {
+      return res.status(404).json({ mensagem: "Usuário não encontrado." });
+    }
+
+    if (email) usuario.email = email;
+    if (senha) usuario.senha = senha;
+    if (permissao) usuario.permissao = permissao;
+
+    console.log("BODY USUARIO RECEBIDO:", req.body)
+
+    await usuario.save();
+
+    res.json({ mensagem: "Usuário atualizado com sucesso!" });
+  } catch (erro) {
+    console.error("Erro ao atualizar usuário:", erro);
+    res.status(500).json({ mensagem: "Erro interno no servidor." });
+  }
+}
+
+
 
 module.exports = {
   buscarUsuarioPorId,
@@ -168,4 +225,6 @@ module.exports = {
   autenticar,
   alterarInformacoesUsuario,
   alterarSenhaUsuario,
+  criarUsuario,
+  atualizarUsuario
 };

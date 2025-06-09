@@ -20,18 +20,20 @@ function cadastrarFuncionario() {
     return false;
   }
 
-  fetch("/internalRoutes/cadastrarFuncionario", {
+  fetch("/funcionario", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      nomeServer: nomeFuncionarioVar,
-      cargoServer: cargoVar,
-      telefoneServer: telefoneVar,
-      cnpjEmpresaServer: cnpjEmpresaVar,
-      idInformacaoServer: idInformacaoVar,
-      siglaUfServer: siglaUfVar
+      nome: nomeFuncionarioVar,
+      cargo: cargoVar,
+      telefone: telefoneVar,
+      fk_cnpj: cnpjEmpresaVar,
+      fk_informacao_contato_cadastro: idInformacaoVar,
+      fk_uf_sigla: siglaUfVar,
+      fk_endereco: 2,
+      fk_usuario: 2
     }),
   })
     .then(function (resposta) {
