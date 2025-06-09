@@ -570,32 +570,38 @@ exports.listarPresencaTuristasUF = async (req, res) => {
   try {
     const where = construirWhereClause(req);
 
-    const resultados = await PerfilEstimadoTurista.findAll({
-      attributes: [[fn("SUM", col("quantidade_turistas")), "total_turistas"]],
-      include: [
-        {
-          model: UnidadeFederativaBrasil,
-          attributes: ["unidade_federativa"], // Inclui o nome completo da UF
-          required: true,
-        },
-      ],
-      where,
-      group: ["UnidadeFederativaBrasil.unidade_federativa"], // Agrupa pelo nome da UF
-      order: [[literal("total_turistas"), "DESC"]],
-    });
+        const resultados = await PerfilEstimadoTurista.findAll({
+            attributes: [
+                [fn('SUM', col('quantidade_turistas')), 'quantidade'] // Renomeado para 'quantidade' para ser mais direto e consistente com o frontend
+            ],
+            include: [{
+                model: UnidadeFederativaBrasil,
+                // ATENÇÃO: Mudança aqui para incluir a sigla
+                attributes: ['sigla'], // Inclui APENAS a sigla da UF
+                required: true
+            }],
+            where,
+            group: ['UnidadeFederativaBrasil.sigla'],
+            order: [[literal('quantidade'), 'DESC']], // Ordena pela quantidade de turistas
+            limit: 5 // Limite mantido em 5, como estava no seu código
+        });
 
-    const dadosFormatados = resultados.map((item) => ({
-      uf: item.UnidadeFederativaBrasil.unidade_federativa, // Acessa o nome da UF
-      quantidade: parseFloat(item.dataValues.total_turistas), // Retorna a quantidade, não percentual
-    }));
+        const dadosFormatados = resultados.map(item => ({
+            // ATENÇÃO: Acessa a sigla, não o nome completo
+            uf: item.UnidadeFederativaBrasil.sigla, // Acessa a sigla da UF
+            quantidade: parseFloat(item.dataValues.quantidade) // Retorna a quantidade bruta
+        }));
 
-    res.json(dadosFormatados);
-  } catch (error) {
-    console.error("Erro ao buscar presença de turistas por UF:", error);
-    res
-      .status(500)
-      .json({ erro: "Erro interno ao buscar presença de turistas por UF." });
-  }
+        // Retorna um array vazio se não houver dados
+        if (dadosFormatados.length === 0) {
+            return res.status(200).json([]);
+        }
+
+        res.json(dadosFormatados);
+    } catch (error) {
+        console.error("Erro ao buscar presença de turistas por UF:", error);
+        res.status(500).json({ erro: "Erro interno ao buscar presença de turistas por UF." });
+    }
 };
 
 // 3. Gráfico de CHEGADAS DE TURISTAS ESTRANGEIROS (por mês)

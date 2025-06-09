@@ -73,64 +73,60 @@ async function carregarDadosDashboardPrincipal() {
     const valores = data.map((item) => item.percentual);
     const ctx = document.getElementById("myChart");
 
-    if (myChartInstance) {
-      myChartInstance.data.labels = labels;
-      myChartInstance.data.datasets[0].data = valores;
-      myChartInstance.update();
-    } else {
-      myChartInstance = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              data: valores,
-              backgroundColor: [
-                coresUsadas.amarelo,
-                coresUsadas.marromBeige,
-                coresUsadas.marrom,
-                coresUsadas.amareloClaro,
-                coresUsadas.begeMedio,
-              ],
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              titleFont: estiloDoTextoDoGrafico.font,
-              bodyFont: estiloDoTextoDoGrafico.font,
-              callbacks: {
-                label: function (context) {
-                  return ` ${context.parsed.y}%`;
+        if (myChartInstance) {
+            myChartInstance.data.labels = labels;
+            myChartInstance.data.datasets[0].data = valores;
+            myChartInstance.update();
+        } else {
+            myChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: valores,
+                        backgroundColor: [
+                            coresUsadas.amarelo, coresUsadas.marromBeige, coresUsadas.marrom,
+                            coresUsadas.amareloClaro, coresUsadas.begeMedio
+                        ],
+                    }]
                 },
-              },
-            },
-          },
-          scales: {
-            x: {
-              ticks: {
-                ...estiloDoTextoDoGrafico,
-                autoSkip: false,
-                maxRotation: 0,
-                minRotation: 0,
-              },
-            },
-            y: {
-              beginAtZero: true,
-              ticks: estiloDoTextoDoGrafico,
-            },
-          },
-        },
-      });
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            titleFont: estiloDoTextoDoGrafico.font,
+                            bodyFont: estiloDoTextoDoGrafico.font,
+                            callbacks: {
+                                label: function (context) {
+                                    return ` ${context.parsed.y}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                ...estiloDoTextoDoGrafico,
+                                autoSkip: false,
+                                maxRotation: 90,
+                                minRotation: 90
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: estiloDoTextoDoGrafico
+                        }
+                    }
+                }
+            });
+        }
+    } catch (err) {
+        console.error('Erro ao buscar dados dos principais países de origem:', err);
+        // Opcional: Mostrar uma mensagem de erro ou dados padrão
     }
-  } catch (err) {
-    console.error("Erro ao buscar dados dos principais países de origem:", err);
-    // Opcional: Mostrar uma mensagem de erro ou dados padrão
-  }
+
 
   // ----------------------------------------------------
   // 2. Gráfico PRESENÇA DE TURISTAS POR UF
