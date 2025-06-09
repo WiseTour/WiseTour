@@ -1,3 +1,4 @@
+
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/sequelizeConfig');
 
@@ -24,6 +25,17 @@ const Usuario = sequelize.define('usuario', {
       isIn: [['admin', 'padrao', 'wisetour']],
     },
   },
+}, {
+  tableName: 'usuario',
+  timestamps: false
 });
+
+
+Usuario.associate = (models) => {
+  Usuario.hasOne(models.Funcionario, {
+    foreignKey: 'fk_usuario',
+    as: 'funcionario'
+  });
+};
 
 module.exports = Usuario;
