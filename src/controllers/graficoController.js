@@ -398,16 +398,34 @@ exports.calcularGastoMedio = async (req, res) => {
 // 1. Gráfico PRINCIPAIS PAÍSES DE ORIGEM
 exports.listarPrincipaisPaisesOrigem = async (req, res) => {
     try {
-        const { mes, ano } = req.query
-        const where = {}
+        const { mes, ano } = req.query; // Pega os filtros como strings do frontend
 
-        if (mes) {
-            where.mes = parseInt(10)
+        // --- LINHAS DE DEBUG INÍCIO ---
+        console.log("--- DEBUG: listarPrincipaisPaisesOrigem ---");
+        console.log("req.query recebido:", req.query);
+        console.log("Valor de 'mes' (string):", mes);
+        console.log("Valor de 'ano' (string):", ano);
+        // --- LINHAS DE DEBUG FIM ---
+
+        const where = {}; // Inicializa o objeto where vazio
+
+        // Adiciona a condição de filtro para 'mes' APENAS se um valor válido foi fornecido
+        if (mes && !isNaN(parseInt(mes, 10))) {
+            where.mes = parseInt(mes, 10);
+            console.log("Parsed 'mes':", where.mes); // DEBUG: Valor inteiro do mês
+        } else {
+            console.log("'mes' não é um número válido ou está vazio. Não será aplicado filtro de mês.");
         }
 
-        if (ano) {
-            where.ano = parseInt(10)
+        // Adiciona a condição de filtro para 'ano' APENAS se um valor válido foi fornecido
+        if (ano && !isNaN(parseInt(ano, 10))) {
+            where.ano = parseInt(ano, 10);
+            console.log("Parsed 'ano':", where.ano); // DEBUG: Valor inteiro do ano
+        } else {
+            console.log("'ano' não é um número válido ou está vazio. Não será aplicado filtro de ano.");
         }
+
+        console.log("Objeto 'where' final para a query:", where); // DEBUG: Objeto where antes da query Sequelize
 
         const resultados = await PerfilEstimadoTurista.findAll({
             attributes: [
@@ -415,11 +433,12 @@ exports.listarPrincipaisPaisesOrigem = async (req, res) => {
             ],
             include: [{
                 model: Pais,
-                attributes: ['pais'], // Inclui o nome do país
-                required: true // Garante que apenas perfis com país associado sejam retornados
+                as: 'Pai', // Mantenha 'as: 'Pai'' se for o alias correto na sua associação no modelo. Se não usa alias, remova esta linha.
+                attributes: ['pais'],
+                required: true
             }],
-            where,
-            group: ['Pai.pais', 'Pai.id_pais'], // Agrupa pelo nome do país
+            where, // Aplica as condições construídas acima (ou permanece {} para todos os dados)
+            group: ['Pai.pais', 'Pai.id_pais'],
             order: [[literal('total_turistas'), 'DESC']],
             limit: 5
         });
@@ -427,10 +446,16 @@ exports.listarPrincipaisPaisesOrigem = async (req, res) => {
         const totalGeral = resultados.reduce((sum, item) => sum + parseFloat(item.dataValues.total_turistas), 0);
 
         const dadosFormatados = resultados.map(item => ({
-            pais: item.Pai.pais, // Acessa o nome do país através da associação
+            pais: item.Pai.pais,
             percentual: totalGeral > 0 ? (parseFloat(item.dataValues.total_turistas) / totalGeral * 100).toFixed(2) : "0.00"
         }));
 
+        if (dadosFormatados.length === 0) {
+            console.log("Nenhum dado encontrado para os filtros aplicados. Retornando array vazio."); // DEBUG
+            return res.status(200).json([]);
+        }
+
+        console.log("Dados formatados retornados:", dadosFormatados); // DEBUG
         res.json(dadosFormatados);
     } catch (error) {
         console.error("Erro ao buscar principais países de origem:", error);
