@@ -369,7 +369,7 @@ select:hover {
 
 
 canvas {
-    max-height: 85% !important;
+    max-height: 75% !important;
     width: 100% !important;
     margin-top: 10px;
     aspect-ratio: inherit;

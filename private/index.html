@@ -20,7 +20,7 @@
             <img class="logo" src="/common/assets/logo/logo_cinza_escuro.svg" alt="Logo WiseTour">
 
             <nav class="menu_container_middle">
-                <a class="opcao" href="index.html">Panorama Geral</a>
+                <a class="opcao active" href="index.html">Panorama Geral</a>
                 <a class="opcao" href="perfilturista.html">Perfil do Turista</a>
                 <a class="opcao" href="sazonalidade.html">Sazonalidade</a>
             </nav>
@@ -48,6 +48,9 @@
                     style="display: none; font-size: 20px; color: #555; margin-left: 10px;"></span>
             </div>
             <div class="filtros">
+                <div class="funil">
+                    <img src="assets/funil.png" alt="funil" style="height: 20px; width: 20px; margin-right: 15px;">
+                </div>
                 <div class="descricao" style="font-size: 14px;">
                     Mês:
                 </div>
@@ -107,25 +110,6 @@
                     <option value="1991">1991</option>
                     <option value="1990">1990</option>
                 </select>
-                <div class="descricao" style="font-size: 14px; margin-left: 20px;">
-                    País:
-                </div>
-                <select name="pais" id="pais">
-                    <option value="">PAÍS:</option>
-                    <option value="argentina">Argentina</option>
-                    <option value="eua">Estados Unidos</option>
-                    <option value="chile">Chile</option>
-                    <option value="paraguai">Paraguai</option>
-                    <option value="uruguai">Uruguai</option>
-                    <option value="franca">França</option>
-                    <option value="portugal">Portugal</option>
-                    <option value="alemanha">Alemanha</option>
-                    <option value="reino-unido">Reino Unido</option>
-                    <option value="italia">Itália</option>
-                </select>
-                <div class="funil">
-                    <img src="assets/funil.png" alt="funil" style="height: 20px; width: 20px; margin-left: 20px;">
-                </div>
             </div>
         </div>
 
@@ -216,7 +200,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             const mes = document.getElementById('mes');
             const ano = document.getElementById('ano');
-            const pais = document.getElementById('pais');
             const resumo = document.getElementById('resumo_filtros');
 
             function atualizarResumo() {
@@ -227,9 +210,6 @@
                 }
                 if (ano.value) {
                     selecionados.push(ano.options[ano.selectedIndex].text);
-                }
-                if (pais.value) {
-                    selecionados.push(pais.options[pais.selectedIndex].text);
                 }
 
                 resumo.style.display = 'inline';
@@ -243,7 +223,6 @@
 
             mes.addEventListener('change', atualizarResumo);
             ano.addEventListener('change', atualizarResumo);
-            pais.addEventListener('change', atualizarResumo);
 
             atualizarResumo();
         });

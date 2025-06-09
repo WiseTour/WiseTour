@@ -1,5 +1,3 @@
-// index.js
-
 const coresUsadas = {
     amarelo: '#F8CA26',
     marrom: '#735900',
@@ -38,7 +36,6 @@ const estiloDoTextoDoGrafico = {
 
 const selectMes = document.getElementById('mes');
 const selectAno = document.getElementById('ano');
-const selectPais = document.getElementById('pais');
 
 // variaveis para as instancias dos graficos
 let myChartInstance;
@@ -95,12 +92,10 @@ document.addEventListener('click', function (e) {
 async function carregarDadosDashboardPrincipal() {
     const mes = selectMes ? selectMes.value : '';
     const ano = selectAno ? selectAno.value : '';
-    const pais = selectPais ? selectPais.value : '';
 
     const queryParams = new URLSearchParams();
     if (mes) queryParams.append('mes', mes);
     if (ano) queryParams.append('ano', ano);
-    if (pais) queryParams.append('pais', pais);
 
     const queryString = queryParams.toString();
     const basePath = '/grafico';
@@ -315,9 +310,8 @@ async function carregarDadosDashboardPrincipal() {
 // Event listeners para os filtros
 if (selectMes) selectMes.addEventListener('change', carregarDadosDashboardPrincipal);
 if (selectAno) selectAno.addEventListener('change', carregarDadosDashboardPrincipal);
-if (selectPais) selectPais.addEventListener('change', carregarDadosDashboardPrincipal);
 
-// Inicialização
+// Chama a função uma vez ao carregar a página para exibir os dados iniciais
 document.addEventListener('DOMContentLoaded', carregarDadosDashboardPrincipal);
 
 function atualizarDataHora() {

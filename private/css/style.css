@@ -16,10 +16,10 @@ button {
 }
 
 html, body {
-    overflow-y: hidden; /* Remove a barra de rolagem vertical */
-    height: 100%; /* Garante que ocupem toda a altura */
-    margin: 0; /* Remove margens padrão */
-    padding: 0; /* Remove paddings padrão */
+    overflow-y: hidden; 
+    height: 100%; 
+    margin: 0; 
+    padding: 0; 
 }
 
 /* HEADER */
