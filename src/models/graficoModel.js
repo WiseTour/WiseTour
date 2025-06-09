@@ -30,7 +30,7 @@ const PerfilEstimadoTurista = sequelize.define('PerfilEstimadoTurista', {
     servico_agencia_turismo: DataTypes.INTEGER, // Ajustei para INT conforme seu DB script
     motivo_viagem: DataTypes.STRING(45), // Ajustei para corresponder ao seu DB script
     motivacao_viagem_lazer: DataTypes.STRING(45), // Ajustei para corresponder ao seu DB script
-    gasto_media_percapita_em_reais: DataTypes.DOUBLE // Ajustei para DOUBLE conforme seu DB script
+    gasto_media_percapita_em_dolar: DataTypes.DOUBLE // Ajustei para DOUBLE conforme seu DB script
 }, {
     tableName: 'perfil_estimado_turistas',
     timestamps: false,

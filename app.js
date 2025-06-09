@@ -68,6 +68,7 @@ sequelize.authenticate().then(() => {
 });
 
 
+
 app.listen(PORTA_APP, function () {
   console.log(`
     ##   ##  ######   #####             ####       ##     ######     ##              ##  ##    ####    ######  

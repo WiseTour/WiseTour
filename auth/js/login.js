@@ -14,6 +14,11 @@ function entrar() {
     console.log("FORM LOGIN: ", emailVar);
     console.log("FORM SENHA: ", senhaVar);
 
+     setTimeout(function () {
+              window.location.href = "/private/index.html";
+            }, 1000);
+
+
     fetch("/usuario/autenticar", {
       method: "POST",
       headers: {

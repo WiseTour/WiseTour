@@ -28,4 +28,8 @@ router.get('/sazonalidade/pico-visitas-unica-linha', graficoController.listarPic
 router.get('/sazonalidade/total-turistas', graficoController.getKPITotalTuristasSazonalidade);
 router.get('/sazonalidade/variacao-turistas', graficoController.getKPIVariacaoTuristasSazonalidade);
 
+// ROTAS PARA AS OPÇÕES DOS FILTROS
+
+router.get('/perfil-estimado-turista/meses-anos-paises', graficoController.getMesesAnosPaises);
+
 module.exports = router;
