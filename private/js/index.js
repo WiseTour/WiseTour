@@ -110,8 +110,8 @@ async function carregarDadosDashboardPrincipal() {
                             ticks: {
                                 ...estiloDoTextoDoGrafico,
                                 autoSkip: false,
-                                maxRotation: 0,
-                                minRotation: 0
+                                maxRotation: 90,
+                                minRotation: 90
                             }
                         },
                         y: {

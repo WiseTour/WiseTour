@@ -470,22 +470,30 @@ exports.listarPresencaTuristasUF = async (req, res) => {
 
         const resultados = await PerfilEstimadoTurista.findAll({
             attributes: [
-                [fn('SUM', col('quantidade_turistas')), 'total_turistas']
+                [fn('SUM', col('quantidade_turistas')), 'quantidade'] // Renomeado para 'quantidade' para ser mais direto e consistente com o frontend
             ],
             include: [{
                 model: UnidadeFederativaBrasil,
-                attributes: ['unidade_federativa'], // Inclui o nome completo da UF
+                // ATENÇÃO: Mudança aqui para incluir a sigla
+                attributes: ['sigla'], // Inclui APENAS a sigla da UF
                 required: true
             }],
             where,
-            group: ['UnidadeFederativaBrasil.unidade_federativa'], // Agrupa pelo nome da UF
-            order: [[literal('total_turistas'), 'DESC']]
+            group: ['UnidadeFederativaBrasil.sigla'],
+            order: [[literal('quantidade'), 'DESC']], // Ordena pela quantidade de turistas
+            limit: 5 // Limite mantido em 5, como estava no seu código
         });
 
         const dadosFormatados = resultados.map(item => ({
-            uf: item.UnidadeFederativaBrasil.unidade_federativa, // Acessa o nome da UF
-            quantidade: parseFloat(item.dataValues.total_turistas) // Retorna a quantidade, não percentual
+            // ATENÇÃO: Acessa a sigla, não o nome completo
+            uf: item.UnidadeFederativaBrasil.sigla, // Acessa a sigla da UF
+            quantidade: parseFloat(item.dataValues.quantidade) // Retorna a quantidade bruta
         }));
+
+        // Retorna um array vazio se não houver dados
+        if (dadosFormatados.length === 0) {
+            return res.status(200).json([]);
+        }
 
         res.json(dadosFormatados);
     } catch (error) {
