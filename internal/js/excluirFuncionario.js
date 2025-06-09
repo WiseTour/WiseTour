@@ -11,8 +11,8 @@ function excluirFuncionario() {
     return false;
   }
 
-  fetch("/internalRoutes/excluirFuncionario", {
-    method: "POST",
+  fetch("/funcionario", {
+    method: "DELETE",
     headers: {
       "Content-Type": "application/json",
     },

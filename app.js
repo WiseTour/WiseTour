@@ -38,7 +38,6 @@ app.get("/estado", async (req, res) => {
 
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarioRoutes");
-var internalRoutes = require("./src/routes/internalRoutes");
 var funcionarioRoutes = require('./src/routes/funcionarioRoutes');
 var preferenciaVisualizacaoDashboardRoutes = require('./src/routes/preferenciaVisualizacaoDashboard');
 var telaDashboardRoutes = require("./src/routes/telaDashboardRoutes");
@@ -65,7 +64,6 @@ app.use("/usuario", usuarioRouter);
 app.use('/funcionario', funcionarioRoutes);
 app.use("/preferenciaVisualizacaoDashboard", preferenciaVisualizacaoDashboardRoutes);
 app.use("/telaDashboard", telaDashboardRoutes);
-app.use("/internalRoutes", internalRoutes);
 app.use("/configuracaoSlackRoutes", configuracaoSlackRoutes)
 app.use("/empresa", empresaRouter);
 app.use("/endereco", enderecoRouter);

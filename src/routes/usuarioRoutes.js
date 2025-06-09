@@ -10,5 +10,6 @@ router.put('/alterar_informacoes', usuario.alterarInformacoesUsuario);
 router.put('/alterar_senha', usuario.alterarSenhaUsuario);
 router.put('/:id_usuario', usuario.atualizarUsuario);
 router.post('/', usuario.criarUsuario);
+router.delete('/', usuario.excluirUsuario);
 
 module.exports = router;

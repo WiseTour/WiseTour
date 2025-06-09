@@ -217,6 +217,35 @@ async function atualizarUsuario(req, res) {
   }
 }
 
+const excluirUsuario = async (req, res) => {
+  try {
+    const { emailUsuarioServer} = req.body;
+
+    // Verificação se os campos foram enviados
+    if (!emailUsuarioServer) {
+      return res.status(400).json({ message: 'Email é obrigatório'});
+    }
+
+    const usuarioExcluido = await Usuario.destroy({
+      where: {
+        email: emailUsuarioServer,
+      }
+    });
+
+    if (usuarioExcluido === 0) {
+      return res.status(404).json({ message: 'Usuário não encontrado com os dados informados.' });
+    }
+
+    console.log("BODY USUARIO RECEBIDO:", req.body)
+    
+
+    res.status(200).json({ message: 'Usuário excluído com sucesso.' });
+  } catch (error) {
+    console.error('Erro ao excluir Usuário:', error);
+    res.status(500).json({ message: 'Erro no servidor.' });
+  }
+};
+
 
 
 module.exports = {
@@ -226,5 +255,6 @@ module.exports = {
   alterarInformacoesUsuario,
   alterarSenhaUsuario,
   criarUsuario,
-  atualizarUsuario
+  atualizarUsuario,
+  excluirUsuario
 };

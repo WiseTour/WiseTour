@@ -12,8 +12,8 @@ function excluirUsuario() {
       return false;
     }
   
-    fetch("/internalRoutes/excluirUsuario", {
-      method: "POST",
+    fetch("/usuario", {
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
