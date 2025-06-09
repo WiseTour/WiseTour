@@ -3,7 +3,7 @@
 const coresUsadas = {
     amarelo: '#F8CA26',
     marrom: '#735900',
-    marromBeige: '#C49F1B', // Renomeado para consistência
+    marromBeige: '#C49F1B',
     amareloClaro: '#FFE483',
     avermelhado: '#A66D44',
     cimento: '#87826E',
@@ -11,7 +11,7 @@ const coresUsadas = {
     cinza: '#E0E0E0',
     marromForte: '#A98400',
     esverdeado: '#6B8E23',
-    begeMedio: '#D9C7A7' // Adicionado para consistência com o uso no gráfico
+    begeMedio: '#D9C7A7'
 };
 
 const opcoesPadrao = {
@@ -36,17 +36,62 @@ const estiloDoTextoDoGrafico = {
     }
 };
 
-// Referências aos elementos de filtro (certifique-se de que esses IDs existem no seu HTML)
 const selectMes = document.getElementById('mes');
 const selectAno = document.getElementById('ano');
-const selectPais = document.getElementById('pais'); // Este filtro de país afetaria os gráficos de países de origem e presença por UF
+const selectPais = document.getElementById('pais');
 
-// Variáveis para armazenar as instâncias dos gráficos
-let myChartInstance; // Para o gráfico de Principais Países de Origem
-let presencaTuristaChartInstance; // Para o gráfico de Presença de Turistas por UF
-let chegadasTuristasChartInstance; // Para o gráfico de Chegadas
+// variaveis para as instancias dos graficos
+let myChartInstance;
+let presencaTuristaChartInstance;
+let chegadasTuristasChartInstance;
 
-// Função assíncrona para carregar e atualizar todos os dados da dashboard principal
+// func para ordenar os dados de um grafico de barras
+function sortChartData(chartId, order) {
+    let chartInstance;
+    switch (chartId) {
+        case 'myChart':
+            chartInstance = myChartInstance;
+            break;
+        case 'presencaTuristaChart':
+            chartInstance = presencaTuristaChartInstance;
+            break;
+        default:
+            return;
+    }
+
+    if (!chartInstance) return;
+
+    const labels = [...chartInstance.data.labels];
+    const dataValues = [...chartInstance.data.datasets[0].data];
+
+    // combinando labels e dados
+    const combined = labels.map((label, index) => ({
+        label: label,
+        data: dataValues[index]
+    }));
+
+    // ordena
+    if (order === 'asc') {
+        combined.sort((a, b) => a.data - b.data);
+    } else {
+        combined.sort((a, b) => b.data - a.data);
+    }
+
+    // atualiza o grafico
+    chartInstance.data.labels = combined.map(item => item.label);
+    chartInstance.data.datasets[0].data = combined.map(item => item.data);
+    chartInstance.update();
+}
+
+// event listeners pross botoes de ordenaçao
+document.addEventListener('click', function (e) {
+    if (e.target && e.target.classList.contains('sort-btn')) {
+        const chartId = e.target.dataset.chart;
+        const order = e.target.dataset.order;
+        sortChartData(chartId, order);
+    }
+});
+
 async function carregarDadosDashboardPrincipal() {
     const mes = selectMes ? selectMes.value : '';
     const ano = selectAno ? selectAno.value : '';
@@ -58,19 +103,17 @@ async function carregarDadosDashboardPrincipal() {
     if (pais) queryParams.append('pais', pais);
 
     const queryString = queryParams.toString();
-    const basePath = '/grafico'; // Base path para suas APIs
+    const basePath = '/grafico';
 
-    // ----------------------------------------------------
     // 1. Gráfico PRINCIPAIS PAÍSES DE ORIGEM
-    // Rota esperada no backend: /grafico/paises-origem
-    // Exemplo de retorno: [{ pais: 'Argentina', percentual: 20 }, ...]
-    // ----------------------------------------------------
     try {
-        const res = await fetch(`${basePath}/paises-origem?${queryString}`); // Supondo esta rota
+        const res = await fetch(`${basePath}/paises-origem?${queryString}`);
         const data = await res.json();
 
-        const labels = data.map(item => item.pais);
-        const valores = data.map(item => item.percentual);
+        // Ordenar os dados em ordem decrescente por padrão
+        const sortedData = [...data].sort((a, b) => b.percentual - a.percentual);
+        const labels = sortedData.map(item => item.pais);
+        const valores = sortedData.map(item => item.percentual);
         const ctx = document.getElementById('myChart');
 
         if (myChartInstance) {
@@ -124,21 +167,17 @@ async function carregarDadosDashboardPrincipal() {
         }
     } catch (err) {
         console.error('Erro ao buscar dados dos principais países de origem:', err);
-        // Opcional: Mostrar uma mensagem de erro ou dados padrão
     }
 
-
-    // ----------------------------------------------------
     // 2. Gráfico PRESENÇA DE TURISTAS POR UF
-    // Rota esperada no backend: /grafico/presenca-uf
-    // Exemplo de retorno: [{ uf: 'SP', quantidade: 5000 }, ...]
-    // ----------------------------------------------------
     try {
-        const res = await fetch(`${basePath}/presenca-uf?${queryString}`); // Supondo esta rota
+        const res = await fetch(`${basePath}/presenca-uf?${queryString}`);
         const data = await res.json();
 
-        const labels = data.map(item => item.uf);
-        const valores = data.map(item => item.quantidade);
+        // Ordenar os dados em ordem decrescente por padrão
+        const sortedData = [...data].sort((a, b) => b.quantidade - a.quantidade);
+        const labels = sortedData.map(item => item.uf);
+        const valores = sortedData.map(item => item.quantidade);
         const ctx = document.getElementById('presencaTuristaChart');
 
         if (presencaTuristaChartInstance) {
@@ -191,16 +230,11 @@ async function carregarDadosDashboardPrincipal() {
         }
     } catch (err) {
         console.error('Erro ao buscar dados de presença de turistas por UF:', err);
-        // Opcional: Mostrar uma mensagem de erro ou dados padrão
     }
 
-    // ----------------------------------------------------
     // 3. Gráfico de CHEGADAS
-    // Rota esperada no backend: /grafico/chegadas (anteriormente /grafico/dados)
-    // Exemplo de retorno: [{ mes_nome: 'Janeiro', chegadas: 1000 }, ...]
-    // ----------------------------------------------------
     try {
-        const res = await fetch(`${basePath}/chegadas?${queryString}`); // Supondo esta rota
+        const res = await fetch(`${basePath}/chegadas?${queryString}`);
         const data = await res.json();
 
         const labels = data.map(item => item.mes_nome);
@@ -252,39 +286,38 @@ async function carregarDadosDashboardPrincipal() {
         }
     } catch (err) {
         console.error('Erro ao buscar dados de chegadas de turistas:', err);
-        // Opcional: Mostrar uma mensagem de erro ou dados padrão
     }
 
+    // 4. KPIs de Chegadas Comparativas
     try {
-    const res = await fetch(`${basePath}/chegadas-comparativas?${queryString}`); // Nova rota
-    if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.erro || `Erro HTTP: ${res.status}`);
+        const res = await fetch(`${basePath}/chegadas-comparativas?${queryString}`);
+        if (!res.ok) {
+            throw new Error(`Erro HTTP: ${res.status}`);
+        }
+        const data = await res.json();
+
+        document.getElementById('kpiChegadasAnoAnterior').textContent = data.chegadasAnoAnterior;
+        document.getElementById('labelAnoAnterior').textContent = `em ${data.anoAnterior}`;
+        document.getElementById('kpiChegadasAnoAtual').textContent = data.chegadasAnoAtual;
+        document.getElementById('labelAnoAtual').textContent = `em ${data.anoAtual}`;
+        document.getElementById('kpiPorcentagemComparativa').textContent = data.porcentagemComparativa;
+
+    } catch (err) {
+        console.error('Erro ao buscar KPIs de chegadas comparativas:', err);
+        document.getElementById('kpiChegadasAnoAnterior').textContent = 'N/A';
+        document.getElementById('labelAnoAnterior').textContent = 'em ---';
+        document.getElementById('kpiChegadasAnoAtual').textContent = 'N/A';
+        document.getElementById('labelAnoAtual').textContent = 'em ---';
+        document.getElementById('kpiPorcentagemComparativa').textContent = 'N/A';
     }
-    const data = await res.json();
-
-    document.getElementById('kpiChegadasAnoAnterior').textContent = data.chegadasAnoAnterior;
-    document.getElementById('labelAnoAnterior').textContent = `em ${data.anoAnterior}`;
-    document.getElementById('kpiChegadasAnoAtual').textContent = data.chegadasAnoAtual;
-    document.getElementById('labelAnoAtual').textContent = `em ${data.anoAtual}`;
-    document.getElementById('kpiPorcentagemComparativa').textContent = data.porcentagemComparativa;
-
-} catch (err) {
-    console.error('Erro ao buscar KPIs de chegadas comparativas:', err);
-    document.getElementById('kpiChegadasAnoAnterior').textContent = 'N/A';
-    document.getElementById('labelAnoAnterior').textContent = 'em ---';
-    document.getElementById('kpiChegadasAnoAtual').textContent = 'N/A';
-    document.getElementById('labelAnoAtual').textContent = 'em ---';
-    document.getElementById('kpiPorcentagemComparativa').textContent = 'N/A';
-}
 }
 
-// Adiciona os event listeners aos selects para chamar a função de carregamento quando o filtro mudar
+// Event listeners para os filtros
 if (selectMes) selectMes.addEventListener('change', carregarDadosDashboardPrincipal);
 if (selectAno) selectAno.addEventListener('change', carregarDadosDashboardPrincipal);
 if (selectPais) selectPais.addEventListener('change', carregarDadosDashboardPrincipal);
 
-// Chama a função uma vez ao carregar a página para exibir os dados iniciais
+// Inicialização
 document.addEventListener('DOMContentLoaded', carregarDadosDashboardPrincipal);
 
 function atualizarDataHora() {

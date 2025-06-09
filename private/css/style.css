@@ -273,6 +273,25 @@ main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrang
   text-align: center;
 }
 
+.sort-buttons {
+  display: inline-flex;
+  margin-left: 10px;
+}
+
+.sort-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 0 2px;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.sort-btn:hover {
+  background-color: #d4c89c;
+}
+
 select:hover {
   cursor: pointer;
 }
