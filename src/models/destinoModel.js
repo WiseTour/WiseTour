@@ -2,7 +2,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../database/sequelize'); // ATENÇÃO: Ajuste este caminho para o seu arquivo de conexão Sequelize
 
-const Destinos = sequelize.define('destinos', { // 'destinos' é o nome da sua tabela no banco de dados
+const Destino = sequelize.define('destino', { // 'destino' é o nome da sua tabela no banco de dados
     fk_perfil_estimado_turistas: {
         type: DataTypes.INTEGER,
         primaryKey: true, // Parte da chave primária composta
@@ -47,10 +47,10 @@ const Destinos = sequelize.define('destinos', { // 'destinos' é o nome da sua t
         allowNull: false
     }
 }, {
-    tableName: 'destinos',
+    tableName: 'destino',
     timestamps: false,
     // DECLARE A CHAVE PRIMÁRIA COMPOSTA AQUI!
     primaryKey: ['fk_perfil_estimado_turistas', 'fk_pais_origem', 'fk_uf_destino', 'fk_uf_entrada']
 });
 
-module.exports = Destinos;
+module.exports = Destino;

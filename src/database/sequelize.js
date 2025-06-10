@@ -8,8 +8,44 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: 'mysql',
-    logging: false, // desativa logs de SQL no console
-  }
-);
+    pool: {
+    max: 10,          // Máximo de 10 conexões no pool
+    min: 2,           // Mínimo de 2 conexões sempre ativas
+    acquire: 60000,   // Tempo limite para obter conexão (60 segundos)
+    idle: 30000,      // Tempo antes de fechar conexão inativa (30 segundos)
+    evict: 60000,     // Tempo para verificar conexões inválidas (60 segundos)
+  },
+  
+  // Outras configurações importantes
+  dialectOptions: {
+    connectTimeout: 60000,    // Timeout de conexão MySQL
+    // acquireTimeout e timeout não são válidos aqui para MySQL2
+  },
+  
+  // Configurações de retry
+  retry: {
+    match: [
+      /ETIMEDOUT/,
+      /EHOSTUNREACH/,
+      /ECONNRESET/,
+      /ECONNREFUSED/,
+      /TIMEOUT/,
+      /ESOCKETTIMEDOUT/,
+      /EHOSTUNREACH/,
+      /EPIPE/,
+      /EAI_AGAIN/,
+      /SequelizeConnectionError/,
+      /SequelizeConnectionRefusedError/,
+      /SequelizeHostNotFoundError/,
+      /SequelizeHostNotReachableError/,
+      /SequelizeInvalidConnectionError/,
+      /SequelizeConnectionTimedOutError/
+    ],
+    max: 3
+  },
+  
+  // Logging para debug
+  logging: console.log, // ou false para desabilitar
+});
 
 module.exports = sequelize;

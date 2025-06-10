@@ -127,12 +127,12 @@ async function carregarDadosDashboardPrincipal() {
         // Opcional: Mostrar uma mensagem de erro ou dados padrão
     }
 
-
   // ----------------------------------------------------
   // 2. Gráfico PRESENÇA DE TURISTAS POR UF
   // Rota esperada no backend: /grafico/presenca-uf
   // Exemplo de retorno: [{ uf: 'SP', quantidade: 5000 }, ...]
   // ----------------------------------------------------
+
   try {
     const res = await fetch(`${basePath}/presenca-uf?${queryString}`); // Supondo esta rota
     const data = await res.json();
@@ -302,3 +302,280 @@ if (selectPais)
 
 // Chama a função uma vez ao carregar a página para exibir os dados iniciais
 // document.addEventListener("DOMContentLoaded", carregarDadosDashboardPrincipal);
+
+// Função para carregar dados do cache ao inicializar a dashboard
+async function carregarDadosDoCache() {
+  const basePath = "/api"; // Base path para as APIs de cache
+
+  // ----------------------------------------------------
+  // 1. Gráfico PRINCIPAIS PAÍSES DE ORIGEM (do cache)
+  // Rota: /api/paises-origem-cached
+  // ----------------------------------------------------
+  try {
+    const res = await fetch(`${basePath}/paises-origem-cached`);
+    if (res.ok) {
+      const data = await res.json();
+
+      const labels = data.map((item) => item.pais);
+      const valores = data.map((item) => item.percentual);
+      const ctx = document.getElementById("myChart");
+
+      if (myChartInstance) {
+        myChartInstance.data.labels = labels;
+        myChartInstance.data.datasets[0].data = valores;
+        myChartInstance.update();
+      } else {
+        myChartInstance = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: valores,
+              backgroundColor: [
+                coresUsadas.amarelo, coresUsadas.marromBeige, coresUsadas.marrom,
+                coresUsadas.amareloClaro, coresUsadas.begeMedio
+              ],
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                titleFont: estiloDoTextoDoGrafico.font,
+                bodyFont: estiloDoTextoDoGrafico.font,
+                callbacks: {
+                  label: function (context) {
+                    return ` ${context.parsed.y}%`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                ticks: {
+                  ...estiloDoTextoDoGrafico,
+                  autoSkip: false,
+                  maxRotation: 90,
+                  minRotation: 90
+                }
+              },
+              y: {
+                beginAtZero: true,
+                ticks: estiloDoTextoDoGrafico
+              }
+            }
+          }
+        });
+      }
+    } else {
+      console.warn('Dados de países de origem não encontrados no cache');
+    }
+  } catch (err) {
+    console.error('Erro ao buscar dados de países de origem do cache:', err);
+  }
+
+  // ----------------------------------------------------
+  // 2. Gráfico PRESENÇA DE TURISTAS POR UF (do cache)
+  // Rota: /api/presenca-uf-cached
+  // ----------------------------------------------------
+  try {
+    const res = await fetch(`${basePath}/presenca-uf-cached`);
+    if (res.ok) {
+      const data = await res.json();
+
+      const labels = data.map((item) => item.uf);
+      const valores = data.map((item) => item.quantidade);
+      const ctx = document.getElementById("presencaTuristaChart");
+
+      if (presencaTuristaChartInstance) {
+        presencaTuristaChartInstance.data.labels = labels;
+        presencaTuristaChartInstance.data.datasets[0].data = valores;
+        presencaTuristaChartInstance.update();
+      } else {
+        presencaTuristaChartInstance = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                data: valores,
+                backgroundColor: [
+                  coresUsadas.amarelo,
+                  coresUsadas.marromBeige,
+                  coresUsadas.marrom,
+                  coresUsadas.amareloClaro,
+                  coresUsadas.begeMedio,
+                ],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                titleFont: estiloDoTextoDoGrafico.font,
+                bodyFont: estiloDoTextoDoGrafico.font,
+                callbacks: {
+                  label: function (context) {
+                    return ` ${context.parsed.y} turistas`;
+                  },
+                },
+              },
+            },
+            scales: {
+              x: {
+                ticks: {
+                  ...estiloDoTextoDoGrafico,
+                  maxRotation: 0,
+                  minRotation: 0,
+                },
+              },
+              y: {
+                beginAtZero: true,
+                ticks: estiloDoTextoDoGrafico,
+              },
+            },
+          },
+        });
+      }
+    } else {
+      console.warn('Dados de presença por UF não encontrados no cache');
+    }
+  } catch (err) {
+    console.error("Erro ao buscar dados de presença de turistas por UF do cache:", err);
+  }
+
+  // ----------------------------------------------------
+  // 3. Gráfico de CHEGADAS (do cache)
+  // Rota: /api/chegadas-cached
+  // ----------------------------------------------------
+  try {
+    const res = await fetch(`${basePath}/chegadas-cached`);
+    if (res.ok) {
+      const data = await res.json();
+
+      const labels = data.map((item) => item.mes_nome);
+      const valores = data.map((item) => item.chegadas);
+      const ctx = document.getElementById("chegadasTuristasChart");
+
+      if (chegadasTuristasChartInstance) {
+        chegadasTuristasChartInstance.data.labels = labels;
+        chegadasTuristasChartInstance.data.datasets[0].data = valores;
+        chegadasTuristasChartInstance.update();
+      } else {
+        chegadasTuristasChartInstance = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                data: valores,
+                borderColor: coresUsadas.amarelo,
+                borderWidth: 2,
+                tension: 0.4,
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                titleFont: estiloDoTextoDoGrafico.font,
+                bodyFont: estiloDoTextoDoGrafico.font,
+              },
+            },
+            scales: {
+              x: {
+                ticks: {
+                  ...estiloDoTextoDoGrafico,
+                  maxRotation: 0,
+                  minRotation: 0,
+                },
+              },
+              y: {
+                beginAtZero: true,
+                ticks: estiloDoTextoDoGrafico,
+              },
+            },
+          },
+        });
+      }
+    } else {
+      console.warn('Dados de chegadas não encontrados no cache');
+    }
+  } catch (err) {
+    console.error("Erro ao buscar dados de chegadas de turistas do cache:", err);
+  }
+
+  // ----------------------------------------------------
+  // 4. KPIs de CHEGADAS COMPARATIVAS (do cache)
+  // Rota: /api/chegadas-comparativas-cached
+  // ----------------------------------------------------
+  try {
+    const res = await fetch(`${basePath}/chegadas-comparativas-cached`);
+    if (res.ok) {
+      const data = await res.json();
+
+      document.getElementById("kpiChegadasAnoAnterior").textContent =
+        data.chegadasAnoAnterior;
+      document.getElementById(
+        "labelAnoAnterior"
+      ).textContent = `em ${data.anoAnterior}`;
+      document.getElementById("kpiChegadasAnoAtual").textContent =
+        data.chegadasAnoAtual;
+      document.getElementById(
+        "labelAnoAtual"
+      ).textContent = `em ${data.anoAtual}`;
+      document.getElementById("kpiPorcentagemComparativa").textContent =
+        data.porcentagemComparativa;
+    } else {
+      console.warn('Dados de chegadas comparativas não encontrados no cache');
+      // Definir valores padrão quando não há dados no cache
+      document.getElementById("kpiChegadasAnoAnterior").textContent = "N/A";
+      document.getElementById("labelAnoAnterior").textContent = "em ---";
+      document.getElementById("kpiChegadasAnoAtual").textContent = "N/A";
+      document.getElementById("labelAnoAtual").textContent = "em ---";
+      document.getElementById("kpiPorcentagemComparativa").textContent = "N/A";
+    }
+  } catch (err) {
+    console.error("Erro ao buscar KPIs de chegadas comparativas do cache:", err);
+    document.getElementById("kpiChegadasAnoAnterior").textContent = "N/A";
+    document.getElementById("labelAnoAnterior").textContent = "em ---";
+    document.getElementById("kpiChegadasAnoAtual").textContent = "N/A";
+    document.getElementById("labelAnoAtual").textContent = "em ---";
+    document.getElementById("kpiPorcentagemComparativa").textContent = "N/A";
+  }
+
+  // ----------------------------------------------------
+  // 5. Carregar dados dos filtros (meses-anos-países) do cache
+  // Rota: /api/meses-anos-paises-cached
+  // ----------------------------------------------------
+  try {
+    const res = await fetch(`${basePath}/meses-anos-paises-cached`);
+    if (res.ok) {
+      const data = await res.json();
+      
+      // Assumindo que você tem uma função para popular os selects de filtro
+      // ou você pode implementar aqui a lógica para popular os dropdowns
+      if (typeof popularFiltros === 'function') {
+        popularFiltros(data);
+      }
+      
+      console.log('Dados de filtros carregados do cache:', data);
+    } else {
+      console.warn('Dados de filtros não encontrados no cache');
+    }
+  } catch (err) {
+    console.error("Erro ao buscar dados de filtros do cache:", err);
+  }
+}
+
+// Chama a função de carregar dados do cache quando a página carrega
+document.addEventListener("DOMContentLoaded", carregarDadosDoCache);
