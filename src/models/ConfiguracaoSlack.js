@@ -11,15 +11,7 @@ const ConfiguracaoSlack = sequelize.define('configuracao_slack', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  slack_user_id: {
-    type: DataTypes.STRING(45),
-    allowNull: true,
-  },
-  slack_username: {
-    type: DataTypes.STRING(255),
-    allowNull: true,
-  },
-  canal_padrao: {
+  webhook_canal_padrao: {
     type: DataTypes.STRING(255),
     allowNull: true,
   },
@@ -30,13 +22,6 @@ const ConfiguracaoSlack = sequelize.define('configuracao_slack', {
       isIn: [['sim', 'nao']],
     },
   },
-}, {
-  indexes: [
-    {
-      unique: true,
-      fields: ['id_configuracao_slack', 'fk_usuario'],
-    },
-  ],
 });
 
 module.exports = ConfiguracaoSlack;

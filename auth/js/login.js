@@ -31,7 +31,7 @@ function entrar() {
 
           const usuario = {
             email: json.email,
-            id: json.id_usuario,
+            id_usuario: json.id_usuario,
             permissao: json.permissao,
           };
 

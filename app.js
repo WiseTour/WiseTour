@@ -24,17 +24,16 @@ app.get("/estado", async (req, res) => {
   try {
     const ipResponse = await axios.get("https://api64.ipify.org?format=json");
     const ip = ipResponse.data.ip;
-    console.log("IP público do usuário:", ip);
 
     const locationResponse = await axios.get(`http://ip-api.com/json/${ip}`);
-    console.log("Resposta da API:", locationResponse.data);
+    const estado = locationResponse.data.regionName || "BRASIL";
 
-    res.json({ estado: locationResponse.data.regionName || "BRASIL" });
+    res.json({ estado });
   } catch (error) {
-    console.error("Erro ao obter localização:", error);
     res.status(500).json({ erro: "Erro ao obter localização" });
   }
 });
+
 
 // /PEGA INFORMAÇÕES DO IP DO USUÁRIO PARA DESCOBRIR O ESTADO
 
@@ -42,10 +41,11 @@ var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuario");
 var internalRoutes = require("./src/routes/internalRoutes");
 var funcionarioRoutes = require('./src/routes/funcionario');
-var preferenciasVisualizacaoDashboardRoutes = require('./src/routes/preferenciasVisualizacaoDashboardRoutes');
+var preferenciaVisualizacaoDashboardRoutes = require('./src/routes/preferenciaVisualizacaoDashboard');
 var telaDashboardRoutes = require("./src/routes/telaDashboardRoutes");
+var configuracaoSlackRoutes = require("./src/routes/configuracaoSlack");
 
-var sequelize = require('./src/database/sequelizeConfig');
+const { sequelize } = require('./src/database/sequelizeConfig');
 var graficoRouter = require("./src/routes/graficoRoute");
 
 app.use(express.json());
@@ -63,10 +63,11 @@ app.use(cors());
 app.use("/", indexRouter);
 app.use("/usuario", usuarioRouter);
 app.use('/funcionario', funcionarioRoutes);
-app.use("/preferenciasVisualizacaoDashboardRoutes", preferenciasVisualizacaoDashboardRoutes);
-app.use("/telaDashboardRoutes", telaDashboardRoutes);
+app.use("/preferenciaVisualizacaoDashboard", preferenciaVisualizacaoDashboardRoutes);
+app.use("/telaDashboard", telaDashboardRoutes);
 app.use("/internalRoutes", internalRoutes);
 app.use("/grafico", graficoRouter);
+app.use("/configuracaoSlackRoutes", configuracaoSlackRoutes)
 
 
 async function connectDB() {

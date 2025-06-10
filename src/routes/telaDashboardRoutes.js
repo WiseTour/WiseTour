@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const telaDashboardController = require('../controllers/telaDashboard');
+const TelaDashboardController = require('../controllers/telaDashboard');
 
-router.get('/:id_usuario', telaDashboardController.buscarTelasPorUsuario);
-router.put('/:id_usuario', telaDashboardController.atualizarPreferencias);
+router.get('/usuario/:usuarioId/telas', TelaDashboardController.buscarTelasUsuario);
 
 module.exports = router;
