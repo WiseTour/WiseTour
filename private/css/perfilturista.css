@@ -2,74 +2,110 @@
 @import url("/common/css/style.css");
 
 
-body,
-body * {
-    font-family: "Anybody", sans-serif !important;
+:root {
+    --font_family_2: "Anybody", sans-serif;
+    --font_family_padrao: "Anybody", sans-serif;
+}
+
+span,
+a,
+input,
+select,
+label,
+button {
+    font-family: var(--font_family_2);
+}
+
+html,
+body {
+    overflow-y: hidden;
+    /* Remove a barra de rolagem vertical */
+    height: 100%;
+    /* Garante que ocupem toda a altura */
+    margin: 0;
+    /* Remove margens padrão */
+    padding: 0;
+    /* Remove paddings padrão */
 }
 
 /* HEADER */
 header {
-    width: 100vw;
-    position: sticky;
-    top: 0;
-    z-index: 9999;
+    width: 100%;
+    height: fit-content;
     background-color: var(--cor_base);
     box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
-}
-
-header .container {
-    width: 90%;
-    margin: 0 auto;
-    margin-inline: 5%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    height: 120px;
+    justify-content: center;
 }
 
-.logo_container .logo {
-    height: 70px;
-}
-
-.menu_container {
+#header_container {
+    width: 92%;
+    padding-block: 20px;
     display: flex;
     align-items: center;
-    gap: 65px;
+    gap: 5%;
 }
 
-.menu_container .opcao {
+.logo {
+    height: 50px;
+}
+
+.menu_container_middle {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5%;
+}
+
+.menu_container_right {
+    display: flex;
+    gap: 10%;
+}
+
+.opcao {
     font-weight: bold;
     text-transform: uppercase;
-    color: black;
-    border: 2px solid black;
+    border: 2px solid var(--cinza_escuro);
     border-radius: 50px;
     text-decoration: none;
-    padding: 13px 31px;
+    padding: 10px 30px;
     transition: transform 0.3s ease;
-    font-size: 17px;
-    transition: all 0.8s ease;
+    text-align: center;
+    font-size: 1.3rem;
 }
 
-.menu_container .opcao.active {
-    border: 2px solid black;
-    border-radius: 50px;
-    color: black;
-}
-
-.icon_container {
+.menu_container_right .opcao {
+    padding: 10px;
     display: flex;
     align-items: center;
-    gap: 15px;
+    justify-content: center;
 }
 
-.icon_container .entrar {
+.opcao i,
+.opcao img {
+    line-height: 1em;
+    height: 1em;
+    width: 1em;
     display: flex;
     align-items: center;
-    transition: 0.3s ease;
+    justify-content: center;
+    font-size: 1em;
+    color: var(--cinza_escuro);
+    fill: var(--cinza_escuro);
 }
 
-.icon_container img {
-    width: 50px;
+.opcao img {
+    fill: var(--cinza_escuro);
+}
+
+/* EFEITOS */
+nav .active {
+    background: var(--cinza_claro);
+}
+
+.opcao:hover {
+    background: var(--cinza_claro);
 }
 
 
@@ -82,21 +118,19 @@ body {
 
 main {
     background-color: #d6d1d1;
-    min-height: 50vw
-
-;
-    display: flex
-;
+    min-height: 42vw;
+    display: flex;
     flex-direction: column;
     align-items: center;
     width: 100vw;
     padding: 5px;
     box-sizing: border-box;
+    height: calc(100vh - 70px);
+    /* Subtrai a altura do header */
 }
 
 main .panorama_geral_linha_1 {
-    display: flex
-;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     height: 60px;
@@ -110,7 +144,7 @@ main .panorama_geral_linha_1 .titulo {
     justify-content: flex-start;
     align-items: center;
     height: 100%;
-    width: 30%;
+    width: 60%;
 }
 
 main .panorama_geral_linha_1 .filtros {
@@ -167,8 +201,7 @@ select:hover {
 
 .coluna-kpis {
     width: 95%;
-    display: flex
-;
+    display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
     /* gap: 10px; */
@@ -295,6 +328,9 @@ select:hover {
     margin-right: -20px;
     margin-top: -20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .titulo-grafico-container .titulo-grafico {
@@ -302,7 +338,6 @@ select:hover {
     font-size: 13px;
     font-weight: bold;
     margin-bottom: 0;
-    text-align: center;
 }
 
 .grafico-planejamento-em-cima {
@@ -334,7 +369,7 @@ select:hover {
 
 
 canvas {
-    max-height: 85% !important;
+    max-height: 75% !important;
     width: 100% !important;
     margin-top: 10px;
     aspect-ratio: inherit;
@@ -353,13 +388,36 @@ canvas {
 
 .icon_container img:hover {
     transform: scale(1.1);
-    
+
 }
 
 #icon-not {
-    width: 25px; 
-    height: auto; 
-  }
+    width: 25px;
+    height: auto;
+}
+
+.sort-buttons {
+    display: flex;
+    gap: 3px;
+    margin-left: 10px;
+}
+
+.sort-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sort-btn:hover {
+    background-color: #d4c89c;
+}
 
 
 

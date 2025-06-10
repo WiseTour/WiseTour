@@ -8,56 +8,59 @@
 
     <link rel="shortcut icon" href="../common/assets/logo/logo_padrao.svg" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://kit.fontawesome.com/041dbc8823.js" crossorigin="anonymous"></script>
     <script src="/common/js/nav-bar.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/filtros.js"></script>
     <script src="js/index.js" defer></script>
+    <script src="https://kit.fontawesome.com/041dbc8823.js" crossorigin="anonymous"></script>
 </head>
 
 <body id="panorama_geral_body">
     <header id="header" class="header">
         <div id="header_container" class="container">
+            <img class="logo" src="/common/assets/logo/logo_cinza_escuro.svg" alt="Logo WiseTour">
 
-            <div class="logo_container">
-                <img class="logo" src="/common/assets/logo/logo_cinza_escuro.svg" alt="Logo WiseTour">
-            </div>
-
-            <nav class="menu_container">
+            <nav class="menu_container_middle">
                 <a class="opcao active" href="index.html">Panorama Geral</a>
                 <a class="opcao" href="perfilturista.html">Perfil do Turista</a>
                 <a class="opcao" href="sazonalidade.html">Sazonalidade</a>
             </nav>
 
-            <div class="icon_container">
-                <a class="opcao entrar" href="/auth/login.html">
-                    <img src="assets/not-icon.svg" alt="" id=icon-not>
+            <nav class="menu_container_right">
+                <a class="opcao" href="configuracao_velho.html">
+                    <img src="assets/titulo-gerenciamento.svg" alt="">
                 </a>
-                <a class="opcao entrar" href="gerenciamento.html">
-                    <img src="assets/ger-icon.png" alt="">
+                <a class="opcao" href="configuracoes.html">
+                    <i class="fa-solid fa-gear"></i>
                 </a>
-                <a class="opcao entrar" href="usuarios.html">
-                    <img src="assets/user-icon.png" alt="">
+                <a class="opcao" href="gerenciamento-usuario.html">
+                    <img src="/common/assets/icon/user_icon.svg">
                 </a>
-            </div>
+            </nav>
         </div>
     </header>
 
 
     <main>
+
         <div class="panorama_geral_linha_1">
             <div class="titulo">
-                PANORAMA GERAL
+                PANORAMA GERAL <span id="resumo_filtros"
+                    style="display: none; font-size: 20px; color: #555; margin-left: 10px;"></span>
             </div>
             <div class="filtros">
-                <select name="mes" id="mes">
-                    <option value="">MÊS:</option>
-                </select>
+                <div class="funil">
+                    <img src="assets/funil.png" alt="funil" style="height: 20px; width: 20px; margin-right: 15px;">
+                </div>
+                <div class="descricao" style="font-size: 14px;">
+                    Mês:
+                </div>
+                <select name="mes" id="mes"></select>
+                <div class="descricao" style="font-size: 14px; margin-left: 20px;">
+                    Ano:
+                </div>
                 <select name="ano" id="ano">
                     <option value="">ANO:</option>
-                </select>
-                <select name="pais" id="pais">
-                    <option value="">PAÍS:</option>
                 </select>
             </div>
         </div>
@@ -67,23 +70,29 @@
                 <div class="principais_paises_origem">
                     <div class="titulo_grafico">
                         PRINCIPAIS PAÍSES DE ORIGEM
+                        <div class="sort-buttons">
+                            <button class="sort-btn" data-chart="myChart" data-order="asc">▲</button>
+                            <button class="sort-btn" data-chart="myChart" data-order="desc">▼</button>
+                        </div>
                     </div>
                     <div class="grafico">
                         <div class="grafico-container">
                             <canvas id="myChart"></canvas>
                         </div>
-
                     </div>
                 </div>
                 <div class="presenca_turista_uf">
                     <div class="titulo_grafico">
                         PRESENÇA DE TURISTAS POR UNIDADE FEDERATIVA
+                        <div class="sort-buttons">
+                            <button class="sort-btn" data-chart="presencaTuristaChart" data-order="asc">▲</button>
+                            <button class="sort-btn" data-chart="presencaTuristaChart" data-order="desc">▼</button>
+                        </div>
                     </div>
                     <div class="grafico">
                         <div class="grafico-container">
                             <canvas id="presencaTuristaChart"></canvas>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -132,7 +141,6 @@
                         <div class="grafico-container">
                             <canvas id="chegadasTuristasChart"></canvas>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -140,36 +148,42 @@
         </div>
     </main>
 
-    <footer>
-        <div class="footer container">
-            <div class="container slogan">
-                <h6><b>WISETOUR,</b><br>
-                    Transformando números em
-                    oportunidades E dados em
-                    destinos de sucesso!</h6>
-            </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mes = document.getElementById('mes');
+            const ano = document.getElementById('ano');
+            const resumo = document.getElementById('resumo_filtros');
 
-            <div class="container menu">
-                <b>MENU</b> <br>
-                <a class="opcao" href="index.html">HOME</a>
-                <a class="opcao" href="sobre.html">SOBRE NÓS</a>
-                <a class="opcao" href="servicos.html">SERVIÇOS</a>
-                <a class="opcao" href="contato.html">ENTRE EM CONTATO</a>
-                <a class="opcao" href="/auth/cadastro.html">CADASTRE-SE</a>
-                <a class="opcao" href="/auth/login.html">ENTRAR</a>
-            </div>
-            <div class="container integrantes">
-                <b>TIME DA WISETOUR</b> <br>
-                <span>Ian Medeiros de Jesus Pimenta</span> <br>
-                <span>Kenner Eduardo Souza Lima</span> <br>
-                <span>Leonardo Sardinha Santana</span> <br>
-                <span>Luana Liriel Brito dos Santos</span> <br>
-                <span>Phelipe Bruione da Silva</span> <br>
-                <span>Samara Martins Damacena</span> <br>
-            </div>
-        </div>
-        <b class="direitos">WISETOUR © 2025. TODOS OS DIREITOS RESERVADOS</b>
-    </footer>
+            function atualizarResumo() {
+                const selecionados = [];
+
+                if (mes.value) {
+                    selecionados.push(mes.options[mes.selectedIndex].text);
+                }
+                if (ano.value) {
+                    selecionados.push(ano.options[ano.selectedIndex].text);
+                }
+
+                resumo.style.display = 'inline';
+
+                if (selecionados.length > 0) {
+                    resumo.textContent = '• ' + selecionados.join(' • ');
+                } else {
+                    resumo.textContent = '• TODOS';
+                }
+            }
+
+            mes.addEventListener('change', atualizarResumo);
+            ano.addEventListener('change', atualizarResumo);
+
+            atualizarResumo();
+        });
+    </script>
+
 </body>
+
+<div id="dataHora" style="position: fixed; bottom: 20px; right: 25px; font-family: 'Anybody', sans-serif; 
+font-size: 16px; color: #0b0b0b;"></div>
+
 
 </html>

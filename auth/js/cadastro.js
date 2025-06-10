@@ -38,7 +38,7 @@ function cadastrar() {
   }
 
   // Envia os dados para o servidor
-  fetch("/usuarios/cadastrar", {
+  fetch("/usuario/cadastrar_info_contato", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

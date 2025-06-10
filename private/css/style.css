@@ -1,92 +1,113 @@
 @import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,95.4,529;1,95.4,529&display=swap');
 @import url("/common/css/style.css");
 
-body,
-body * {
-    font-family: "Anybody", sans-serif !important;
+:root {
+  --font_family_2: "Anybody", sans-serif;
+  --font_family_padrao: "Anybody", sans-serif;
+}
+
+span,
+a,
+input,
+select,
+label,
+button {
+  font-family: var(--font_family_2);
+}
+
+html, body {
+    overflow-y: hidden; 
+    height: 100%; 
+    margin: 0; 
+    padding: 0; 
 }
 
 /* HEADER */
 header {
-    width: 100vw;
-    position: sticky;
-    top: 0;
-    z-index: 9999;
-    background-color: var(--cor_base);
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+  width: 100%;
+  height: fit-content;
+  background-color: var(--cor_base);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-header .container {
-    width: 90%;
-    margin: 0 auto;
-    margin-inline: 5%;
-    display: flex
-;
-    align-items: center;
-    justify-content: space-between;
-    height: 120px;
+#header_container {
+  width: 92%;
+  padding-block: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5%;
 }
 
-.logo_container .logo {
-  height: 70px;
+.logo {
+  height: 50px;
 }
 
-.menu_container {
-    display: flex;
-    align-items: center;
-    gap: 65px;
+.menu_container_middle {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 5%;
 }
 
-.menu_container .opcao {
-    font-weight: bold;
-    text-transform: uppercase;
-    color: black;
-    border: 2px solid black;
-    border-radius: 50px;
-    text-decoration: none;
-    padding: 13px 31px;
-    transition: transform 0.3s ease;
-    font-size: 17px;
-    transition: all 0.8s ease;
+.menu_container_right {
+  display: flex;
+  gap: 10%;
 }
 
-.menu_container .opcao.active {
-    border: 2px solid black;
-    border-radius: 50px;
-    color: black;
+.opcao {
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 2px solid var(--cinza_escuro);
+  border-radius: 50px;
+  text-decoration: none;
+  padding: 10px 30px;
+  transition: transform 0.3s ease;
+  text-align: center;
+  font-size: 1.3rem;
 }
 
-.icon_container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+.menu_container_right .opcao {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.icon_container .entrar {
-    display: flex;
-    align-items: center;
-    transition: 0.3s ease;
+.opcao i,
+.opcao img {
+  line-height: 1em;
+  height: 1em;
+  width: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1em;
+  color: var(--cinza_escuro);
+  fill: var(--cinza_escuro);
 }
 
-.icon_container img {
-    width: 50px;
+.opcao img {
+  fill: var(--cinza_escuro);
 }
 
-.icon_container img {
-  transition: transform 0.6s ease;
+/* EFEITOS */
+nav .active {
+  background: var(--cinza_claro);
 }
 
-.icon_container img:hover {
-  transform: scale(1.1);
-  
+.opcao:hover {
+  background: var(--cinza_claro);
 }
 
 
 /* CONTEUDO */
 
-body{
+body {
   max-width: 100vw;
-  
+
 }
 
 main {
@@ -97,14 +118,13 @@ main {
   justify-content: flex-start;
   align-items: center;
   width: 100vw;
-  height: 100vh;
   position: relative;
   overflow: hidden;
+  height: calc(100vh - 70px); /* Subtrai a altura do header */
 }
 
 main .panorama_geral_linha_1 {
-  display: flex
-;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   height: 70px;
@@ -115,20 +135,18 @@ main .panorama_geral_linha_1 {
 width: 200px; */
 
 main .panorama_geral_linha_1 .titulo {
-  display: flex
-;
+  display: flex;
   font-size: 25px;
   font-weight: bolder;
   justify-content: flex-start;
   align-items: center;
   height: 100%;
-  width: 30%;
+  width: 50%;
 }
 
 main .panorama_geral_linha_1 .filtros {
   /* background-color: blue; */
-  display: flex
-;
+  display: flex;
   justify-content: flex-end;
   align-items: center;
   /* height: 100%; */
@@ -153,8 +171,7 @@ main .panorama_geral_linha_1 .filtros select {
 }
 
 main .panorama_geral_linha_2 {
-  display: flex
-;
+  display: flex;
   justify-content: center;
   align-items: center;
   height: 500px;
@@ -162,7 +179,7 @@ main .panorama_geral_linha_2 {
   gap: 10px;
 }
 
-main .panorama_geral_linha_2 .panorama_geral_coluna_1{
+main .panorama_geral_linha_2 .panorama_geral_coluna_1 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -171,7 +188,7 @@ main .panorama_geral_linha_2 .panorama_geral_coluna_1{
   width: 31.4%;
 }
 
-main .panorama_geral_linha_2 .panorama_geral_coluna_1 .principais_paises_origem{
+main .panorama_geral_linha_2 .panorama_geral_coluna_1 .principais_paises_origem {
   /* background-color: green; */
   display: flex;
   flex-direction: column;
@@ -182,7 +199,7 @@ main .panorama_geral_linha_2 .panorama_geral_coluna_1 .principais_paises_origem{
   width: 100%;
 }
 
-main .panorama_geral_linha_2 .panorama_geral_coluna_1 .presenca_turista_uf{
+main .panorama_geral_linha_2 .panorama_geral_coluna_1 .presenca_turista_uf {
   /* background-color: yellow; */
   display: flex;
   flex-direction: column;
@@ -193,7 +210,7 @@ main .panorama_geral_linha_2 .panorama_geral_coluna_1 .presenca_turista_uf{
   width: 100%;
 }
 
-main .panorama_geral_linha_2 .panorama_geral_coluna_2{
+main .panorama_geral_linha_2 .panorama_geral_coluna_2 {
   display: flex;
   flex-direction: column;
   margin-left: 0.5%;
@@ -202,20 +219,19 @@ main .panorama_geral_linha_2 .panorama_geral_coluna_2{
 }
 
 main .panorama_geral_linha_2 .panorama_geral_coluna_2 .kpis {
-  display: flex
-;
+  display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
   margin-left: 37px;
 }
 
-main .panorama_geral_linha_2 .panorama_geral_coluna_2 .kpis .kpi{
+main .panorama_geral_linha_2 .panorama_geral_coluna_2 .kpis .kpi {
   height: 100%;
   width: 32%;
 }
 
-main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrangeiros{
+main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrangeiros {
   /* background-color: purple; */
   display: flex;
   flex-direction: column;
@@ -225,7 +241,7 @@ main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrang
   width: 100%;
 }
 
-main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrangeiros canvas{
+main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrangeiros canvas {
   height: 100%;
   width: 100%;
 }
@@ -245,8 +261,7 @@ main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrang
   font-size: 13px;
   font-weight: bold;
   background-color: #e4dab6;
-  display: flex
-;
+  display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -258,13 +273,31 @@ main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrang
   text-align: center;
 }
 
+.sort-buttons {
+  display: inline-flex;
+  margin-left: 10px;
+}
+
+.sort-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 0 2px;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.sort-btn:hover {
+  background-color: #d4c89c;
+}
+
 select:hover {
   cursor: pointer;
 }
 
 .card {
-  display: flex
-;
+  display: flex;
   /* align-items: flex-start; */
   /* border-radius: 20px; */
   position: relative;
@@ -281,8 +314,7 @@ select:hover {
   border-radius: 30px;
   height: 70px;
   width: 140px;
-  display: flex
-;
+  display: flex;
   align-items: center;
   /* justify-content: center; */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -292,8 +324,8 @@ select:hover {
 }
 
 .icon-box img {
-    max-width: 40px;
-    max-height: 35px;
+  max-width: 40px;
+  max-height: 35px;
 }
 
 .icon-box i {
@@ -308,8 +340,7 @@ select:hover {
   width: 170px;
   left: 60px;
   padding: 12px;
-  display: flex
-;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
@@ -322,10 +353,10 @@ select:hover {
 }
 
 .info-box .label {
-    font-size: 10px;
-    font-weight: bold;
-    line-height: 1.3;
-    text-align: center;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 1.3;
+  text-align: center;
 }
 
 /* EFEITOS */
@@ -357,7 +388,8 @@ select:hover {
 }
 
 .chegadas_turistas_estrangeiros .grafico {
-  height: 360px !important; /* Altura fixa maior (ajuste o valor conforme necessidade) */
+  height: 360px !important;
+  /* Altura fixa maior (ajuste o valor conforme necessidade) */
 }
 
 .chegadas_turistas_estrangeiros .grafico-container {
@@ -365,79 +397,16 @@ select:hover {
 }
 
 .panorama_geral_coluna_2 .kpis {
-  margin-bottom: 10px; /* Espaço abaixo dos KPIs (ajuste este valor conforme necessidade) */
+  margin-bottom: 10px;
+  /* Espaço abaixo dos KPIs (ajuste este valor conforme necessidade) */
 }
 
 .grafico-container canvas {
-  font-stretch: semi-condensed;  
-  letter-spacing: -0.1px;   
+  font-stretch: semi-condensed;
+  letter-spacing: -0.1px;
 }
 
 #icon-not {
-  width: 25px; 
-  height: auto; 
-}
-
-
-/* FOOTER */
-footer {
-  background-color: var(--cinza);
-  color: var(--cinza_claro);
-  width: 100vw;
-  height: fit-content;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex_start;
-  gap: 50px;
-  padding: var(--padding_block) var(--padding_inline);
-}
-
-footer * {
-  color: var(--cinza_claro);
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-footer .container {
-  height: 100%;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  align-items: baseline;
-  justify-items: end;
-}
-
-footer .container .container {
-  width: fit-content;
+  width: 25px;
   height: auto;
-  color: var(--cinza_claro);
-  flex-direction: column;
-  display: flex;
-  align-items: baseline;
-  font-weight: 100;
 }
-
-footer .container .slogan h6 {
-  font-family: var(--font_family_padrao);
-}
-
-footer .container .menu {
-  justify-self: center;
-  align-items: center;
-  gap: 10px;
-}
-
-footer .container .integrantes {
-  align-items: end;
-}
-
-footer .container .menu a:hover {
-  text-decoration: underline;
-}
-
-footer .container b {
-  font-weight: 400;
-}
-
-/* /FOOTER */

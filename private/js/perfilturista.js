@@ -115,8 +115,10 @@ async function carregarDadosDashboard() {
         const res = await fetch(`${basePath}/motivo?${queryString}`);
         const data = await res.json();
 
-        const labels = data.map(item => item.motivo);
-        const valores = data.map(item => item.percentual);
+        // Ordenar inicialmente de forma decrescente
+        const sortedData = [...data].sort((a, b) => b.percentual - a.percentual);
+        const labels = sortedData.map(item => item.motivo);
+        const valores = sortedData.map(item => item.percentual);
         const ctxMotivos = document.getElementById('graficoMotivos');
 
         if (graficoMotivosInstance) {
@@ -138,16 +140,40 @@ async function carregarDadosDashboard() {
                 options: {
                     ...opcoesPadrao,
                     indexAxis: 'y',
-                    plugins: { legend: { display: false } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.parsed.x}%`;
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         x: {
                             beginAtZero: true,
                             grid: { display: false },
-                            ticks: { ...estiloDoTextoDoGrafico, font: { ...estiloDoTextoDoGrafico.font, size: 15 } }
+                            ticks: { 
+                                ...estiloDoTextoDoGrafico, 
+                                font: { 
+                                    ...estiloDoTextoDoGrafico.font, 
+                                    size: 15 
+                                },
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
                         },
                         y: {
                             grid: { display: false },
-                            ticks: { ...estiloDoTextoDoGrafico, font: { ...estiloDoTextoDoGrafico.font, size: 15 } }
+                            ticks: { 
+                                ...estiloDoTextoDoGrafico, 
+                                font: { 
+                                    ...estiloDoTextoDoGrafico.font, 
+                                    size: 15 
+                                } 
+                            }
                         }
                     }
                 }
@@ -162,8 +188,10 @@ async function carregarDadosDashboard() {
         const res = await fetch(`${basePath}/fontes?${queryString}`);
         const data = await res.json();
 
-        const labels = data.map(item => item.fonte);
-        const valores = data.map(item => item.percentual);
+        // Ordenar inicialmente de forma decrescente
+        const sortedData = [...data].sort((a, b) => b.percentual - a.percentual);
+        const labels = sortedData.map(item => item.fonte);
+        const valores = sortedData.map(item => item.percentual);
         const ctxFontes = document.getElementById('graficoFontes');
 
         if (graficoFontesInstance) {
@@ -188,16 +216,38 @@ async function carregarDadosDashboard() {
                 },
                 options: {
                     ...opcoesPadrao,
-                    plugins: { legend: { display: false } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.parsed.y}%`;
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         y: {
                             beginAtZero: true,
                             grid: { display: false },
-                            ticks: { ...estiloDoTextoDoGrafico, callback: function (value) { return value + '%'; } }
+                            ticks: { 
+                                ...estiloDoTextoDoGrafico, 
+                                callback: function (value) { 
+                                    return value + '%'; 
+                                } 
+                            }
                         },
                         x: {
                             grid: { display: false },
-                            ticks: { ...estiloDoTextoDoGrafico, font: { ...estiloDoTextoDoGrafico.font, size: 9 }, maxRotation: 0, minRotation: 0 }
+                            ticks: { 
+                                ...estiloDoTextoDoGrafico, 
+                                font: { 
+                                    ...estiloDoTextoDoGrafico.font, 
+                                    size: 9 
+                                }, 
+                                maxRotation: 0, 
+                                minRotation: 0 
+                            }
                         }
                     }
                 }

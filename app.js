@@ -1,9 +1,6 @@
 // var ambiente_processo = 'producao';
 var ambiente_processo = "desenvolvimento";
-
 var caminho_env = ambiente_processo === "producao" ? ".env" : ".env.dev";
-// Acima, temos o uso do operador ternário para definir o caminho do arquivo .env
-// A sintaxe do operador ternário é: condição ? valor_se_verdadeiro : valor_se_falso
 
 require("dotenv").config({ path: caminho_env });
 
@@ -18,9 +15,12 @@ var app = express();
 var cacheService = require('./cacheService');
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuario");
-var internalRoutes = require("./src/routes/internalRoutes");
+var funcionarioRoutes = require('./src/routes/funcionario');
+var preferenciaVisualizacaoDashboardRoutes = require('./src/routes/preferenciaVisualizacaoDashboard');
+var telaDashboardRoutes = require("./src/routes/telaDashboardRoutes");
+var configuracaoSlackRoutes = require("./src/routes/configuracaoSlack");
 var ipRouter = require("./src/routes/ipRoute"); // Nova rota para IP
-var sequelize = require('./src//database/sequelizeConfig');
+var { sequelize } = require('./src/database/sequelizeConfig');
 var graficoRouter = require("./src/routes/graficoRoute");
 
 app.use(express.json());
@@ -32,16 +32,19 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/common", express.static(path.join(__dirname, "common")));
 app.use("/auth", express.static(path.join(__dirname, "auth")));
 app.use("/private", express.static(path.join(__dirname, "private")));
-app.use("/internal", express.static(path.join(__dirname, "internal")));
 app.use(cors());
 
 app.use("/", indexRouter);
 app.use("/usuario", usuarioRouter);
-app.use("/internalRoutes", internalRoutes);
+app.use('/funcionario', funcionarioRoutes);
+app.use("/preferenciaVisualizacaoDashboard", preferenciaVisualizacaoDashboardRoutes);
+app.use("/telaDashboard", telaDashboardRoutes);
 app.use("/grafico", graficoRouter);
+app.use("/configuracaoSlackRoutes", configuracaoSlackRoutes)
+
 app.use("/ip", ipRouter); // Rota para serviços de IP
 
-const graficoController = require('./src/controllers/graficoController');
+const graficoController = require('./src/controllers/perfilEstimadoTuristasController');
 
 // Rotas simplificadas de cache
 app.get('/grafico/perfil-estimado-turista/meses-anos-paises', graficoController.getMesesAnosPaises);
@@ -366,11 +369,13 @@ setInterval(async () => {
   await cacheService.carregarCacheUltimoPeriodo(app); // CORRIGIDO: usar cacheService e passar app
 }, 60 * 60 * 1000); // 1 hora em millisegundos
 
+
 sequelize.authenticate().then(() => {
   console.log("Conectado ao banco com Sequelize");
 }).catch(err => {
   console.error("Erro na conexão Sequelize:", err);
 });
+
 
 app.listen(PORTA_APP, function () {
   console.log(`

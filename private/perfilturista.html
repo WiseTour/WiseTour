@@ -19,55 +19,62 @@
 <body id="panorama_geral_body">
     <header id="header" class="header">
         <div id="header_container" class="container">
+            <img class="logo" src="/common/assets/logo/logo_cinza_escuro.svg" alt="Logo WiseTour">
 
-            <div class="logo_container">
-                <img class="logo" src="/common/assets/logo/logo_cinza_escuro.svg" alt="Logo WiseTour">
-            </div>
-
-            <nav class="menu_container">
+            <nav class="menu_container_middle">
                 <a class="opcao" href="index.html">Panorama Geral</a>
                 <a class="opcao active" href="perfilturista.html">Perfil do Turista</a>
                 <a class="opcao" href="sazonalidade.html">Sazonalidade</a>
             </nav>
 
-            <div class="icon_container">
-                <a class="opcao entrar" href="/auth/login.html">
-                    <img src="assets/not-icon.svg" id=icon-not>
+            <nav class="menu_container_right">
+                <a class="opcao" href="configuracao_velho.html">
+                    <img src="assets/titulo-gerenciamento.svg" alt="">
                 </a>
-                <a class="opcao entrar" href="gerenciamento.html">
-                    <img src="assets/ger-icon.png" alt="">
+                <a class="opcao" href="configuracoes.html">
+                    <i class="fa-solid fa-gear"></i>
                 </a>
-                <a class="opcao entrar" href="usuarios.html">
-                    <img src="assets/user-icon.png" alt="">
+                <a class="opcao" href="gerenciamento-usuario.html">
+                    <img src="/common/assets/icon/user_icon.svg">
                 </a>
-            </div>
-
+            </nav>
         </div>
     </header>
 
 
     <main>
         <!-- filtros e titulo -->
+
         <div class="panorama_geral_linha_1">
             <div class="titulo">
-                PERFIL DO TURISTA
+                PERFIL DO TURISTA <span id="resumo_filtros"
+                    style="display: none; font-size: 20px; color: #555; margin-left: 10px;"></span>
             </div>
             <div class="filtros">
+                <div class="funil">
+                    <img src="assets/funil.png" alt="funil" style="height: 20px; width: 20px; margin-right: 15px;">
+                </div>
+                <div class="descricao" style="font-size: 14px;">
+                    Mês:
+                </div>
                 <select name="mes" id="mes">
-                    <option value="">MÊS:</option>
-                    <option value="1">Janeiro</option>
-                    <option value="2">Fevereiro</option>
-                    <option value="3">Março</option>
-                    <option value="4">Abril</option>
-                    <option value="5">Maio</option>
-                    <option value="6">Junho</option>
-                    <option value="7">Julho</option>
-                    <option value="8">Agosto</option>
-                    <option value="9">Setembro</option>
-                    <option value="10">Outubro</option>
-                    <option value="11">Novembro</option>
-                    <option value="12">Dezembro</option>
+                    <option value="">TODOS</option>
+                    <option value="janeiro">Janeiro</option>
+                    <option value="fevereiro">Fevereiro</option>
+                    <option value="marco">Março</option>
+                    <option value="abril">Abril</option>
+                    <option value="maio">Maio</option>
+                    <option value="junho">Junho</option>
+                    <option value="julho">Julho</option>
+                    <option value="agosto">Agosto</option>
+                    <option value="setembro">Setembro</option>
+                    <option value="outubro">Outubro</option>
+                    <option value="novembro">Novembro</option>
+                    <option value="dezembro">Dezembro</option>
                 </select>
+                <div class="descricao" style="font-size: 14px; margin-left: 20px;">
+                    Ano:
+                </div>
                 <select name="ano" id="ano">
                     <option value="">ANO:</option>
                     <option value="2024">2024</option>
@@ -106,23 +113,21 @@
                     <option value="1991">1991</option>
                     <option value="1990">1990</option>
                 </select>
+                <div class="descricao" style="font-size: 14px; margin-left: 20px;">
+                    País:
+                </div>
                 <select name="pais" id="pais">
                     <option value="">PAÍS:</option>
-                    <option value="1">Argentina</option>
-                    <option value="2">Estados Unidos</option>
-                    <option value="3">Alemanha</option>
-                    <option value="4">Chile</option>
-                    <option value="5">Paraguai</option>
-                    <option value="6">Uruguai</option>
-                    <option value="7">França</option>
-                    <option value="8">Portugal</option>
-                    <option value="9">Reino Unido</option>
-                    <option value="10">Itália</option>
-                    <option value="11">Espanha</option>
-                    <option value="12">México</option>
-                    <option value="13">Canadá</option>
-                    <option value="14">China</option>
-                    <option value="15">Colômbia</option>
+                    <option value="argentina">Argentina</option>
+                    <option value="eua">Estados Unidos</option>
+                    <option value="chile">Chile</option>
+                    <option value="paraguai">Paraguai</option>
+                    <option value="uruguai">Uruguai</option>
+                    <option value="franca">França</option>
+                    <option value="portugal">Portugal</option>
+                    <option value="alemanha">Alemanha</option>
+                    <option value="reino-unido">Reino Unido</option>
+                    <option value="italia">Itália</option>
                 </select>
             </div>
         </div>
@@ -141,18 +146,6 @@
                     <h3>gasto médio do turista por permanência no brasil</h3>
                 </div>
             </div>
-
-
-            <div class="card">
-                <div class="card-amarelo-fundo">
-                    <img src="assets/kpi-img-2.svg" alt="">
-                </div>
-                <div class="card-kpi">
-                    <h1>22%</h1>
-                    <h3>dos turistas retornam ao brasil a cada 2 anos</h3>
-                </div>
-            </div>
-
 
             <div class="card">
                 <div class="card-amarelo-fundo">
@@ -181,6 +174,10 @@
                 <div class="coluna-grafico-esquerda">
                     <div class="titulo-grafico-container">
                         <div class="titulo-grafico">MOTIVO DAS VIAGENS REALIZADAS</div>
+                        <div class="sort-buttons">
+                            <button class="sort-btn" data-chart="graficoMotivos" data-order="asc">▲</button>
+                            <button class="sort-btn" data-chart="graficoMotivos" data-order="desc">▼</button>
+                        </div>
                     </div>
 
                     <canvas id="graficoMotivos"></canvas>
@@ -190,6 +187,10 @@
                     <div class="grafico-superior-direito">
                         <div class="titulo-grafico-container">
                             <div class="titulo-grafico">FONTE DE INFORMAÇÃO PARA PLANEJAMENTO DA VIAGEM</div>
+                            <div class="sort-buttons">
+                                <button class="sort-btn" data-chart="graficoFontes" data-order="asc">▲</button>
+                                <button class="sort-btn" data-chart="graficoFontes" data-order="desc">▼</button>
+                            </div>
                         </div>
                         <canvas id="graficoFontes"></canvas>
                     </div>
@@ -216,36 +217,48 @@
         </div>
     </main>
 
-    <footer>
-        <div class="footer container">
-            <div class="container slogan">
-                <h6><b>WISETOUR,</b><br>
-                    Transformando números em
-                    oportunidades E dados em
-                    destinos de sucesso!</h6>
-            </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mes = document.getElementById('mes');
+            const ano = document.getElementById('ano');
+            const pais = document.getElementById('pais');
+            const resumo = document.getElementById('resumo_filtros');
 
-            <div class="container menu">
-                <b>MENU</b> <br>
-                <a class="opcao" href="index.html">HOME</a>
-                <a class="opcao" href="sobre.html">SOBRE NÓS</a>
-                <a class="opcao" href="servicos.html">SERVIÇOS</a>
-                <a class="opcao" href="contato.html">ENTRE EM CONTATO</a>
-                <a class="opcao" href="/auth/cadastro.html">CADASTRE-SE</a>
-                <a class="opcao" href="/auth/login.html">ENTRAR</a>
-            </div>
-            <div class="container integrantes">
-                <b>TIME DA WISETOUR</b> <br>
-                <span>Ian Medeiros de Jesus Pimenta</span> <br>
-                <span>Kenner Eduardo Souza Lima</span> <br>
-                <span>Leonardo Sardinha Santana</span> <br>
-                <span>Luana Liriel Brito dos Santos</span> <br>
-                <span>Phelipe Bruione da Silva</span> <br>
-                <span>Samara Martins Damacena</span> <br>
-            </div>
-        </div>
-        <b class="direitos">WISETOUR © 2025. TODOS OS DIREITOS RESERVADOS</b>
-    </footer>
+            function atualizarResumo() {
+                const selecionados = [];
+
+                if (mes.value) {
+                    selecionados.push(mes.options[mes.selectedIndex].text);
+                }
+                if (ano.value) {
+                    selecionados.push(ano.options[ano.selectedIndex].text);
+                }
+                if (pais.value) {
+                    selecionados.push(pais.options[pais.selectedIndex].text);
+                }
+
+                resumo.style.display = 'inline';
+
+                if (selecionados.length > 0) {
+                    resumo.textContent = '• ' + selecionados.join(' • ');
+                } else {
+                    resumo.textContent = '• TODOS';
+                }
+            }
+
+            mes.addEventListener('change', atualizarResumo);
+            ano.addEventListener('change', atualizarResumo);
+            pais.addEventListener('change', atualizarResumo);
+
+            // Exibe "TODOS" por padrão no carregamento
+            atualizarResumo();
+        });
+    </script>
+
 </body>
+
+
+<div id="dataHora" style="position: fixed; bottom: 20px; right: 25px; font-family: 'Anybody', sans-serif; 
+font-size: 16px; color: #0b0b0b;"></div>
 
 </html>

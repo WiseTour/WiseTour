@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const graficoController = require('../controllers/graficoController');
+const graficoController = require('../controllers/perfilEstimadoTuristasController');
 
 // Rotas do perfil do turista (já existentes)
 router.get('/motivo', graficoController.listarMotivos);

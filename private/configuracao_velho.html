@@ -1,0 +1,112 @@
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações</title>
+    <link rel="shortcut icon" href="../common/assets/logo/logo_padrao.svg" type="image/x-icon">
+    <link rel="stylesheet" href="css/gerenciamento.css">
+    <script type="module" src="/private/js/configuracao_velho.js"></script>
+    <script src="https://kit.fontawesome.com/041dbc8823.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <header id="header" class="header">
+        <div id="header_container" class="container">
+            <img class="logo" src="/common/assets/logo/logo_cinza_escuro.svg" alt="Logo WiseTour">
+
+            <nav class="menu_container_middle">
+                <a class="opcao" href="index.html">Panorama Geral</a>
+                <a class="opcao" href="perfilturista.html">Perfil do Turista</a>
+                <a class="opcao" href="sazonalidade.html">Sazonalidade</a>
+            </nav>
+
+            <nav class="menu_container_right">
+                <a class="opcao active" href="configuracao_velho.html">
+                    <img src="assets/titulo-gerenciamento.svg" alt="">
+                </a>
+                <a class="opcao " href="configuracoes.html">
+                    <i class="fa-solid fa-gear"></i>
+                </a>
+                <a class="opcao" href="gerenciamento-usuario.html">
+                    <img src="/common/assets/icon/user_icon.svg">
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+    <div class="container_main">
+        <div class="cabecalho">
+                        <h2>GERENCIAMENTO DE USUÁRIOS</h2>
+            <button id="btn-novo-usuario">
+                <i class="fa-solid fa-user-plus"></i>
+                NOVO USUÁRIO
+            </button>
+        </div>
+        
+        <div class="container_usuarios" id="lista-usuarios">
+            <div class="tabela-container">
+                <table class="tabela-usuarios">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Cargo</th>
+                            <th>Telefone</th>
+                            <th>Email</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpo-tabela">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="container_cadastro" id="form-cadastro" style="display: none;">
+            <div class="left_container">
+                <div class="form-cadastro-container">
+                    <h3>CADASTRAR NOVO USUÁRIO</h3>
+                    <form id="form-usuario">
+                        <div class="form-group">
+                            <label for="nome">Nome Completo:</label>
+                            <input type="text" id="nome" name="nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cargo">Cargo/Função:</label>
+                            <input type="text" id="cargo" name="cargo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefone">Telefone:</label>
+                            <input type="tel" id="telefone" name="telefone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="senha">Senha:</label>
+                            <input type="password" id="senha" name="senha" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmar-senha">Confirmar Senha:</label>
+                            <input type="password" id="confirmar-senha" name="confirmar-senha" required>
+                        </div>
+                        <div class="form-botoes">
+                            <button type="button" class="btn-cancelar" id="btn-cancelar">
+                                <i class="fa-solid fa-times"></i> Cancelar
+                            </button>
+                            <button type="submit" class="btn-salvar">
+                                <i class="fa-solid fa-save"></i> Salvar Usuário
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="alert-container" style="display: none; position: fixed; top: 20px; right: 20px; background: #ff4444; color: white; padding: 15px; border-radius: 5px; z-index: 1000;"></div>
+</main>
+</body>
+</html>

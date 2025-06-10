@@ -1,36 +1,8 @@
 // src/controllers/graficoController.js
 
-const { Op, fn, col, literal } = require("sequelize");
-const PerfilEstimadoTurista = require("../models/graficoModel");
-const Pais = require("../models/paisModel");
-const UnidadeFederativaBrasil = require("../models/unidadeFederativaBrasilModel");
-const Destino = require("../models/destinoModel");
-const sequelize = require("../database/sequelize");
-
-// --- Associações (CRUCIAL para os JOINs funcionarem corretamente) ---
-
-PerfilEstimadoTurista.belongsTo(Pais, {
-  foreignKey: "fk_pais_origem",
-  targetKey: "id_pais",
-});
-Pais.hasMany(PerfilEstimadoTurista, {
-  foreignKey: "fk_pais_origem",
-  sourceKey: "id_pais",
-});
-
-PerfilEstimadoTurista.belongsTo(UnidadeFederativaBrasil, {
-  foreignKey: "fk_uf_entrada",
-  targetKey: "sigla",
-});
-UnidadeFederativaBrasil.hasMany(PerfilEstimadoTurista, {
-  foreignKey: "fk_uf_entrada",
-  sourceKey: "sigla",
-});
-
-Destino.belongsTo(UnidadeFederativaBrasil, {
-  foreignKey: "fk_uf_destino",
-  targetKey: "sigla",
-});
+const { Op, fn, col, literal, QueryTypes } = require("sequelize");
+const { perfilEstimadoTuristas, unidadeFederativaBrasil, destino, pais } = require('../models/index');
+const { sequelize } = require('../models/index');
 
 //modificações
 
@@ -95,7 +67,7 @@ exports.buscarDadosParaDashboard = async (req, res) => {
             FROM
                 perfil_estimado_turistas AS p
             JOIN
-                Destino AS d ON p.id_perfil_estimado_turistas = d.fk_perfil_estimado_turistas
+                destino AS d ON p.id_perfil_estimado_turistas = d.fk_perfil_estimado_turistas
                              AND p.fk_pais_origem = d.fk_pais_origem
                              AND p.fk_uf_entrada = d.fk_uf_entrada
             JOIN
@@ -120,9 +92,8 @@ exports.buscarDadosParaDashboard = async (req, res) => {
 };
 
 exports.obterDadosVisitasPorEstado = async (req, res) => {
-  // OU exports.listarVisitasPorEstadoParaMapa
   try {
-    const { mes, ano, pais } = req.query; // Pega os filtros do frontend
+    const { mes, ano, pais } = req.query;
 
     let whereConditions = `WHERE 1=1`;
     const replacements = {};
@@ -140,52 +111,45 @@ exports.obterDadosVisitasPorEstado = async (req, res) => {
       replacements.pais = parseInt(pais, 10);
     }
 
-    // ... (dentro de exports.obterDadosVisitasPorEstado) ...
-
     const querySQL = `
-    SELECT
-        CONCAT('br-', LOWER(UF.sigla)) AS 'hc-key', -- Nome da coluna ajustado para Highcharts
-        SUM(P.quantidade_turistas) AS value -- Nome da coluna ajustado para Highcharts
-    FROM
+      SELECT 
+        UF.unidade_federativa AS estado,
+        SUM(P.quantidade_turistas) AS total_turistas
+      FROM 
         perfil_estimado_turistas AS P
-    JOIN
-        Destino AS D ON P.id_perfil_estimado_turistas = D.fk_perfil_estimado_turistas
+      JOIN 
+        destino AS D ON P.id_perfil_estimado_turistas = D.fk_perfil_estimado_turistas
                      AND P.fk_pais_origem = D.fk_pais_origem
                      AND P.fk_uf_entrada = D.fk_uf_entrada
-    JOIN
+      JOIN 
         unidade_federativa_brasil AS UF ON D.fk_uf_destino = UF.sigla
-    ${whereConditions}
-    GROUP BY
-        UF.sigla
-    ORDER BY
-        value DESC;
-`;
+      ${whereConditions}
+      GROUP BY 
+        UF.unidade_federativa, UF.sigla
+      ORDER BY 
+        total_turistas DESC;
+    `;
 
     const resultados = await sequelize.query(querySQL, {
       replacements: replacements,
-      type: sequelize.QueryTypes.SELECT,
+      type: QueryTypes.SELECT,
     });
 
-    if (resultados.length === 0) {
-      return res.status(200).json([]); // Retorna um array vazio em vez de 404 para não quebrar o frontend
-    }
+    res.json(resultados);
 
-    res.json(resultados); // Vai retornar um array de objetos como [{ "hc-key": "br-sp", "value": 85000 }, ...]
   } catch (error) {
     console.error("Erro ao obter dados de visitação por estado:", error);
-    res
-      .status(500)
-      .json({ erro: "Erro interno ao obter dados de visitação por estado." });
+    res.status(500).json({ erro: "Erro interno ao obter dados de visitação por estado." });
   }
 };
 
 exports.listarTopEstadosVisitadosSazonalidade = async (req, res) => {
   try {
-    const { mes, ano, pais } = req.query; // Pega os filtros do frontend
+    const { mes, ano, pais } = req.query;
 
-    // Construindo a cláusula WHERE dinamicamente para o SQL
-    let whereConditions = `WHERE 1=1`; // Começa com uma condição sempre verdadeira
-    const replacements = {}; // Objeto para armazenar os valores para substituição segura
+    // Construindo a cláusula WHERE dinamicamente
+    let whereConditions = `WHERE 1=1`;
+    const replacements = {};
 
     if (mes) {
       whereConditions += ` AND P.mes = :mes`;
@@ -201,43 +165,37 @@ exports.listarTopEstadosVisitadosSazonalidade = async (req, res) => {
     }
 
     const querySQL = `
-            SELECT
-                UF.unidade_federativa AS unidade_federativa,
-                SUM(P.quantidade_turistas) AS total_turistas_uf
-            FROM
-                perfil_estimado_turistas AS P
-            JOIN
-                Destino AS D ON P.id_perfil_estimado_turistas = D.fk_perfil_estimado_turistas
-                             AND P.fk_pais_origem = D.fk_pais_origem
-                             AND P.fk_uf_entrada = D.fk_uf_entrada
-            JOIN
-                unidade_federativa_brasil AS UF ON D.fk_uf_destino = UF.sigla
-            ${whereConditions} -- Inclui as condições dinâmicas do WHERE
-            GROUP BY
-                UF.unidade_federativa
-            ORDER BY
-                total_turistas_uf DESC
-            LIMIT 3;
-        `;
+      SELECT 
+        UF.unidade_federativa AS unidade_federativa,
+        SUM(P.quantidade_turistas) AS total_turistas_uf
+      FROM 
+        perfil_estimado_turistas AS P
+      JOIN 
+        destino AS D ON P.id_perfil_estimado_turistas = D.fk_perfil_estimado_turistas
+                     AND P.fk_pais_origem = D.fk_pais_origem
+                     AND P.fk_uf_entrada = D.fk_uf_entrada
+      JOIN 
+        unidade_federativa_brasil AS UF ON D.fk_uf_destino = UF.sigla
+      ${whereConditions}
+      GROUP BY 
+        UF.unidade_federativa
+      ORDER BY 
+        total_turistas_uf DESC
+      LIMIT 3;
+    `;
 
+    // CORREÇÃO: Usar QueryTypes.SELECT em vez de sequelize.QueryTypes.SELECT
     const resultados = await sequelize.query(querySQL, {
       replacements: replacements,
-      type: sequelize.QueryTypes.SELECT,
+      type: QueryTypes.SELECT,
     });
 
-    // Mapeia os resultados para extrair APENAS o nome da UF
     const topEstadosNomes = resultados.map((item) => item.unidade_federativa);
+    res.json(topEstadosNomes);
 
-    // Envia apenas o array de strings
-    res.json(topEstadosNomes); // Isso enviaria ["São Paulo", "Rio de Janeiro", "Minas Gerais"]
   } catch (error) {
-    console.error(
-      "Erro ao buscar top estados visitados para sazonalidade:",
-      error
-    );
-    res
-      .status(500)
-      .json({ erro: "Erro interno ao buscar top estados visitados." });
+    console.error("Erro ao buscar top estados visitados para sazonalidade:", error);
+    res.status(500).json({ erro: "Erro interno ao buscar top estados visitados." });
   }
 };
 
@@ -248,7 +206,7 @@ exports.listarTopEstadosVisitadosSazonalidade = async (req, res) => {
 exports.listarMotivos = async (req, res) => {
   try {
     const where = construirWhereClause(req);
-    const resultados = await PerfilEstimadoTurista.findAll({
+    const resultados = await perfilEstimadoTuristas.findAll({
       attributes: [
         "motivo_viagem",
         [fn("SUM", col("quantidade_turistas")), "total_turistas"],
@@ -283,7 +241,7 @@ exports.listarMotivos = async (req, res) => {
 exports.listarFontesInformacao = async (req, res) => {
   try {
     const where = construirWhereClause(req);
-    const resultados = await PerfilEstimadoTurista.findAll({
+    const resultados = await perfilEstimadoTuristas.findAll({
       attributes: [
         "fonte_informacao_viagem",
         [fn("SUM", col("quantidade_turistas")), "total_turistas"],
@@ -320,7 +278,7 @@ exports.listarFontesInformacao = async (req, res) => {
 exports.listarComposicao = async (req, res) => {
   try {
     const where = construirWhereClause(req);
-    const resultados = await PerfilEstimadoTurista.findAll({
+    const resultados = await perfilEstimadoTuristas.findAll({
       attributes: [
         "composicao_grupo_familiar",
         [fn("SUM", col("quantidade_turistas")), "total_turistas"],
@@ -357,7 +315,7 @@ exports.listarComposicao = async (req, res) => {
 exports.listarVias = async (req, res) => {
   try {
     const where = construirWhereClause(req);
-    const resultados = await PerfilEstimadoTurista.findAll({
+    const resultados = await perfilEstimadoTuristas.findAll({
       attributes: [
         "via_acesso",
         [fn("SUM", col("quantidade_turistas")), "total_turistas"],
@@ -392,7 +350,7 @@ exports.listarVias = async (req, res) => {
 exports.listarGeneroMaisRecorrente = async (req, res) => {
   try {
     const where = construirWhereClause(req);
-    const resultado = await PerfilEstimadoTurista.findOne({
+    const resultado = await perfilEstimadoTuristas.findOne({
       attributes: [
         "genero",
         [fn("SUM", col("quantidade_turistas")), "total_turistas"],
@@ -422,7 +380,7 @@ exports.listarGeneroMaisRecorrente = async (req, res) => {
 exports.listarFaixaEtariaMaisRecorrente = async (req, res) => {
   try {
     const where = construirWhereClause(req);
-    const resultado = await PerfilEstimadoTurista.findOne({
+    const resultado = await perfilEstimadoTuristas.findOne({
       attributes: [
         "faixa_etaria",
         [fn("SUM", col("quantidade_turistas")), "total_turistas"],
@@ -453,7 +411,7 @@ exports.listarFaixaEtariaMaisRecorrente = async (req, res) => {
 exports.calcularGastoMedio = async (req, res) => {
   try {
     const where = construirWhereClause(req);
-    const resultado = await PerfilEstimadoTurista.findOne({
+    const resultado = await perfilEstimadoTuristas.findOne({
       attributes: [
         [fn("AVG", col("gasto_media_percapita_em_dolar")), "gastoMedio"],
       ],
@@ -516,18 +474,18 @@ exports.listarPrincipaisPaisesOrigem = async (req, res) => {
 
     console.log("Objeto 'where' final para a query:", where); // DEBUG: Objeto where antes da query Sequelize
 
-    const resultados = await PerfilEstimadoTurista.findAll({
+    const resultados = await perfilEstimadoTuristas.findAll({
       attributes: [[fn("SUM", col("quantidade_turistas")), "total_turistas"]],
       include: [
         {
-          model: Pais,
-          as: "Pai", // Mantenha 'as: 'Pai'' se for o alias correto na sua associação no modelo. Se não usa alias, remova esta linha.
+          model: pais,
+          as: 'pais', // Usando o alias correto definido nos relacionamentos
           attributes: ["pais"],
           required: true,
         },
       ],
       where, // Aplica as condições construídas acima (ou permanece {} para todos os dados)
-      group: ["Pai.pais", "Pai.id_pais"],
+      group: ["pais.pais", "pais.id_pais"],
       order: [[literal("total_turistas"), "DESC"]],
       limit: 5,
     });
@@ -538,7 +496,7 @@ exports.listarPrincipaisPaisesOrigem = async (req, res) => {
     );
 
     const dadosFormatados = resultados.map((item) => ({
-      pais: item.Pai.pais,
+      pais: item.pais.pais,
       percentual:
         totalGeral > 0
           ? (
@@ -570,38 +528,39 @@ exports.listarPresencaTuristasUF = async (req, res) => {
   try {
     const where = construirWhereClause(req);
 
-        const resultados = await PerfilEstimadoTurista.findAll({
-            attributes: [
-                [fn('SUM', col('quantidade_turistas')), 'quantidade'] // Renomeado para 'quantidade' para ser mais direto e consistente com o frontend
-            ],
-            include: [{
-                model: UnidadeFederativaBrasil,
-                // ATENÇÃO: Mudança aqui para incluir a sigla
-                attributes: ['sigla'], // Inclui APENAS a sigla da UF
-                required: true
-            }],
-            where,
-            group: ['UnidadeFederativaBrasil.sigla'],
-            order: [[literal('quantidade'), 'DESC']], // Ordena pela quantidade de turistas
-            limit: 5 // Limite mantido em 5, como estava no seu código
-        });
+    const resultados = await perfilEstimadoTuristas.findAll({
+      attributes: [
+        [fn('SUM', col('quantidade_turistas')), 'quantidade'] // Renomeado para 'quantidade' para ser mais direto e consistente com o frontend
+      ],
+      include: [{
+        model: unidadeFederativaBrasil,
+        as: 'unidade_federativa_brasil', // Usando o alias correto definido nos relacionamentos
+        // ATENÇÃO: Mudança aqui para incluir a sigla
+        attributes: ['sigla'], // Inclui APENAS a sigla da UF
+        required: true
+      }],
+      where,
+      group: ['unidade_federativa_brasil.sigla'],
+      order: [[literal('quantidade'), 'DESC']], // Ordena pela quantidade de turistas
+      limit: 5 // Limite mantido em 5, como estava no seu código
+    });
 
-        const dadosFormatados = resultados.map(item => ({
-            // ATENÇÃO: Acessa a sigla, não o nome completo
-            uf: item.UnidadeFederativaBrasil.sigla, // Acessa a sigla da UF
-            quantidade: parseFloat(item.dataValues.quantidade) // Retorna a quantidade bruta
-        }));
+    const dadosFormatados = resultados.map(item => ({
+      // ATENÇÃO: Acessa a sigla, não o nome completo
+      uf: item.unidade_federativa_brasil.sigla, // Acessa a sigla da UF
+      quantidade: parseFloat(item.dataValues.quantidade) // Retorna a quantidade bruta
+    }));
 
-        // Retorna um array vazio se não houver dados
-        if (dadosFormatados.length === 0) {
-            return res.status(200).json([]);
-        }
-
-        res.json(dadosFormatados);
-    } catch (error) {
-        console.error("Erro ao buscar presença de turistas por UF:", error);
-        res.status(500).json({ erro: "Erro interno ao buscar presença de turistas por UF." });
+    // Retorna um array vazio se não houver dados
+    if (dadosFormatados.length === 0) {
+      return res.status(200).json([]);
     }
+
+    res.json(dadosFormatados);
+  } catch (error) {
+    console.error("Erro ao buscar presença de turistas por UF:", error);
+    res.status(500).json({ erro: "Erro interno ao buscar presença de turistas por UF." });
+  }
 };
 
 // 3. Gráfico de CHEGADAS DE TURISTAS ESTRANGEIROS (por mês)
@@ -616,7 +575,7 @@ exports.listarChegadasTuristasEstrangeiros = async (req, res) => {
       where.fk_pais_origem = parseInt(pais, 10);
     }
 
-    const resultados = await PerfilEstimadoTurista.findAll({
+    const resultados = await perfilEstimadoTuristas.findAll({
       attributes: ["mes", [fn("SUM", col("quantidade_turistas")), "chegadas"]],
       where,
       group: ["mes"],
@@ -668,7 +627,7 @@ exports.calcularChegadasComparativas = async (req, res) => {
     }
 
     // Total de chegadas para o ano atual
-    const resultAnoAtual = await PerfilEstimadoTurista.findOne({
+    const resultAnoAtual = await perfilEstimadoTuristas.findOne({
       attributes: [[fn("SUM", col("quantidade_turistas")), "total_chegadas"]],
       where: {
         ...baseWhere,
@@ -679,7 +638,7 @@ exports.calcularChegadasComparativas = async (req, res) => {
     const chegadasAnoAtual = parseFloat(resultAnoAtual.total_chegadas || 0);
 
     // Total de chegadas para o ano anterior
-    const resultAnoAnterior = await PerfilEstimadoTurista.findOne({
+    const resultAnoAnterior = await perfilEstimadoTuristas.findOne({
       attributes: [[fn("SUM", col("quantidade_turistas")), "total_chegadas"]],
       where: {
         ...baseWhere,
@@ -730,7 +689,7 @@ exports.listarPicoVisitasSazonalidade = async (req, res) => {
       where.fk_pais_origem = parseInt(pais, 10);
     }
 
-    const resultados = await PerfilEstimadoTurista.findAll({
+    const resultados = await perfilEstimadoTuristas.findAll({
       attributes: ["mes", [fn("SUM", col("quantidade_turistas")), "chegadas"]],
       where, // Aplica os filtros condicionalmente
       group: ["mes"],
@@ -760,10 +719,6 @@ exports.listarPicoVisitasSazonalidade = async (req, res) => {
   }
 };
 
-// controllers/graficoController.js
-
-// ... (seus requires, nomesDosMeses e outras funções) ...
-
 // controllers/graficoController.js (Trecho relevante da função getKPITotalTuristasSazonalidade)
 exports.getKPITotalTuristasSazonalidade = async (req, res) => {
   try {
@@ -778,7 +733,7 @@ exports.getKPITotalTuristasSazonalidade = async (req, res) => {
     if (pais) {
       where.fk_pais_origem = parseInt(pais, 10);
     }
-    const total = await PerfilEstimadoTurista.sum("quantidade_turistas", {
+    const total = await perfilEstimadoTuristas.sum("quantidade_turistas", {
       where,
     });
     res.json({ total: total || 0 });
@@ -827,10 +782,10 @@ exports.getKPIVariacaoTuristasSazonalidade = async (req, res) => {
       anoComparado = anoAtual - 1;
 
       // Busca as chegadas
-      chegadasAtual = await PerfilEstimadoTurista.sum("quantidade_turistas", {
+      chegadasAtual = await perfilEstimadoTuristas.sum("quantidade_turistas", {
         where: whereAtual,
       });
-      chegadasAnterior = await PerfilEstimadoTurista.sum(
+      chegadasAnterior = await perfilEstimadoTuristas.sum(
         "quantidade_turistas",
         { where: whereAnterior }
       );
@@ -871,17 +826,19 @@ exports.getKPIVariacaoTuristasSazonalidade = async (req, res) => {
   }
 };
 
+// FUNÇÃO CORRIGIDA - Alias corrigido para corresponder ao relacionamento
 exports.getMesesAnosPaises = async (req, res) => {
   try {
-    const resultados = await PerfilEstimadoTurista.findAll({
+    const resultados = await perfilEstimadoTuristas.findAll({
       attributes: ["ano", "mes"],
       include: [
         {
-          model: Pais,
+          model: pais,
+          as: "pais", // CORREÇÃO: Usado o alias correto definido no relacionamento
           attributes: ["id_pais", "pais"],
         },
       ],
-      group: ["ano", "mes", "id_pais", "pais"],
+      group: ["ano", "mes", "pais.id_pais", "pais.pais"], // CORREÇÃO: Ajustado o group para usar o alias correto
       order: [["ano", "ASC"], ["mes", "ASC"]],
       raw: true,
       nest: true,
@@ -889,17 +846,16 @@ exports.getMesesAnosPaises = async (req, res) => {
 
     console.log(resultados);
 
-    const mesesAnosPaises = resultados.map((item) => ({
+    const mesesAnospaises = resultados.map((item) => ({
       ano: item.ano,
       mes: item.mes,
-      pais: item.Pai.pais || null,
-      id_pais: item.Pai.id_pais || null
+      pais: item.pais.pais || null,
+      id_pais: item.pais.id_pais || null
     }));
 
-    res.json({ mesesAnosPaises });
+    res.json({ mesesAnospaises });
   } catch (error) {
     console.error("Erro ao buscar meses, anos e países:", error);
     res.status(500).json({ erro: "Erro interno ao buscar meses, anos e países." });
   }
 };
-

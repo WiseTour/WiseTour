@@ -20,112 +20,53 @@
 <body id="sazonalidade_body">
     <header id="header" class="header">
         <div id="header_container" class="container">
-            <div class="logo_container">
-                <img class="logo" src="/common/assets/logo/logo_cinza_escuro.svg" alt="Logo WiseTour">
-            </div>
+            <img class="logo" src="/common/assets/logo/logo_cinza_escuro.svg" alt="Logo WiseTour">
 
-            <nav class="menu_container">
+            <nav class="menu_container_middle">
                 <a class="opcao" href="index.html">Panorama Geral</a>
                 <a class="opcao" href="perfilturista.html">Perfil do Turista</a>
                 <a class="opcao active" href="sazonalidade.html">Sazonalidade</a>
             </nav>
 
-            <div class="icon_container">
-                <a class="opcao entrar" href="/auth/login.html">
-                    <img src="assets/not-icon.svg" alt="" id=icon-not>
+            <nav class="menu_container_right">
+                <a class="opcao" href="configuracao_velho.html">
+                    <img src="assets/titulo-gerenciamento.svg" alt="">
                 </a>
-                <a class="opcao entrar" href="gerenciamento.html">
-                    <img src="assets/ger-icon.png" alt="">
+                <a class="opcao" href="configuracoes.html">
+                    <i class="fa-solid fa-gear"></i>
                 </a>
-                <a class="opcao entrar" href="usuarios.html">
-                    <img src="assets/user-icon.png" alt="">
+                <a class="opcao" href="gerenciamento-usuario.html">
+                    <img src="/common/assets/icon/user_icon.svg">
                 </a>
-            </div>
+            </nav>
         </div>
     </header>
 
     <main>
+
         <div class="sazonalidade_linha_1">
             <div class="titulo">
-                SAZONALIDADE
+                SAZONALIDADE <span id="resumo_filtros"
+                    style="display: none; font-size: 20px; color: #555; margin-left: 10px;"></span>
             </div>
             <div class="filtros">
-                <select name="mes" id="mes">
-                    <option value="">MÊS:</option>
-                    <option value="1">Janeiro</option>
-                    <option value="2">Fevereiro</option>
-                    <option value="3">Março</option>
-                    <option value="4">Abril</option>
-                    <option value="5">Maio</option>
-                    <option value="6">Junho</option>
-                    <option value="7">Julho</option>
-                    <option value="8">Agosto</option>
-                    <option value="9">Setembro</option>
-                    <option value="10">Outubro</option>
-                    <option value="11">Novembro</option>
-                    <option value="12">Dezembro</option>
-                </select>
-                <select name="ano" id="ano">
-                    <option value="">ANO:</option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                    <option value="2020">2020</option>
-                    <option value="2019">2019</option>
-                    <option value="2018">2018</option>
-                    <option value="2017">2017</option>
-                    <option value="2016">2016</option>
-                    <option value="2015">2015</option>
-                    <option value="2014">2014</option>
-                    <option value="2013">2013</option>
-                    <option value="2012">2012</option>
-                    <option value="2011">2011</option>
-                    <option value="2010">2010</option>
-                    <option value="2009">2009</option>
-                    <option value="2008">2008</option>
-                    <option value="2007">2007</option>
-                    <option value="2006">2006</option>
-                    <option value="2005">2005</option>
-                    <option value="2004">2004</option>
-                    <option value="2003">2003</option>
-                    <option value="2002">2002</option>
-                    <option value="2001">2001</option>
-                    <option value="2000">2000</option>
-                    <option value="1999">1999</option>
-                    <option value="1998">1998</option>
-                    <option value="1997">1997</option>
-                    <option value="1996">1996</option>
-                    <option value="1995">1995</option>
-                    <option value="1994">1994</option>
-                    <option value="1993">1993</option>
-                    <option value="1992">1992</option>
-                    <option value="1991">1991</option>
-                    <option value="1990">1990</option>
-                </select>
-                <select name="pais" id="pais">
-                    <option value="">PAÍS:</option>
-                    <option value="1">Argentina</option>
-                    <option value="2">Estados Unidos</option>
-                    <option value="3">Alemanha</option>
-                    <option value="4">Chile</option>
-                    <option value="5">Paraguai</option>
-                    <option value="6">Uruguai</option>
-                    <option value="7">França</option>
-                    <option value="8">Portugal</option>
-                    <option value="9">Reino Unido</option>
-                    <option value="10">Itália</option>
-                    <option value="11">Espanha</option>
-                    <option value="12">México</option>
-                    <option value="13">Canadá</option>
-                    <option value="14">China</option>
-                    <option value="15">Colômbia</option>
-                </select>
+                <div class="funil">
+                    <img src="assets/funil.png" alt="funil" style="height: 20px; width: 20px; margin-right: 15px;">
+                </div>
+                <div class="descricao" style="font-size: 14px;">
+                    Mês:
+                </div>
+                <select name="mes" id="mes"></select>
+                <div class="descricao" style="font-size: 14px; margin-left: 20px;">
+                    Ano:
+                </div>
+                <select name="ano" id="ano"></select>
+                <div class="descricao" style="font-size: 14px; margin-left: 20px;">
+                    País:
+                </div>
+                <select name="pais" id="pais"></select>
             </div>
         </div>
-
-
-
 
         <!-- kpis -->
 
@@ -136,18 +77,21 @@
                     <img src="assets/kpi-img-7.svg" alt="">
                 </div>
                 <div class="card-kpi kpilonga">
-                    <h1 id="totalTuristasSazonalidade"></h1>
+                    <h1 id="totalTuristasKPI">6.435,87</h1>
                     <h3>QUANTIDADE TOTAL DE TURISTAS</h3>
                 </div>
             </div>
+
+
+
 
             <div class="card">
                 <div class="card-amarelo-fundo">
                     <img src="assets/kpi-img-6.svg" alt="">
                 </div>
                 <div class="card-kpi kpilonga">
-                    <h1 id="variacaoTuristasKPI"></h1>
-                    <h3 id="variacaoDescKPI"></h3>
+                    <h1 id="variacaoTuristasKPI">+10%</h1>
+                    <h3 id="variacaoDescKPI">DE VARIAÇÃO DE TURISTAS EM RELAÇÃO À MAIO DO ANO ANTERIOR</h3>
                 </div>
             </div>
 
@@ -163,10 +107,10 @@
                             <h3>ESTADOS MAIS VISITADOS</h3>
                         </div>
                         <div class="states-over-image">
-                            <span class="state" id="estadoVisitado2">Carregando...</span>
-                            <span class="state" id="estadoVisitado1"></span>
-                            <span class="state" id="estadoVisitado3"></span>
-                            <img src="assets/top3.svg" alt="Ilustração dos top 3 estados">
+                            <span class="state" id="estadoVisitado1">São Paulo</span>
+                            <span class="state" id="estadoVisitado2">Rio de Janeiro</span>
+                            <span class="state" id="estadoVisitado3">Santa Catarina</span>
+                            <img src="assets/top3.svg" alt="">
                         </div>
                     </div>
                 </div>
@@ -209,33 +153,44 @@
         </div>
     </main>
 
-    <footer>
-        <div class="footer container">
-            <div class="container slogan">
-                <h6><b>WISETOUR,</b><br>
-                    Transformando números em
-                    oportunidades E dados em
-                    destinos de sucesso!</h6>
-            </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mes = document.getElementById('mes');
+            const ano = document.getElementById('ano');
+            const pais = document.getElementById('pais');
+            const resumo = document.getElementById('resumo_filtros');
 
-            <div class="container menu">
-                <b>MENU</b> <br>
-                <a class="opcao" href="index.html">HOME</a>
-                <a class="opcao" href="sobre.html">SOBRE NÓS</a>
-                <a class="opcao" href="servicos.html">SERVIÇOS</a>
-                <a class="opcao" href="contato.html">ENTRE EM CONTATO</a>
-                <a class="opcao" href="/auth/cadastro.html">CADASTRE-SE</a>
-                <a class="opcao" href="/auth/login.html">ENTRAR</a>
-            </div>
-            <div class="container integrantes">
-                <b>TIME DA WISETOUR</b> <br>
-                <span>Ian Medeiros de Jesus Pimenta</span> <br>
-                <span>Kenner Eduardo Souza Lima</span> <br>
-                <span>Leonardo Sardinha Santana</span> <br>
-                <span>Luana Liriel Brito dos Santos</span> <br>
-                <span>Phelipe Bruione da Silva</span> <br>
-                <span>Samara Martins Damacena</span> <br>
-            </div>
-        </div>
-        <b class="direitos">WISETOUR © 2025. TODOS OS DIREITOS RESERVADOS</b>
-    </footer>
+            function atualizarResumo() {
+                const selecionados = [];
+
+                if (mes.value) {
+                    selecionados.push(mes.options[mes.selectedIndex].text);
+                }
+                if (ano.value) {
+                    selecionados.push(ano.options[ano.selectedIndex].text);
+                }
+                if (pais.value) {
+                    selecionados.push(pais.options[pais.selectedIndex].text);
+                }
+
+                resumo.style.display = 'inline';
+
+                if (selecionados.length > 0) {
+                    resumo.textContent = '• ' + selecionados.join(' • ');
+                } else {
+                    resumo.textContent = '• TODOS';
+                }
+            }
+
+            mes.addEventListener('change', atualizarResumo);
+            ano.addEventListener('change', atualizarResumo);
+            pais.addEventListener('change', atualizarResumo);
+
+            // Exibe "TODOS" por padrão no carregamento
+            atualizarResumo();
+        });
+    </script>
+
+
+    <div id="dataHora" style="position: fixed; bottom: 20px; right: 25px; font-family: 'Anybody', sans-serif; 
+font-size: 16px; color: #0b0b0b;"></div>

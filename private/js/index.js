@@ -1,5 +1,3 @@
-// index.js
-
 const coresUsadas = {
   amarelo: "#F8CA26",
   marrom: "#735900",
@@ -124,7 +122,6 @@ async function carregarDadosDashboardPrincipal() {
         }
     } catch (err) {
         console.error('Erro ao buscar dados dos principais países de origem:', err);
-        // Opcional: Mostrar uma mensagem de erro ou dados padrão
     }
 
   // ----------------------------------------------------
