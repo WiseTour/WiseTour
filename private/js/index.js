@@ -37,7 +37,6 @@ const estiloDoTextoDoGrafico = {
 // Referências aos elementos de filtro (certifique-se de que esses IDs existem no seu HTML)
 const selectMes = document.getElementById("mes");
 const selectAno = document.getElementById("ano");
-const selectPais = document.getElementById("pais"); // Este filtro de país afetaria os gráficos de países de origem e presença por UF
 
 // Variáveis para armazenar as instâncias dos gráficos
 let myChartInstance; // Para o gráfico de Principais Países de Origem
@@ -48,12 +47,10 @@ let chegadasTuristasChartInstance; // Para o gráfico de Chegadas
 async function carregarDadosDashboardPrincipal() {
   const mes = selectMes ? selectMes.value : "";
   const ano = selectAno ? selectAno.value : "";
-  const pais = selectPais ? selectPais.value : "";
 
   const queryParams = new URLSearchParams();
   if (mes) queryParams.append("mes", mes);
-  if (ano) queryParams.append("ano", ano);
-  if (pais) queryParams.append("pais", pais);
+  if (ano) queryParams.append("ano", ano);;
 
   const queryString = queryParams.toString();
   const basePath = "/grafico"; // Base path para suas APIs
@@ -290,12 +287,8 @@ async function carregarDadosDashboardPrincipal() {
 }
 
 // Adiciona os event listeners aos selects para chamar a função de carregamento quando o filtro mudar
-if (selectMes)
-  selectMes.addEventListener("change", carregarDadosDashboardPrincipal);
-if (selectAno)
-  selectAno.addEventListener("change", carregarDadosDashboardPrincipal);
-if (selectPais)
-  selectPais.addEventListener("change", carregarDadosDashboardPrincipal);
+
+document.getElementsByClassName("funil").addEventListener("click", carregarDadosDashboardPrincipal)
 
 // Chama a função uma vez ao carregar a página para exibir os dados iniciais
 // document.addEventListener("DOMContentLoaded", carregarDadosDashboardPrincipal);

@@ -410,3 +410,11 @@ select:hover {
   width: 25px;
   height: auto;
 }
+
+.funil{
+  cursor: pointer;
+}
+
+.funil:hover{
+  scale: 1.1;
+}
