@@ -9,7 +9,7 @@ function normalizarDados(data) {
 
   return data.mesesAnosPaises.map((item) => ({
     ...item,
-    pais: item.pais?.toUpperCase(), // padroniza para evitar re-render
+    pais: item.pais?.toUpperCase(), 
   }));
 }
 

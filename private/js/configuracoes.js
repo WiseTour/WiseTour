@@ -102,89 +102,86 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Configuração do Slack
     // Configuração do Slack
-fetch(
-  `/configuracaoSlackRoutes/usuario/configuracaoSlack/tiposNotificacoes?id_usuario=${usuario.id_usuario}`,
-  {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  }
-)
-  .then((res) => {
-    if (!res.ok) throw new Error("Erro ao buscar configuração do Slack");
-    return res.json();
-  })
-  .then((dados) => {
-    // ✅ Debug para ver a estrutura dos dados
-    console.log("Dados recebidos:", dados);
-    
-    sessionStorage.setItem("configuracaoSlack", JSON.stringify(dados));
-    
-    // ✅ Verificação se há dados
-    if (!dados || dados.length === 0) {
-      console.warn("Nenhuma configuração do Slack encontrada");
-      return;
-    }
-    
-    const config = dados[0];
-    console.log("Configuração:", config);
-    
-    // ✅ Configurar checkbox do Slack
-    const ativarSlackCheckbox = document.getElementById("ativar-slack");
-    if (ativarSlackCheckbox) {
-      ativarSlackCheckbox.checked = config.ativo === "sim";
-    }
-    
-    // ✅ Configurar canal padrão
-    const canalPadraoInput = document.getElementById("canal_padrao");
-    if (canalPadraoInput) {
-      canalPadraoInput.value = config.webhook_canal_padrao || "";
-    }
-    
-    // ✅ Limpar todas as etapas primeiro
-    const etapas = [
-      "inicializacao",
-      "extracao", 
-      "tratamento",
-      "transformacao",
-      "carregamento",
-      "finalizacao",
-    ];
-    
-    etapas.forEach((etapa) => {
-      const checkbox = document.getElementById(etapa);
-      if (checkbox) checkbox.checked = false;
-    });
-    
-    // ✅ Verificar diferentes possíveis nomes da propriedade
-    const tiposNotificacao = config.tipos_notificacao || 
-                            config.tipo_notificacao_dados || 
-                            config.tipoNotificacaoDados || 
-                            [];
-    
-    console.log("Tipos de notificação:", tiposNotificacao);
-    
-    // ✅ Verificar se é array e tem dados
-    if (Array.isArray(tiposNotificacao) && tiposNotificacao.length > 0) {
-      tiposNotificacao.forEach(({ etapa }) => {
-        if (etapa && etapa.etapa && 
-            etapa.etapa !== "s3_conexao" && 
-            etapa.etapa !== "conexao_s3") {
-          const checkbox = document.getElementById(etapa.etapa);
-          if (checkbox) {
-            checkbox.checked = true;
-          } else {
-            console.warn(`Checkbox não encontrado para etapa: ${etapa.etapa}`);
-          }
+    fetch(
+      `/configuracaoSlackRoutes/usuario/configuracaoSlack/tiposNotificacoes?id_usuario=${usuario.id_usuario}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    )
+      .then((res) => {
+        if (!res.ok) throw new Error("Erro ao buscar configuração do Slack");
+        return res.json();
+      })
+      .then((dados) => {
+        console.log("Dados recebidos:", dados);
+
+        sessionStorage.setItem("configuracaoSlack", JSON.stringify(dados));
+
+        if (!dados || dados.length === 0) {
+          console.warn("Nenhuma configuração do Slack encontrada");
+          return;
         }
+
+        const config = dados[0];
+        console.log("Configuração:", config);
+
+        const ativarSlackCheckbox = document.getElementById("ativar-slack");
+        if (ativarSlackCheckbox) {
+          ativarSlackCheckbox.checked = config.ativo === "sim";
+        }
+
+        const canalPadraoInput = document.getElementById("canal_padrao");
+        if (canalPadraoInput) {
+          canalPadraoInput.value = config.webhook_canal_padrao || "";
+        }
+
+        const etapas = [
+          "inicializacao",
+          "extracao",
+          "tratamento",
+          "transformacao",
+          "carregamento",
+          "finalizacao",
+        ];
+
+        etapas.forEach((etapa) => {
+          const checkbox = document.getElementById(etapa);
+          if (checkbox) checkbox.checked = false;
+        });
+
+        const tiposNotificacao = config.tipos_notificacao || [];
+
+        console.log("Tipos de notificação:", tiposNotificacao);
+
+        if (Array.isArray(tiposNotificacao) && tiposNotificacao.length > 0) {
+          tiposNotificacao.forEach(({ etapa }) => {
+            if (
+              etapa &&
+              etapa.etapa &&
+              etapa.etapa !== "s3_conexao" &&
+              etapa.etapa !== "conexao_s3"
+            ) {
+              const checkbox = document.getElementById(etapa.etapa);
+              if (checkbox) {
+                checkbox.checked = true;
+              } else {
+                console.warn(
+                  `Checkbox não encontrado para etapa: ${etapa.etapa}`
+                );
+              }
+            }
+          });
+        } else {
+          console.warn(
+            "Nenhum tipo de notificação encontrado ou dados não são um array"
+          );
+        }
+      })
+      .catch((err) => {
+        console.error("Erro:", err);
+        alert("Não foi possível carregar a configuração do Slack");
       });
-    } else {
-      console.warn("Nenhum tipo de notificação encontrado ou dados não são um array");
-    }
-  })
-  .catch((err) => {
-    console.error("Erro:", err);
-    alert("Não foi possível carregar a configuração do Slack");
-  });
   }
 
   // === NAVEGAÇÃO ENTRE SEÇÕES DO CABEÇALHO ===

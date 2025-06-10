@@ -1,5 +1,4 @@
 require("dotenv").config();
-
 const Sequelize = require("sequelize");
 
 const sequelize = new Sequelize(
@@ -50,8 +49,15 @@ const sequelize = new Sequelize(
       max: 3,
     },
 
-    // Logging para debug
-    logging: console.log, // ou false para desabilitar
+
+    logging: (sql, timing) => {
+      console.log('\n' + '='.repeat(150));
+      console.log(`\n[${new Date().toISOString()}] SQL Query:`);
+      console.log(sql);
+      if (timing) console.log(`Execution time: ${timing}ms\n`);
+      console.log('='.repeat(150) + '\n');
+    },
+
   }
 );
 
