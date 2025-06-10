@@ -86,6 +86,188 @@ function getFiltros() {
     return filtros;
 }
 
+
+async function carregarDadosDoCache() {
+    console.log("carregarDadosDoCache(): Iniciado.");
+    
+    try {
+        const response = await fetch('/api/cache-data');
+        if (!response.ok) {
+            throw new Error(`Erro HTTP! status: ${response.status}`);
+        }
+        
+        const cacheData = await response.json();
+        console.log("carregarDadosDoCache(): Dados do cache recebidos:", cacheData);
+        
+        // Definir filtros baseados no último período do cache
+        if (cacheData.ultimoPeriodo.mes && selectMes) {
+            selectMes.value = cacheData.ultimoPeriodo.mes;
+        }
+        if (cacheData.ultimoPeriodo.ano && selectAno) {
+            selectAno.value = cacheData.ultimoPeriodo.ano;
+        }
+        
+        // Carregar KPIs com dados do cache
+        if (cacheData.ultimoPeriodo.sazonalidadeTotalTuristas && totalTuristasKPI) {
+            totalTuristasKPI.textContent = formatNumber(cacheData.ultimoPeriodo.sazonalidadeTotalTuristas.total || 0);
+        }
+        
+        if (cacheData.ultimoPeriodo.sazonalidadeVariacaoTuristas && variacaoTuristasKPI && variacaoDescKPI) {
+            const variacao = cacheData.ultimoPeriodo.sazonalidadeVariacaoTuristas;
+            if (variacao.variacao !== null && variacao.variacao !== undefined) {
+                variacaoTuristasKPI.textContent = `${variacao.variacao > 0 ? '+' : ''}${formatNumber(parseFloat(variacao.variacao))}%`;
+            }
+            if (variacao.mesNome && variacao.anoComparado) {
+                const mesNomeFormatado = variacao.mesNome.charAt(0).toUpperCase() + variacao.mesNome.slice(1);
+                variacaoDescKPI.textContent = `DE VARIAÇÃO DE TURISTAS EM RELAÇÃO A ${mesNomeFormatado.toUpperCase()} DE ${variacao.anoComparado}.`;
+            }
+        }
+        
+        // Carregar Top 3 Estados com dados do cache
+        if (cacheData.ultimoPeriodo.sazonalidadeTopEstados) {
+            const topEstados = cacheData.ultimoPeriodo.sazonalidadeTopEstados;
+            if (estadoVisitado1) estadoVisitado1.textContent = topEstados[0] || '';
+            if (estadoVisitado2) estadoVisitado2.textContent = topEstados[1] || '';
+            if (estadoVisitado3) estadoVisitado3.textContent = topEstados[2] || '';
+        }
+        
+        // Carregar mapa com dados do cache
+        if (cacheData.ultimoPeriodo.visitasPorEstado) {
+            carregarMapaComDadosCache(cacheData.ultimoPeriodo.visitasPorEstado);
+        }
+        
+        // Carregar gráfico de pico de visitas com dados do cache
+        if (cacheData.ultimoPeriodo.sazonalidadePicoVisitas) {
+            carregarPicoVisitasComDadosCache(cacheData.ultimoPeriodo.sazonalidadePicoVisitas);
+        }
+        
+        console.log("carregarDadosDoCache(): Dados do cache carregados com sucesso.");
+        
+    } catch (error) {
+        console.error('Erro ao carregar dados do cache:', error);
+        // Se falhar ao carregar do cache, carrega normalmente via API
+        console.log("Fallback: Carregando dados via API devido ao erro no cache.");
+        await carregarTodosOsDadosDoDashboard();
+    }
+}
+
+
+function carregarMapaComDadosCache(dadosDoCache) {
+    console.log("carregarMapaComDadosCache(): Carregando mapa com dados do cache.");
+    
+    const chartDom = document.getElementById('mapaBrasil');
+    if (!chartDom) return;
+    
+    if (!dadosDoCache || dadosDoCache.length === 0) {
+        chartDom.innerHTML = '<div style="text-align: center; padding: 20px;">Nenhum dado de visita disponível.</div>';
+        return;
+    }
+    
+    const maxValor = Math.max(...dadosDoCache.map(d => d.value));
+    
+    if (myMapaChart) {
+        myMapaChart.series[0].setData(dadosDoCache);
+        myMapaChart.colorAxis[0].update({ max: maxValor });
+    } else {
+        if (typeof Highcharts !== 'undefined' && typeof Highcharts.mapChart !== 'undefined') {
+            myMapaChart = Highcharts.mapChart('mapaBrasil', {
+                chart: { map: 'countries/br/br-all' },
+                title: { text: '' },
+                colorAxis: {
+                    min: 0,
+                    max: maxValor,
+                    stops: [
+                        [0.1, coresUsadas.amareloClaro],
+                        [0.5, coresUsadas.amarelo],
+                        [0.9, coresUsadas.marrom]
+                    ]
+                },
+                series: [{
+                    data: dadosDoCache,
+                    name: 'Turistas estrangeiros',
+                    tooltip: { pointFormat: '<b>{point.name}</b><br>Turistas: {point.value}' }
+                }]
+            });
+        }
+    }
+}
+
+
+function carregarPicoVisitasComDadosCache(dadosDoCache) {
+    console.log("carregarPicoVisitasComDadosCache(): Carregando gráfico com dados do cache.");
+    
+    const chartCtxElement = picoVisitasChartCanvas;
+    const noDataMessageDiv = picoVisitasNoDataMessage;
+    
+    if (!chartCtxElement || !noDataMessageDiv) return;
+    
+    noDataMessageDiv.style.display = 'none';
+    chartCtxElement.style.display = 'block';
+    
+    let labels = [];
+    let valores = [];
+    
+    if (!dadosDoCache || dadosDoCache.length === 0) {
+        labels = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+        valores = Array(12).fill(0);
+    } else {
+        labels = dadosDoCache.map(item => item.mes_nome);
+        valores = dadosDoCache.map(item => item.chegadas);
+    }
+    
+    if (myPicoVisitasSazonalidadeChart) {
+        myPicoVisitasSazonalidadeChart.data.labels = labels;
+        myPicoVisitasSazonalidadeChart.data.datasets[0].data = valores;
+        myPicoVisitasSazonalidadeChart.update();
+    } else if (typeof Chart !== 'undefined') {
+        myPicoVisitasSazonalidadeChart = new Chart(chartCtxElement, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Pico de Chegadas de Turistas',
+                    data: valores,
+                    borderColor: coresUsadas.amarelo,
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        titleFont: estiloDoTextoDoGrafico.font,
+                        bodyFont: estiloDoTextoDoGrafico.font,
+                        callbacks: {
+                            label: function(context) {
+                                if (context.parsed.y === 0 && (valores.every(val => val === 0))) {
+                                    return ` Chegadas: Nenhum dado`;
+                                }
+                                return ` Chegadas: ${formatNumber(context.parsed.y)}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { ...estiloDoTextoDoGrafico },
+                        grid: { color: 'rgb(0, 0, 0, 0.1)' }
+                    },
+                    x: {
+                        ticks: { ...estiloDoTextoDoGrafico },
+                        grid: { color: 'rgb(0, 0, 0, 0.1)' }
+                    }
+                }
+            }
+        });
+    }
+}
+
 /**
  * Função para formatar números com vírgula como separador decimal e ponto como separador de milhar.
  * Ex: 6435.87 -> 6.435,87
@@ -523,15 +705,22 @@ async function carregarPicoVisitasSazonalidadeChart() {
  * Função para carregar TODOS os dados que dependem dos filtros.
  * Chamada na inicialização e ao mudar qualquer filtro.
  */
-async function carregarTodosOsDadosDoDashboard() {
-    console.log("carregarTodosOsDadosDoDashboard(): Iniciado.");
-    await carregarKPITotalTuristas();
-    await carregarKPIVariacaoTuristas();
-    await carregarKPITopEstados();
-    await carregarMapaEstadosVisitados();
-    await carregarPicoVisitasSazonalidadeChart(); // Chama a função que usa a nova rota (linha única)
+async function carregarTodosOsDadosDoDashboard(usarCache = false) {
+    console.log("carregarTodosOsDadosDoDashboard(): Iniciado.", usarCache ? "Usando cache." : "Usando API.");
+    
+    if (usarCache) {
+        await carregarDadosDoCache();
+    } else {
+        await carregarKPITotalTuristas();
+        await carregarKPIVariacaoTuristas();
+        await carregarKPITopEstados();
+        await carregarMapaEstadosVisitados();
+        await carregarPicoVisitasSazonalidadeChart();
+    }
+    
     console.log("carregarTodosOsDadosDoDashboard(): Concluído.");
 }
+
 
 
 // Adiciona Event Listeners aos filtros para recarregar dados do dashboard.
@@ -555,6 +744,6 @@ if (selectPais) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Evento 'DOMContentLoaded' disparado. Chamando carregarTodosOsDadosDoDashboard.");
-    carregarTodosOsDadosDoDashboard();
+    console.log("Evento 'DOMContentLoaded' disparado. Carregando dados do cache primeiro.");
+    carregarTodosOsDadosDoDashboard(true); // true = usar cache na inicialização
 });

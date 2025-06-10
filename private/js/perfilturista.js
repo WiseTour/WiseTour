@@ -300,11 +300,254 @@ async function carregarDadosDashboard() {
     }
 }
 
+/**
+ * Carrega e atualiza a dashboard com dados do cache (último período consultado).
+ * Utiliza diretamente os dados do cache sem fazer novas consultas ao banco.
+ */
+async function carregarDadosDoCache() {
+    console.log('carregarDadosDoCache: Função iniciada.');
+
+    try {
+        // Busca os dados do cache
+        const cacheRes = await fetch('/api/cache-data'); // ou '/api/status-cache' se usar a Solução 1
+        if (!cacheRes.ok) {
+            throw new Error(`Erro ao buscar dados do cache: ${cacheRes.status}`);
+        }
+        
+        const cacheData = await cacheRes.json();
+        console.log('Dados do cache:', cacheData);
+        
+        // Verifica se há dados em cache disponíveis
+        if (!cacheData.ultimoPeriodo || (!cacheData.ultimoPeriodo.mes && !cacheData.ultimoPeriodo.ano)) {
+            console.warn('Nenhum dado em cache disponível. Carregando dados normalmente...');
+            await carregarDadosDashboard();
+            return;
+        }
+
+        const { ultimoPeriodo } = cacheData;
+        console.log('Dados do último período:', ultimoPeriodo);
+        
+        // Atualiza os filtros com os valores do último período em cache
+        if (selectMes && ultimoPeriodo.mes) {
+            selectMes.value = ultimoPeriodo.mes.toString();
+        }
+        if (selectAno && ultimoPeriodo.ano) {
+            selectAno.value = ultimoPeriodo.ano.toString();
+        }
+
+        // Carrega KPIs diretamente do cache
+        if (ultimoPeriodo.genero) {
+            document.getElementById('kpiGenero').textContent = ultimoPeriodo.genero.genero || 'N/A';
+        } else {
+            document.getElementById('kpiGenero').textContent = 'N/A';
+        }
+
+        if (ultimoPeriodo.gastoMedio) {
+            document.getElementById('kpiGastoMedio').textContent = ultimoPeriodo.gastoMedio.gastoMedio || 'N/A';
+        } else {
+            document.getElementById('kpiGastoMedio').textContent = 'N/A';
+        }
+
+        if (ultimoPeriodo.faixaEtaria) {
+            document.getElementById('kpiFaixaEtaria').textContent = ultimoPeriodo.faixaEtaria.faixa_etaria || 'N/A';
+        } else {
+            document.getElementById('kpiFaixaEtaria').textContent = 'N/A';
+        }
+
+        // Carrega gráfico de Motivos do cache
+        if (ultimoPeriodo.motivos && Array.isArray(ultimoPeriodo.motivos)) {
+            const labels = ultimoPeriodo.motivos.map(item => item.motivo);
+            const valores = ultimoPeriodo.motivos.map(item => item.percentual);
+            const ctxMotivos = document.getElementById('graficoMotivos');
+
+            if (graficoMotivosInstance) {
+                graficoMotivosInstance.data.labels = labels;
+                graficoMotivosInstance.data.datasets[0].data = valores;
+                graficoMotivosInstance.update();
+            } else {
+                graficoMotivosInstance = new Chart(ctxMotivos, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Motivos',
+                            data: valores,
+                            backgroundColor: [coresUsadas.amarelo, coresUsadas.marrom, coresUsadas.marromBege],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        ...opcoesPadrao,
+                        indexAxis: 'y',
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                grid: { display: false },
+                                ticks: { ...estiloDoTextoDoGrafico, font: { ...estiloDoTextoDoGrafico.font, size: 15 } }
+                            },
+                            y: {
+                                grid: { display: false },
+                                ticks: { ...estiloDoTextoDoGrafico, font: { ...estiloDoTextoDoGrafico.font, size: 15 } }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Carrega gráfico de Fontes do cache
+        if (ultimoPeriodo.fontes && Array.isArray(ultimoPeriodo.fontes)) {
+            const labels = ultimoPeriodo.fontes.map(item => item.fonte);
+            const valores = ultimoPeriodo.fontes.map(item => item.percentual);
+            const ctxFontes = document.getElementById('graficoFontes');
+
+            if (graficoFontesInstance) {
+                graficoFontesInstance.data.labels = labels;
+                graficoFontesInstance.data.datasets[0].data = valores;
+                graficoFontesInstance.update();
+            } else {
+                graficoFontesInstance = new Chart(ctxFontes, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Fontes',
+                            data: valores,
+                            backgroundColor: [
+                                coresUsadas.amarelo, coresUsadas.marrom, coresUsadas.marromBege,
+                                coresUsadas.amareloClaro, coresUsadas.marromForte, coresUsadas.esverdeado,
+                                coresUsadas.acinzentado, coresUsadas.cinza, '#D9C7A7'
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        ...opcoesPadrao,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { display: false },
+                                ticks: { ...estiloDoTextoDoGrafico, callback: function (value) { return value + '%'; } }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { ...estiloDoTextoDoGrafico, font: { ...estiloDoTextoDoGrafico.font, size: 9 }, maxRotation: 0, minRotation: 0 }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Carrega gráfico de Composição do cache
+        if (ultimoPeriodo.composicao && Array.isArray(ultimoPeriodo.composicao)) {
+            const labels = ultimoPeriodo.composicao.map(item => item.composicao);
+            const valores = ultimoPeriodo.composicao.map(item => item.percentual);
+            const ctxComposicao = document.getElementById('graficoComposicao');
+
+            if (graficoComposicaoInstance) {
+                graficoComposicaoInstance.data.labels = labels;
+                graficoComposicaoInstance.data.datasets[0].data = valores;
+                graficoComposicaoInstance.update();
+            } else {
+                graficoComposicaoInstance = new Chart(ctxComposicao, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: valores,
+                            backgroundColor: [
+                                coresUsadas.amarelo, coresUsadas.marrom, coresUsadas.marromBege,
+                                coresUsadas.amareloClaro
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        ...opcoesPadrao,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    ...estiloDoTextoDoGrafico,
+                                    boxWidth: 35, boxHeight: 14, borderRadius: 50, padding: 5,
+                                    font: { ...estiloDoTextoDoGrafico.font, size: 14 }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Carrega gráfico de Vias do cache
+        if (ultimoPeriodo.vias && Array.isArray(ultimoPeriodo.vias)) {
+            const labels = ultimoPeriodo.vias.map(item => item.vias);
+            const valores = ultimoPeriodo.vias.map(item => item.percentual);
+            const ctxVias = document.getElementById('graficoVias');
+
+            if (graficoViasInstance) {
+                graficoViasInstance.data.labels = labels;
+                graficoViasInstance.data.datasets[0].data = valores;
+                graficoViasInstance.update();
+            } else {
+                graficoViasInstance = new Chart(ctxVias, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: valores,
+                            backgroundColor: [
+                                coresUsadas.avermelhado, coresUsadas.cimento, coresUsadas.acinzentado,
+                                coresUsadas.cinza
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        ...opcoesPadrao,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    ...estiloDoTextoDoGrafico,
+                                    boxWidth: 35, boxHeight: 14, borderRadius: 50, padding: 5,
+                                    font: { ...estiloDoTextoDoGrafico.font, size: 14 }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        console.log('Dashboard carregada com dados do cache com sucesso.');
+
+    } catch (err) {
+        console.error('Erro ao carregar dados do cache:', err);
+        console.log('Fallback: Carregando dados normalmente...');
+        await carregarDadosDashboard();
+    }
+}
+
 // Adiciona event listeners aos filtros para recarregar a dashboard ao mudar.
 if (selectMes) selectMes.addEventListener('change', carregarDadosDashboard);
 if (selectAno) selectAno.addEventListener('change', carregarDadosDashboard);
 if (selectPais) selectPais.addEventListener('change', carregarDadosDashboard);
 
 // Chama a função de carregamento ao carregar a página.
-document.addEventListener('DOMContentLoaded', carregarDadosDashboard);
+// Prioriza o carregamento do cache para melhor performance inicial
+document.addEventListener('DOMContentLoaded', () => {
+    // Verifica se deve carregar do cache ou fazer consulta normal
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceRefresh = urlParams.get('refresh') === 'true';
+    if (forceRefresh) {
+        carregarDadosDashboard();
+    } else {
+        carregarDadosDoCache();
+    }
+});
+
 console.log('perfilturista.js: Script carregado.');
