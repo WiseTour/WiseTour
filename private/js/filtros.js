@@ -93,6 +93,7 @@ async function inicializarDados() {
         console.log("Dados não mudaram, mantendo cache");
       }
     }
+
     
   } catch (error) {
     console.error("Erro ao inicializar dados:", error);

@@ -39,13 +39,75 @@ function entrar() {
 
           if (json.permissao == "wisetour") {
             setTimeout(function () {
-              window.location.href =
-                "/internal/configuracao-cadastral-empresa.html";
+              window.location.href = "/internal/configuracao-cadastral-empresa.html";
             }, 1000);
           } else if (json.permissao == "padrao" || json.permissao == "admin") {
-            setTimeout(function () {
-              window.location.href = "/private/index.html";
-            }, 1000);
+            // Para usuários padrão e admin, buscar preferências primeiro
+            fetch(
+              `/preferenciaVisualizacaoDashboard/usuario/preferencias-visualizacao-dashboard?id_usuario=${usuario.id_usuario}`
+            )
+              .then((res) => {
+                if (!res.ok)
+                  throw new Error("Erro ao buscar preferências do usuário");
+                return res.json();
+              })
+              .then((preferencias) => {
+                // Armazena no localStorage
+                localStorage.setItem(
+                  "preferenciaUsuario",
+                  JSON.stringify(preferencias)
+                );
+
+                // Função para determinar a URL de redirecionamento
+                function determinarRedirecionamento(preferencias) {
+                  // Verificar se tem panoramaGeral ativo
+                  const panoramaGeral = preferencias.find(
+                    (p) =>
+                      p.tela_dashboard?.tela === "panoramaGeral" ||
+                      p.fk_tela_dashboard === 1
+                  );
+                  if (panoramaGeral && panoramaGeral.ativo === "sim") {
+                    return "/private/index.html";
+                  }
+
+                  // Verificar se tem perfilTurista ativo
+                  const perfilTurista = preferencias.find(
+                    (p) =>
+                      p.tela_dashboard?.tela === "perfilTurista" ||
+                      p.fk_tela_dashboard === 2
+                  );
+                  if (perfilTurista && perfilTurista.ativo === "sim") {
+                    return "/private/perfilturista.html";
+                  }
+
+                  // Verificar se tem sazonalidade ativo
+                  const sazonalidade = preferencias.find(
+                    (p) =>
+                      p.tela_dashboard?.tela === "sazonalidade" ||
+                      p.fk_tela_dashboard === 3
+                  );
+                  if (sazonalidade && sazonalidade.ativo === "sim") {
+                    return "/private/sazonalidade.html";
+                  }
+
+                  // Se não tiver nenhum ativo, vai para configurações
+                  return "/private/configuracoes.html";
+                }
+
+                const urlRedirecionamento = determinarRedirecionamento(preferencias);
+                
+                setTimeout(function () {
+                  window.location.href = urlRedirecionamento;
+                }, 1000);
+              })
+              .catch((err) => {
+                console.error("Erro:", err);
+                alert("Não foi possível carregar as preferências do usuário");
+                // Em caso de erro, redireciona para configurações
+                setTimeout(function () {
+                  window.location.href = "/private/configuracoes.html";
+                }, 1000);
+              });
           } else {
             alert("Houve um erro ao tentar realizar o login!");
           }

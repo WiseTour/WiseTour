@@ -1,5 +1,4 @@
-
-import { aplicarMascaraCelular, removerMascara } from './utils/mascara.js';
+import { aplicarMascaraCelular, removerMascara } from "./utils/mascara.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const botoesCabecalho = document.querySelectorAll(".cabecalho button");
@@ -16,6 +15,78 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.style.cursor = "default";
     btn.style.opacity = "0.5";
   });
+
+function aplicarPreferenciasDoUsuario() {
+  // IDs dos elementos relacionados às preferências
+  const mapeamentoIds = {
+    panoramaGeral: "btnPanoramaGeral",
+    perfilTurista: "btnPerfilTurista",
+    sazonalidade: "btnSazonalidade",
+  };
+
+  const menuContainer = document.querySelector(".menu_container_middle");
+
+  let botoesVisiveis = 0;
+
+  // Recuperar preferências do localStorage
+  const preferencias = JSON.parse(
+    localStorage.getItem("preferenciaUsuario") || "[]"
+  );
+
+  // Mapeia preferências por tela
+  const telasAtivas = {};
+  preferencias.forEach((pref) => {
+    const tela = pref.tela_dashboard?.tela;
+    const ativo = pref.ativo;
+    if (tela) telasAtivas[tela] = ativo;
+  });
+
+  // Aplica visibilidade e conta os visíveis
+  Object.entries(mapeamentoIds).forEach(([tela, idElemento]) => {
+    const el = document.getElementById(idElemento);
+    if (!el) return;
+
+    const ativo = telasAtivas[tela];
+    if (ativo === "nao" || ativo === undefined) {
+      el.style.display = "none";
+    } else {
+      el.style.display = "block"; // ou "flex" se preferir
+      botoesVisiveis++;
+    }
+  });
+
+  // Ajusta as colunas conforme a quantidade de botões visíveis
+  if (menuContainer) {
+    if (botoesVisiveis === 0) {
+      menuContainer.style.gridTemplateColumns = "1fr";
+    } else {
+      menuContainer.style.gridTemplateColumns = `repeat(${botoesVisiveis}, 1fr)`;
+    }
+  }
+}
+
+function aplicarPermissaoUsuario() {
+  const idElementoAdmin = "btnAdmin"; // Altere conforme o ID real no HTML
+  const el = document.getElementById(idElementoAdmin);
+
+  if (el) {
+    // Remove classe e garante que o botão não esteja visível por padrão
+    el.classList.remove("ativado");
+    el.style.display = "none";
+
+    // Recupera o usuário do localStorage
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+    // Se for admin, mostra e aplica a classe ativado
+    if (usuario && usuario.permissao === "admin") {
+      el.style.display = "block"; // ou "flex", conforme necessário
+      el.classList.add("ativado");
+    }
+  }
+}
+
+  aplicarPreferenciasDoUsuario();
+  aplicarPermissaoUsuario();
 
   containers.forEach((container, index) => {
     container.style.display = index === 0 ? "flex" : "none";
@@ -134,7 +205,10 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .then((data) => {
         // Preenche os campos do formulário de senha
-        preencherCamposGerenciamentoSenha(JSON.parse(sessionStorage.getItem("usuario")), data.senha);
+        preencherCamposGerenciamentoSenha(
+          JSON.parse(sessionStorage.getItem("usuario")),
+          data.senha
+        );
       })
       .catch((error) => {
         console.error("Erro:", error);
@@ -146,21 +220,23 @@ document.addEventListener("DOMContentLoaded", () => {
 function preencherCamposUsuario(data) {
   document.getElementById("nome").value = data.funcionario.nome || "";
   document.getElementById("funcao").value = data.funcionario.cargo || "";
-  document.getElementById("telefone").value = aplicarMascaraCelular(data.funcionario.telefone) || "";
+  document.getElementById("telefone").value =
+    aplicarMascaraCelular(data.funcionario.telefone) || "";
   document.getElementById("email").value = data.email || "";
 
   document.getElementById("span-passaporte").innerText = data.id_usuario || "";
   document.getElementById("span-nome").innerText = data.funcionario.nome || "";
-  document.getElementById("span-funcao").innerText = data.funcionario.cargo || "";
+  document.getElementById("span-funcao").innerText =
+    data.funcionario.cargo || "";
 }
 
 function preencherCamposGerenciamentoSenha(data, senha) {
-  document.getElementById("nome_gerenciamento_senha").value = data.funcionario.nome || "";
+  document.getElementById("nome_gerenciamento_senha").value =
+    data.funcionario.nome || "";
   document.getElementById("email_gerenciamento_senha").value = data.email || "";
   document.getElementById("senha_gerenciamento_senha").value = senha || "";
   document.getElementById("nova_senha_gerenciamento_senha").value = "";
 }
-
 
 function alterarInformacoesUsuario() {
   const usuario = JSON.parse(sessionStorage.getItem("usuario"));
@@ -199,7 +275,6 @@ function alterarInformacoesUsuario() {
     });
 }
 
-
 function alterarSenhaUsuario() {
   const usuario = JSON.parse(sessionStorage.getItem("usuario"));
 
@@ -208,7 +283,9 @@ function alterarSenhaUsuario() {
     return;
   }
 
-  const novaSenha = document.getElementById("nova_senha_gerenciamento_senha").value;
+  const novaSenha = document.getElementById(
+    "nova_senha_gerenciamento_senha"
+  ).value;
 
   if (!novaSenha) {
     alert("Por favor, preencha o campo de nova senha.");

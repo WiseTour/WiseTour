@@ -5,6 +5,78 @@ document.addEventListener("DOMContentLoaded", () => {
   const botoesSalvar = document.querySelectorAll(".btn_salvar");
   const inputs = document.querySelectorAll("input");
 
+  function aplicarPreferenciasDoUsuario() {
+    // IDs dos elementos relacionados às preferências
+    const mapeamentoIds = {
+      panoramaGeral: "btnPanoramaGeral",
+      perfilTurista: "btnPerfilTurista",
+      sazonalidade: "btnSazonalidade",
+    };
+
+    const menuContainer = document.querySelector(".menu_container_middle");
+
+    let botoesVisiveis = 0;
+
+    // Recuperar preferências do localStorage
+    const preferencias = JSON.parse(
+      localStorage.getItem("preferenciaUsuario") || "[]"
+    );
+
+    // Mapeia preferências por tela
+    const telasAtivas = {};
+    preferencias.forEach((pref) => {
+      const tela = pref.tela_dashboard?.tela;
+      const ativo = pref.ativo;
+      if (tela) telasAtivas[tela] = ativo;
+    });
+
+    // Aplica visibilidade e conta os visíveis
+    Object.entries(mapeamentoIds).forEach(([tela, idElemento]) => {
+      const el = document.getElementById(idElemento);
+      if (!el) return;
+
+      const ativo = telasAtivas[tela];
+      if (ativo === "nao" || ativo === undefined) {
+        el.style.display = "none";
+      } else {
+        el.style.display = "block"; // ou "flex" se preferir
+        botoesVisiveis++;
+      }
+    });
+
+    // Ajusta as colunas conforme a quantidade de botões visíveis
+    if (menuContainer) {
+      if (botoesVisiveis === 0) {
+        menuContainer.style.gridTemplateColumns = "1fr";
+      } else {
+        menuContainer.style.gridTemplateColumns = `repeat(${botoesVisiveis}, 1fr)`;
+      }
+    }
+  }
+
+  function aplicarPermissaoUsuario() {
+    const idElementoAdmin = "btnAdmin"; // Altere conforme o ID real no HTML
+    const el = document.getElementById(idElementoAdmin);
+
+    if (el) {
+      // Remove classe e garante que o botão não esteja visível por padrão
+      el.classList.remove("ativado");
+      el.style.display = "none";
+
+      // Recupera o usuário do localStorage
+      const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+      // Se for admin, mostra e aplica a classe ativado
+      if (usuario && usuario.permissao === "admin") {
+        el.style.display = "block"; // ou "flex", conforme necessário
+        el.classList.add("ativado");
+      }
+    }
+  }
+
+  aplicarPreferenciasDoUsuario();
+  aplicarPermissaoUsuario();
+
   inputs.forEach((input) => {
     input.disabled = true;
     input.style.opacity = "0.5";
@@ -79,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return res.json();
       })
       .then((preferencias) => {
-        sessionStorage.setItem(
+        localStorage.setItem(
           "preferenciaUsuario",
           JSON.stringify(preferencias)
         );
@@ -261,6 +333,25 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
 
+        const preferenciasExpandidas = preferenciasAtualizadas.map((pref) => {
+          // Mapeamento reverso para obter o nome da tela
+          const telaReverseMap = {
+            1: "panoramaGeral",
+            2: "perfilTurista",
+            3: "sazonalidade",
+          };
+
+          return {
+            fk_tela_dashboard: pref.fk_tela_dashboard,
+            fk_usuario: pref.fk_usuario,
+            ativo: pref.ativo,
+            tela_dashboard: {
+              id_tela_dashboard: pref.fk_tela_dashboard,
+              tela: telaReverseMap[pref.fk_tela_dashboard],
+            },
+          };
+        });
+
         fetch(
           `/preferenciaVisualizacaoDashboard/usuario/preferencias-visualizacao-dashboard`,
           {
@@ -273,7 +364,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!res.ok) throw new Error("Erro ao salvar preferências");
             return res.json();
           })
-          .then(() => alert("Preferências salvas com sucesso!"))
+          .then((resposta) => {
+            console.log("Preferências salvas com sucesso:", resposta);
+            alert("Preferências salvas com sucesso!");
+            localStorage.setItem("preferenciaUsuario", JSON.stringify(preferenciasExpandidas));
+            window.location.href = "./configuracoes.html";
+          })
           .catch((err) => {
             console.error("Erro ao salvar preferências:", err);
             alert("Erro ao salvar preferências");
@@ -354,3 +450,56 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+function aplicarPreferenciasDoUsuario() {
+  // IDs dos elementos relacionados às preferências
+  const mapeamentoIds = {
+    panoramaGeral: "btnPanoramaGeral",
+    perfilTurista: "btnPerfilTurista",
+    sazonalidade: "btnSazonalidade",
+  };
+
+  const menuContainer = document.querySelector(".menu_container_middle");
+
+  let botoesVisiveis = 0;
+
+  // Recuperar preferências do localStorage
+  const preferencias = JSON.parse(
+    localStorage.getItem("preferenciaUsuario") || "[]"
+  );
+
+  // Mapeia preferências por tela
+  const telasAtivas = {};
+  preferencias.forEach((pref) => {
+    const tela = pref.tela_dashboard?.tela;
+    const ativo = pref.ativo;
+    if (tela) telasAtivas[tela] = ativo;
+  });
+
+  // Aplica visibilidade e conta os visíveis
+  Object.entries(mapeamentoIds).forEach(([tela, idElemento]) => {
+    const el = document.getElementById(idElemento);
+    if (!el) return;
+
+    const ativo = telasAtivas[tela];
+    if (ativo === "nao" || ativo === undefined) {
+      el.style.display = "none";
+    } else {
+      el.style.display = "block"; // ou "flex" se preferir
+      botoesVisiveis++;
+    }
+  });
+
+  // Ajusta as colunas conforme a quantidade de botões visíveis
+  if (menuContainer) {
+    if (botoesVisiveis === 0) {
+      menuContainer.style.gridTemplateColumns = "1fr";
+    } else {
+      menuContainer.style.gridTemplateColumns = `repeat(${botoesVisiveis}, 1fr)`;
+    }
+  }
+}
+
+window.onload = function () {
+  aplicarPreferenciasDoUsuario();
+};
