@@ -166,7 +166,7 @@ exports.listarTopEstadosVisitadosSazonalidade = async (req, res) => {
 
     const querySQL = `
       SELECT 
-        UF.unidade_federativa AS unidade_federativa,
+        UF.sigla AS unidade_federativa,
         SUM(P.quantidade_turistas) AS total_turistas_uf
       FROM 
         perfil_estimado_turistas AS P
@@ -177,7 +177,7 @@ exports.listarTopEstadosVisitadosSazonalidade = async (req, res) => {
       JOIN 
         unidade_federativa_brasil AS UF ON D.fk_uf_destino = UF.sigla
       ${whereConditions}
-      AND UF.unidade_federativa <> 'Outras Unidades da Federação'
+      AND UF.sigla <> 'OF'
       GROUP BY 
         UF.unidade_federativa
       ORDER BY 
