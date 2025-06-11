@@ -44,7 +44,7 @@ let presencaTuristaChartInstance; // Para o gráfico de Presença de Turistas po
 let chegadasTuristasChartInstance; // Para o gráfico de Chegadas
 
 // Função assíncrona para carregar e atualizar todos os dados da dashboard principal
-async function carregarDadosDashboardPrincipal() {
+async function carregarDadosDashboard() {
   const mes = selectMes ? selectMes.value : "";
   const ano = selectAno ? selectAno.value : "";
 
@@ -285,13 +285,6 @@ async function carregarDadosDashboardPrincipal() {
     document.getElementById("kpiPorcentagemComparativa").textContent = "N/A";
   }
 }
-
-// Adiciona os event listeners aos selects para chamar a função de carregamento quando o filtro mudar
-
-document.getElementById("funil").addEventListener("click", carregarDadosDashboardPrincipal)
-
-// Chama a função uma vez ao carregar a página para exibir os dados iniciais
-// document.addEventListener("DOMContentLoaded", carregarDadosDashboardPrincipal);
 
 // Função para carregar dados do cache ao inicializar a dashboard
 async function carregarDadosDoCache() {
@@ -567,5 +560,19 @@ async function carregarDadosDoCache() {
   }
 }
 
-// Chama a função de carregar dados do cache quando a página carrega
-// document.addEventListener("DOMContentLoaded", carregarDadosDoCache);
+
+// Adiciona os event listeners ao funil para chamar a função de carregamento da dashboard
+document.getElementById("funil").addEventListener("click", carregarDadosDashboard)
+
+// Chama a função de carregamento ao carregar a página.
+// Prioriza o carregamento do cache para melhor performance inicial
+document.addEventListener('DOMContentLoaded', () => {
+    // Verifica se deve carregar do cache ou fazer consulta normal
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceRefresh = urlParams.get('refresh') === 'true';
+    if (forceRefresh) {
+        carregarDadosDashboard();
+    } else {
+        carregarDadosDoCache();
+    }
+});
