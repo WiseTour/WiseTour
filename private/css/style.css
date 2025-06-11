@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,95.4,529;1,95.4,529&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,95.4,529;1,95.4,529&display=swap");
 @import url("/common/css/style.css");
 
 :root {
@@ -15,11 +15,12 @@ button {
   font-family: var(--font_family_2);
 }
 
-html, body {
-    overflow-y: hidden; 
-    height: 100%; 
-    margin: 0; 
-    padding: 0; 
+html,
+body {
+  overflow-y: hidden;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 /* HEADER */
@@ -102,12 +103,10 @@ nav .active {
   background: var(--cinza_claro);
 }
 
-
 /* CONTEUDO */
 
 body {
   max-width: 100vw;
-
 }
 
 main {
@@ -154,11 +153,9 @@ main .panorama_geral_linha_1 .filtros {
   margin-right: 5px;
 }
 
-
-
 main .panorama_geral_linha_1 .filtros select {
   font-size: 40px;
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
   color: var(--cinza_escuro);
   font-size: 13px;
   width: 110px;
@@ -188,7 +185,10 @@ main .panorama_geral_linha_2 .panorama_geral_coluna_1 {
   width: 31.4%;
 }
 
-main .panorama_geral_linha_2 .panorama_geral_coluna_1 .principais_paises_origem {
+main
+  .panorama_geral_linha_2
+  .panorama_geral_coluna_1
+  .principais_paises_origem {
   /* background-color: green; */
   display: flex;
   flex-direction: column;
@@ -231,7 +231,10 @@ main .panorama_geral_linha_2 .panorama_geral_coluna_2 .kpis .kpi {
   width: 32%;
 }
 
-main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrangeiros {
+main
+  .panorama_geral_linha_2
+  .panorama_geral_coluna_2
+  .chegadas_turistas_estrangeiros {
   /* background-color: purple; */
   display: flex;
   flex-direction: column;
@@ -241,7 +244,11 @@ main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrang
   width: 100%;
 }
 
-main .panorama_geral_linha_2 .panorama_geral_coluna_2 .chegadas_turistas_estrangeiros canvas {
+main
+  .panorama_geral_linha_2
+  .panorama_geral_coluna_2
+  .chegadas_turistas_estrangeiros
+  canvas {
   height: 100%;
   width: 100%;
 }
@@ -309,7 +316,7 @@ select:hover {
   position: absolute;
   /* left: -30px; */
   z-index: 1;
-  background-color: #F8CA26;
+  background-color: #f8ca26;
   padding: 25px;
   border-radius: 30px;
   height: 70px;
@@ -363,11 +370,11 @@ select:hover {
 .menu_container .opcao.active {
   color: black;
   border-radius: 50px;
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
 }
 
 .menu_container .opcao:hover {
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
   color: black;
   border-radius: 50px;
 }
@@ -411,7 +418,7 @@ select:hover {
   height: auto;
 }
 
-.funil{
+.funil {
   cursor: pointer;
   color: var(--cinza_escuro);
   font-size: 1.5rem;
@@ -419,6 +426,232 @@ select:hover {
   padding-left: 20px;
 }
 
-.funil:hover{
+.funil:hover {
   scale: 1.1;
+}
+
+.main-grafico {
+  display: none; /* Esconder por padrão */
+}
+
+.loading-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: var(--cinza);
+}
+
+.flight-path {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  transform: translateY(-50%);
+  overflow: hidden;
+}
+
+.trail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to right,
+    #fdd339 0px,
+    #fdd339 20px,
+    transparent 20px,
+    transparent 35px
+  );
+  width: 0%;
+  animation: drawTrail 8s linear infinite;
+  border-radius: 2px;
+}
+
+.bird-container {
+  position: absolute;
+  top: 50%;
+  left: -100px;
+  transform: translateY(-25px);
+  animation: flyBird 8s linear infinite;
+  z-index: 10;
+}
+
+.bird {
+  width: 200px;
+  height: 200px;
+  animation: flapWings 0.8s ease-in-out infinite alternate;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.bird svg {
+  width: 100%;
+  height: 100%;
+}
+
+.loading-text {
+  margin-top: 120px;
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+
+.dots::after {
+  content: "";
+  display: inline-block;
+  animation: loadingDots 2s infinite;
+}
+
+.loading-text,
+.dots {
+  font-size: 2rem;
+  text-transform: uppercase;
+  color: #d6d1d1;
+}
+
+.dots {
+  font-size: 4rem;
+  text-transform: uppercase;
+  color: #d6d1d1;
+}
+
+/* Animações */
+@keyframes flyBird {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: calc(100%);
+  }
+}
+
+@keyframes drawTrail {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes flapWings {
+  0% {
+    transform: translateY(-120px) scale(1);
+  }
+  100% {
+    transform: translateY(-100px) scale(1.05);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes loadingDots {
+  0%,
+  20% {
+    content: "";
+  }
+  40% {
+    content: ".";
+  }
+  60% {
+    content: "..";
+  }
+  80%,
+  100% {
+    content: "...";
+  }
+}
+
+/* Efeitos adicionais */
+.cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.548);
+  border-radius: 50px;
+  animation: floatCloud 20s linear infinite;
+}
+
+.cloud1 {
+  width: 80px;
+  height: 40px;
+  top: 20%;
+  left: -100px;
+  animation-delay: 0s;
+}
+
+.cloud2 {
+  width: 60px;
+  height: 30px;
+  top: 30%;
+  left: -80px;
+  animation-delay: -5s;
+}
+
+.cloud3 {
+  width: 100px;
+  height: 50px;
+  top: 70%;
+  left: -120px;
+  animation-delay: -10s;
+}
+
+@keyframes floatCloud {
+  0% {
+    left: -200px;
+  }
+  100% {
+    left: calc(100% + 200px);
+  }
+}
+
+/* Efeito de brilho na trilha */
+.trail::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  right: 0;
+  width: 30px;
+  height: 8px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  border-radius: 4px;
+  animation: shimmer 0.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .bird {
+    width: 50px;
+    height: 50px;
+  }
+
+  .loading-text {
+    font-size: 20px;
+    margin-top: 100px;
+  }
 }
