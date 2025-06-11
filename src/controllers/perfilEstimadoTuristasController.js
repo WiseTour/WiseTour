@@ -846,14 +846,14 @@ exports.getMesesAnosPaises = async (req, res) => {
 
     console.log(resultados);
 
-    const mesesAnospaises = resultados.map((item) => ({
+    const mesesAnosPaises = resultados.map((item) => ({
       ano: item.ano,
       mes: item.mes,
       pais: item.pais.pais || null,
       id_pais: item.pais.id_pais || null
     }));
 
-    res.json({ mesesAnospaises });
+    res.json({ mesesAnosPaises });
   } catch (error) {
     console.error("Erro ao buscar meses, anos e países:", error);
     res.status(500).json({ erro: "Erro interno ao buscar meses, anos e países." });
