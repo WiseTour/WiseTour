@@ -241,13 +241,13 @@ function preencherCamposGerenciamentoSenha(data, senha) {
 function alterarInformacoesUsuario() {
   const usuario = JSON.parse(sessionStorage.getItem("usuario"));
 
-  if (!usuario || !usuario.id_usuario_usuario) {
+  if (!usuario || !usuario.id_usuario) {
     alert("Usuário não encontrado.");
     return;
   }
 
   const informacoes = {
-    id_usuario: usuario.id_usuario_usuario,
+    id_usuario: usuario.id_usuario,
     id_funcionario: usuario.funcionario.id_funcionario,
     nome: document.getElementById("nome").value,
     cargo: document.getElementById("funcao").value,

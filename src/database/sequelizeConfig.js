@@ -9,22 +9,20 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST,
     dialect: "mysql",
     pool: {
-      max: 10, // Máximo de 10 conexões no pool
-      min: 2, // Mínimo de 2 conexões sempre ativas
-      acquire: 60000, // Tempo limite para obter conexão (60 segundos)
-      idle: 30000, // Tempo antes de fechar conexão inativa (30 segundos)
-      evict: 60000, // Tempo para verificar conexões inválidas (60 segundos)
+      max: 10, 
+      min: 2, 
+      acquire: 60000, 
+      idle: 30000,
+      evict: 60000, 
     },
     define: {
-      freezeTableName: true, // Isso impede a pluralização automática
+      freezeTableName: true, 
       // ou
       underscored: true,
     },
 
-    // Outras configurações importantes
     dialectOptions: {
-      connectTimeout: 60000, // Timeout de conexão MySQL
-      // acquireTimeout e timeout não são válidos aqui para MySQL2
+      connectTimeout: 60000,
     },
 
     // Configurações de retry
@@ -48,7 +46,6 @@ const sequelize = new Sequelize(
       ],
       max: 3,
     },
-
 
     logging: (sql, timing) => {
       console.log('\n' + '='.repeat(150));
