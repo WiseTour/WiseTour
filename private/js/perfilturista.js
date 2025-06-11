@@ -77,7 +77,9 @@ async function carregarDadosDashboard() {
   console.log("carregarDadosDashboard: Função iniciada.");
 
   // Ativa o loading no início
-  mostrarLoading();
+  setTimeout(() => {
+    mostrarLoading(), 3000;
+  });
 
   try {
     // Coleta os valores dos filtros.
@@ -442,7 +444,9 @@ async function carregarDadosDashboard() {
     await Promise.allSettled(promises);
   } finally {
     // Desativa o loading após todas as requisições terminarem (sucesso ou erro)
-    ocultarLoading();
+    setTimeout(() => {
+      ocultarLoading();
+    }, 3000);
     console.log("carregarDadosDashboard: Carregamento finalizado.");
   }
 }
@@ -472,7 +476,9 @@ async function carregarDadosDoCache() {
         "Nenhum dado em cache disponível. Carregando dados normalmente..."
       );
       // Remove o loading aqui pois carregarDadosDashboard() vai controlar
-      ocultarLoading();
+      setTimeout(() => {
+        ocultarLoading();
+      }, 3000);
       await carregarDadosDashboard();
       return;
     }
@@ -734,11 +740,15 @@ async function carregarDadosDoCache() {
     console.error("Erro ao carregar dados do cache:", err);
     console.log("Fallback: Carregando dados normalmente...");
     // Remove o loading aqui pois carregarDadosDashboard() vai controlar
-    ocultarLoading();
+    setTimeout(() => {
+      ocultarLoading();
+    }, 3000);
     await carregarDadosDashboard();
   } finally {
     // Desativa o loading após carregar do cache
-    ocultarLoading();
+    setTimeout(() => {
+      ocultarLoading();
+    }, 3000);
     console.log("carregarDadosDoCache: Carregamento finalizado.");
   }
 }
@@ -833,164 +843,176 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function ordenarBarrasCrescenteGraficoMotivosInstance() {
-    // Verifica se a instância do gráfico é válida
-    if (!graficoMotivosInstance || !graficoMotivosInstance.data) {
-        console.error('Instância do gráfico inválida');
-        return;
-    }
+  // Verifica se a instância do gráfico é válida
+  if (!graficoMotivosInstance || !graficoMotivosInstance.data) {
+    console.error("Instância do gráfico inválida");
+    return;
+  }
 
-    const data = graficoMotivosInstance.data;
-    
-    // Verifica se há datasets e labels
-    if (!data.datasets || !data.datasets[0] || !data.labels) {
-        console.error('Dados do gráfico não encontrados');
-        return;
-    }
+  const data = graficoMotivosInstance.data;
 
-    const dataset = data.datasets[0]; // Assume o primeiro dataset
-    const labels = data.labels;
-    const values = dataset.data;
+  // Verifica se há datasets e labels
+  if (!data.datasets || !data.datasets[0] || !data.labels) {
+    console.error("Dados do gráfico não encontrados");
+    return;
+  }
 
-    // Cria um array de objetos combinando labels e valores
-    const combined = labels.map((label, index) => ({
-        label: label,
-        value: values[index]
-    }));
+  const dataset = data.datasets[0]; // Assume o primeiro dataset
+  const labels = data.labels;
+  const values = dataset.data;
 
-    // Ordena por valor em ordem crescente
-    combined.sort((a, b) => a.value - b.value);
+  // Cria um array de objetos combinando labels e valores
+  const combined = labels.map((label, index) => ({
+    label: label,
+    value: values[index],
+  }));
 
-    // Separa novamente os labels e valores ordenados
-    const sortedLabels = combined.map(item => item.label);
-    const sortedValues = combined.map(item => item.value);
+  // Ordena por valor em ordem crescente
+  combined.sort((a, b) => a.value - b.value);
 
-    // Atualiza os dados do gráfico
-    data.labels = sortedLabels;
-    dataset.data = sortedValues;
+  // Separa novamente os labels e valores ordenados
+  const sortedLabels = combined.map((item) => item.label);
+  const sortedValues = combined.map((item) => item.value);
 
-    // Redesenha o gráfico com os novos dados
-    graficoMotivosInstance.update();
+  // Atualiza os dados do gráfico
+  data.labels = sortedLabels;
+  dataset.data = sortedValues;
 
-    console.log('Gráfico reordenado em ordem crescente!');
+  // Redesenha o gráfico com os novos dados
+  graficoMotivosInstance.update();
+
+  console.log("Gráfico reordenado em ordem crescente!");
 }
 
 // Função alternativa para ordem decrescente
 function ordenarBarrasDecrescenteGraficoMotivosInstance() {
-    if (!graficoMotivosInstance || !graficoMotivosInstance.data) {
-        console.error('Instância do gráfico inválida');
-        return;
-    }
+  if (!graficoMotivosInstance || !graficoMotivosInstance.data) {
+    console.error("Instância do gráfico inválida");
+    return;
+  }
 
-    const data = graficoMotivosInstance.data;
-    
-    if (!data.datasets || !data.datasets[0] || !data.labels) {
-        console.error('Dados do gráfico não encontrados');
-        return;
-    }
+  const data = graficoMotivosInstance.data;
 
-    const dataset = data.datasets[0];
-    const labels = data.labels;
-    const values = dataset.data;
+  if (!data.datasets || !data.datasets[0] || !data.labels) {
+    console.error("Dados do gráfico não encontrados");
+    return;
+  }
 
-    const combined = labels.map((label, index) => ({
-        label: label,
-        value: values[index]
-    }));
+  const dataset = data.datasets[0];
+  const labels = data.labels;
+  const values = dataset.data;
 
-    // Ordena por valor em ordem decrescente
-    combined.sort((a, b) => b.value - a.value);
+  const combined = labels.map((label, index) => ({
+    label: label,
+    value: values[index],
+  }));
 
-    const sortedLabels = combined.map(item => item.label);
-    const sortedValues = combined.map(item => item.value);
+  // Ordena por valor em ordem decrescente
+  combined.sort((a, b) => b.value - a.value);
 
-    data.labels = sortedLabels;
-    dataset.data = sortedValues;
+  const sortedLabels = combined.map((item) => item.label);
+  const sortedValues = combined.map((item) => item.value);
 
-    graficoMotivosInstance.update();
+  data.labels = sortedLabels;
+  dataset.data = sortedValues;
 
-    console.log('Gráfico reordenado em ordem decrescente!');
+  graficoMotivosInstance.update();
+
+  console.log("Gráfico reordenado em ordem decrescente!");
 }
 
 function ordenarBarrasCrescenteFonteInformacao() {
-    // Verifica se a instância do gráfico é válida
-    if (!graficoFontesInstance || !graficoFontesInstance.data) {
-        console.error('Instância do gráfico inválida');
-        return;
-    }
+  // Verifica se a instância do gráfico é válida
+  if (!graficoFontesInstance || !graficoFontesInstance.data) {
+    console.error("Instância do gráfico inválida");
+    return;
+  }
 
-    const data = graficoFontesInstance.data;
-    
-    // Verifica se há datasets e labels
-    if (!data.datasets || !data.datasets[0] || !data.labels) {
-        console.error('Dados do gráfico não encontrados');
-        return;
-    }
+  const data = graficoFontesInstance.data;
 
-    const dataset = data.datasets[0]; // Assume o primeiro dataset
-    const labels = data.labels;
-    const values = dataset.data;
+  // Verifica se há datasets e labels
+  if (!data.datasets || !data.datasets[0] || !data.labels) {
+    console.error("Dados do gráfico não encontrados");
+    return;
+  }
 
-    // Cria um array de objetos combinando labels e valores
-    const combined = labels.map((label, index) => ({
-        label: label,
-        value: values[index]
-    }));
+  const dataset = data.datasets[0]; // Assume o primeiro dataset
+  const labels = data.labels;
+  const values = dataset.data;
 
-    // Ordena por valor em ordem crescente
-    combined.sort((a, b) => a.value - b.value);
+  // Cria um array de objetos combinando labels e valores
+  const combined = labels.map((label, index) => ({
+    label: label,
+    value: values[index],
+  }));
 
-    // Separa novamente os labels e valores ordenados
-    const sortedLabels = combined.map(item => item.label);
-    const sortedValues = combined.map(item => item.value);
+  // Ordena por valor em ordem crescente
+  combined.sort((a, b) => a.value - b.value);
 
-    // Atualiza os dados do gráfico
-    data.labels = sortedLabels;
-    dataset.data = sortedValues;
+  // Separa novamente os labels e valores ordenados
+  const sortedLabels = combined.map((item) => item.label);
+  const sortedValues = combined.map((item) => item.value);
 
-    // Redesenha o gráfico com os novos dados
-    graficoFontesInstance.update();
+  // Atualiza os dados do gráfico
+  data.labels = sortedLabels;
+  dataset.data = sortedValues;
 
-    console.log('Gráfico reordenado em ordem crescente!');
+  // Redesenha o gráfico com os novos dados
+  graficoFontesInstance.update();
+
+  console.log("Gráfico reordenado em ordem crescente!");
 }
 
 // Função alternativa para ordem decrescente
 function ordenarBarrasDecrescenteFonteInformacao() {
-    if (!graficoFontesInstance || !graficoFontesInstance.data) {
-        console.error('Instância do gráfico inválida');
-        return;
-    }
+  if (!graficoFontesInstance || !graficoFontesInstance.data) {
+    console.error("Instância do gráfico inválida");
+    return;
+  }
 
-    const data = graficoFontesInstance.data;
-    
-    if (!data.datasets || !data.datasets[0] || !data.labels) {
-        console.error('Dados do gráfico não encontrados');
-        return;
-    }
+  const data = graficoFontesInstance.data;
 
-    const dataset = data.datasets[0];
-    const labels = data.labels;
-    const values = dataset.data;
+  if (!data.datasets || !data.datasets[0] || !data.labels) {
+    console.error("Dados do gráfico não encontrados");
+    return;
+  }
 
-    const combined = labels.map((label, index) => ({
-        label: label,
-        value: values[index]
-    }));
+  const dataset = data.datasets[0];
+  const labels = data.labels;
+  const values = dataset.data;
 
-    // Ordena por valor em ordem decrescente
-    combined.sort((a, b) => b.value - a.value);
+  const combined = labels.map((label, index) => ({
+    label: label,
+    value: values[index],
+  }));
 
-    const sortedLabels = combined.map(item => item.label);
-    const sortedValues = combined.map(item => item.value);
+  // Ordena por valor em ordem decrescente
+  combined.sort((a, b) => b.value - a.value);
 
-    data.labels = sortedLabels;
-    dataset.data = sortedValues;
+  const sortedLabels = combined.map((item) => item.label);
+  const sortedValues = combined.map((item) => item.value);
 
-    graficoFontesInstance.update();
+  data.labels = sortedLabels;
+  dataset.data = sortedValues;
 
-    console.log('Gráfico reordenado em ordem decrescente!');
+  graficoFontesInstance.update();
+
+  console.log("Gráfico reordenado em ordem decrescente!");
 }
 
-document.getElementById("sort-btn-asc-motivos").addEventListener("click", () => ordenarBarrasCrescenteGraficoMotivosInstance());
-document.getElementById("sort-btn-desc-motivos").addEventListener("click", () => ordenarBarrasDecrescenteGraficoMotivosInstance());
-document.getElementById("sort-btn-asc-fonte-informacao").addEventListener("click", () => ordenarBarrasCrescenteFonteInformacao());
-document.getElementById("sort-btn-desc-fonte-informacao").addEventListener("click", () => ordenarBarrasDecrescenteFonteInformacao());
+document
+  .getElementById("sort-btn-asc-motivos")
+  .addEventListener("click", () =>
+    ordenarBarrasCrescenteGraficoMotivosInstance()
+  );
+document
+  .getElementById("sort-btn-desc-motivos")
+  .addEventListener("click", () =>
+    ordenarBarrasDecrescenteGraficoMotivosInstance()
+  );
+document
+  .getElementById("sort-btn-asc-fonte-informacao")
+  .addEventListener("click", () => ordenarBarrasCrescenteFonteInformacao());
+document
+  .getElementById("sort-btn-desc-fonte-informacao")
+  .addEventListener("click", () => ordenarBarrasDecrescenteFonteInformacao());

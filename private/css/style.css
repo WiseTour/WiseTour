@@ -432,6 +432,7 @@ select:hover {
 
 .main-grafico {
   display: none; /* Esconder por padrão */
+  transition: 5s ease-in;
 }
 
 .loading-container {
@@ -443,6 +444,7 @@ select:hover {
   justify-content: center;
   flex-direction: column;
   background-color: var(--cinza);
+  transition: 5s ease-in;
 }
 
 .flight-path {

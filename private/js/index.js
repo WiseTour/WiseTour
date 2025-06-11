@@ -314,11 +314,15 @@ async function carregarDadosDashboard() {
   try {
     await Promise.all(carregamentos);
     // Todos os dados foram carregados, esconder loading e mostrar dashboard
-    esconderLoading();
+    setTimeout(() => {
+      esconderLoading();
+    }, 5000);
   } catch (error) {
     console.error("Erro durante o carregamento dos dados:", error);
     // Mesmo com erro, esconder o loading
-    esconderLoading();
+    setTimeout(() => {
+      esconderLoading();
+    }, 5000);
   }
 }
 
@@ -328,7 +332,7 @@ function mostrarLoading() {
   const mainGrafico = document.querySelector(".main-grafico");
 
   if (loadingContainer) {
-    loadingContainer.style.display = "block";
+    loadingContainer.style.display = "flex";
   }
 
   if (mainGrafico) {
@@ -434,7 +438,9 @@ async function carregarDadosDoCache() {
     console.log("Dashboard carregada com dados do cache");
 
     // Esconder loading após todos os dados serem carregados
-    esconderLoading();
+    setTimeout(() => {
+      esconderLoading();
+    }, 5000);
   } catch (err) {
     console.error("Erro geral ao carregar dados do cache:", err);
     // Em caso de erro, carregar dados normalmente
@@ -464,7 +470,6 @@ function definirValorSelect(selectElement, valor, tipo) {
 
 // Funções de carregamento de cache individuais (exemplo de implementação)
 // Adapte conforme suas necessidades específicas
-
 
 // Função auxiliar para definir valor do select corretamente
 function definirValorSelect(selectElement, valor, tipoSelect) {
@@ -928,165 +933,178 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function ordenarBarrasCrescentePrincipaisPaisesOrigem() {
-    // Verifica se a instância do gráfico é válida
-    if (!myChartInstance || !myChartInstance.data) {
-        console.error('Instância do gráfico inválida');
-        return;
-    }
+  // Verifica se a instância do gráfico é válida
+  if (!myChartInstance || !myChartInstance.data) {
+    console.error("Instância do gráfico inválida");
+    return;
+  }
 
-    const data = myChartInstance.data;
-    
-    // Verifica se há datasets e labels
-    if (!data.datasets || !data.datasets[0] || !data.labels) {
-        console.error('Dados do gráfico não encontrados');
-        return;
-    }
+  const data = myChartInstance.data;
 
-    const dataset = data.datasets[0]; // Assume o primeiro dataset
-    const labels = data.labels;
-    const values = dataset.data;
+  // Verifica se há datasets e labels
+  if (!data.datasets || !data.datasets[0] || !data.labels) {
+    console.error("Dados do gráfico não encontrados");
+    return;
+  }
 
-    // Cria um array de objetos combinando labels e valores
-    const combined = labels.map((label, index) => ({
-        label: label,
-        value: values[index]
-    }));
+  const dataset = data.datasets[0]; // Assume o primeiro dataset
+  const labels = data.labels;
+  const values = dataset.data;
 
-    // Ordena por valor em ordem crescente
-    combined.sort((a, b) => a.value - b.value);
+  // Cria um array de objetos combinando labels e valores
+  const combined = labels.map((label, index) => ({
+    label: label,
+    value: values[index],
+  }));
 
-    // Separa novamente os labels e valores ordenados
-    const sortedLabels = combined.map(item => item.label);
-    const sortedValues = combined.map(item => item.value);
+  // Ordena por valor em ordem crescente
+  combined.sort((a, b) => a.value - b.value);
 
-    // Atualiza os dados do gráfico
-    data.labels = sortedLabels;
-    dataset.data = sortedValues;
+  // Separa novamente os labels e valores ordenados
+  const sortedLabels = combined.map((item) => item.label);
+  const sortedValues = combined.map((item) => item.value);
 
-    // Redesenha o gráfico com os novos dados
-    myChartInstance.update();
+  // Atualiza os dados do gráfico
+  data.labels = sortedLabels;
+  dataset.data = sortedValues;
 
-    console.log('Gráfico reordenado em ordem crescente!');
+  // Redesenha o gráfico com os novos dados
+  myChartInstance.update();
+
+  console.log("Gráfico reordenado em ordem crescente!");
 }
 
 // Função alternativa para ordem decrescente
 function ordenarBarrasDecrescentePrincipaisPaisesOrigem() {
-    if (!myChartInstance || !myChartInstance.data) {
-        console.error('Instância do gráfico inválida');
-        return;
-    }
+  if (!myChartInstance || !myChartInstance.data) {
+    console.error("Instância do gráfico inválida");
+    return;
+  }
 
-    const data = myChartInstance.data;
-    
-    if (!data.datasets || !data.datasets[0] || !data.labels) {
-        console.error('Dados do gráfico não encontrados');
-        return;
-    }
+  const data = myChartInstance.data;
 
-    const dataset = data.datasets[0];
-    const labels = data.labels;
-    const values = dataset.data;
+  if (!data.datasets || !data.datasets[0] || !data.labels) {
+    console.error("Dados do gráfico não encontrados");
+    return;
+  }
 
-    const combined = labels.map((label, index) => ({
-        label: label,
-        value: values[index]
-    }));
+  const dataset = data.datasets[0];
+  const labels = data.labels;
+  const values = dataset.data;
 
-    // Ordena por valor em ordem decrescente
-    combined.sort((a, b) => b.value - a.value);
+  const combined = labels.map((label, index) => ({
+    label: label,
+    value: values[index],
+  }));
 
-    const sortedLabels = combined.map(item => item.label);
-    const sortedValues = combined.map(item => item.value);
+  // Ordena por valor em ordem decrescente
+  combined.sort((a, b) => b.value - a.value);
 
-    data.labels = sortedLabels;
-    dataset.data = sortedValues;
+  const sortedLabels = combined.map((item) => item.label);
+  const sortedValues = combined.map((item) => item.value);
 
-    myChartInstance.update();
+  data.labels = sortedLabels;
+  dataset.data = sortedValues;
 
-    console.log('Gráfico reordenado em ordem decrescente!');
+  myChartInstance.update();
+
+  console.log("Gráfico reordenado em ordem decrescente!");
 }
 
-
 function ordenarBarrasCrescentePresencaTuristicaUF() {
-    // Verifica se a instância do gráfico é válida
-    if (!presencaTuristaChartInstance || !presencaTuristaChartInstance.data) {
-        console.error('Instância do gráfico inválida');
-        return;
-    }
+  // Verifica se a instância do gráfico é válida
+  if (!presencaTuristaChartInstance || !presencaTuristaChartInstance.data) {
+    console.error("Instância do gráfico inválida");
+    return;
+  }
 
-    const data = presencaTuristaChartInstance.data;
-    
-    // Verifica se há datasets e labels
-    if (!data.datasets || !data.datasets[0] || !data.labels) {
-        console.error('Dados do gráfico não encontrados');
-        return;
-    }
+  const data = presencaTuristaChartInstance.data;
 
-    const dataset = data.datasets[0]; // Assume o primeiro dataset
-    const labels = data.labels;
-    const values = dataset.data;
+  // Verifica se há datasets e labels
+  if (!data.datasets || !data.datasets[0] || !data.labels) {
+    console.error("Dados do gráfico não encontrados");
+    return;
+  }
 
-    // Cria um array de objetos combinando labels e valores
-    const combined = labels.map((label, index) => ({
-        label: label,
-        value: values[index]
-    }));
+  const dataset = data.datasets[0]; // Assume o primeiro dataset
+  const labels = data.labels;
+  const values = dataset.data;
 
-    // Ordena por valor em ordem crescente
-    combined.sort((a, b) => a.value - b.value);
+  // Cria um array de objetos combinando labels e valores
+  const combined = labels.map((label, index) => ({
+    label: label,
+    value: values[index],
+  }));
 
-    // Separa novamente os labels e valores ordenados
-    const sortedLabels = combined.map(item => item.label);
-    const sortedValues = combined.map(item => item.value);
+  // Ordena por valor em ordem crescente
+  combined.sort((a, b) => a.value - b.value);
 
-    // Atualiza os dados do gráfico
-    data.labels = sortedLabels;
-    dataset.data = sortedValues;
+  // Separa novamente os labels e valores ordenados
+  const sortedLabels = combined.map((item) => item.label);
+  const sortedValues = combined.map((item) => item.value);
 
-    // Redesenha o gráfico com os novos dados
-    presencaTuristaChartInstance.update();
+  // Atualiza os dados do gráfico
+  data.labels = sortedLabels;
+  dataset.data = sortedValues;
 
-    console.log('Gráfico reordenado em ordem crescente!');
+  // Redesenha o gráfico com os novos dados
+  presencaTuristaChartInstance.update();
+
+  console.log("Gráfico reordenado em ordem crescente!");
 }
 
 // Função alternativa para ordem decrescente
 function ordenarBarrasDecrescentePresencaTuristicaUF() {
-    if (!presencaTuristaChartInstance || !presencaTuristaChartInstance.data) {
-        console.error('Instância do gráfico inválida');
-        return;
-    }
+  if (!presencaTuristaChartInstance || !presencaTuristaChartInstance.data) {
+    console.error("Instância do gráfico inválida");
+    return;
+  }
 
-    const data = presencaTuristaChartInstance.data;
-    
-    if (!data.datasets || !data.datasets[0] || !data.labels) {
-        console.error('Dados do gráfico não encontrados');
-        return;
-    }
+  const data = presencaTuristaChartInstance.data;
 
-    const dataset = data.datasets[0];
-    const labels = data.labels;
-    const values = dataset.data;
+  if (!data.datasets || !data.datasets[0] || !data.labels) {
+    console.error("Dados do gráfico não encontrados");
+    return;
+  }
 
-    const combined = labels.map((label, index) => ({
-        label: label,
-        value: values[index]
-    }));
+  const dataset = data.datasets[0];
+  const labels = data.labels;
+  const values = dataset.data;
 
-    // Ordena por valor em ordem decrescente
-    combined.sort((a, b) => b.value - a.value);
+  const combined = labels.map((label, index) => ({
+    label: label,
+    value: values[index],
+  }));
 
-    const sortedLabels = combined.map(item => item.label);
-    const sortedValues = combined.map(item => item.value);
+  // Ordena por valor em ordem decrescente
+  combined.sort((a, b) => b.value - a.value);
 
-    data.labels = sortedLabels;
-    dataset.data = sortedValues;
+  const sortedLabels = combined.map((item) => item.label);
+  const sortedValues = combined.map((item) => item.value);
 
-    presencaTuristaChartInstance.update();
+  data.labels = sortedLabels;
+  dataset.data = sortedValues;
 
-    console.log('Gráfico reordenado em ordem decrescente!');
+  presencaTuristaChartInstance.update();
+
+  console.log("Gráfico reordenado em ordem decrescente!");
 }
 
-document.getElementById("sort-btn-asc-principais-paises-origem").addEventListener("click", () => ordenarBarrasCrescentePrincipaisPaisesOrigem());
-document.getElementById("sort-btn-desc-principais-paises-origem").addEventListener("click", () => ordenarBarrasDecrescentePrincipaisPaisesOrigem());
-document.getElementById("sort-btn-asc-presenca-turistas-uf").addEventListener("click", () => ordenarBarrasCrescentePresencaTuristicaUF());
-document.getElementById("sort-btn-desc-presenca-turistas-uf").addEventListener("click", () => ordenarBarrasDecrescentePresencaTuristicaUF());
+document
+  .getElementById("sort-btn-asc-principais-paises-origem")
+  .addEventListener("click", () =>
+    ordenarBarrasCrescentePrincipaisPaisesOrigem()
+  );
+document
+  .getElementById("sort-btn-desc-principais-paises-origem")
+  .addEventListener("click", () =>
+    ordenarBarrasDecrescentePrincipaisPaisesOrigem()
+  );
+document
+  .getElementById("sort-btn-asc-presenca-turistas-uf")
+  .addEventListener("click", () => ordenarBarrasCrescentePresencaTuristicaUF());
+document
+  .getElementById("sort-btn-desc-presenca-turistas-uf")
+  .addEventListener("click", () =>
+    ordenarBarrasDecrescentePresencaTuristicaUF()
+  );

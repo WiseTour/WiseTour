@@ -48,7 +48,7 @@ const variacaoDescKPI = document.getElementById("variacaoDescKPI");
 const estadoVisitado1 = document.getElementById("estadoVisitado1");
 const estadoVisitado2 = document.getElementById("estadoVisitado2");
 const estadoVisitado3 = document.getElementById("estadoVisitado3");
-const totalTuristasKPI = document.getElementById("totalTuristasSazonalidade");
+const totalTuristasKPI = document.getElementById("totalTuristasKPI");
 
 // NOVAS REFERÊNCIAS PARA O GRÁFICO DE PICO DE VISITAS (adicionadas ou confirmadas aqui)
 const picoVisitasChartContainer = document.getElementById(
@@ -1022,7 +1022,9 @@ async function carregarTodosOsDadosDoDashboard(usarCache = false) {
     // (os componentes individuais já tratam seus próprios erros)
   } finally {
     // Sempre esconde o loading ao final, independente de sucesso ou erro
-    esconderLoading();
+    setTimeout(() => {
+      esconderLoading();
+    }, 3000);
   }
 }
 
