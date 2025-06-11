@@ -32,8 +32,8 @@ function cadastrarFuncionario() {
       fk_cnpj: cnpjEmpresaVar,
       fk_informacao_contato_cadastro: idInformacaoVar,
       fk_uf_sigla: siglaUfVar,
-      fk_endereco: 2,
-      fk_usuario: 2
+      fk_endereco: 1,
+      fk_usuario: 1
     }),
   })
     .then(function (resposta) {

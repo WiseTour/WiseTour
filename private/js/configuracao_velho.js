@@ -4,9 +4,38 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnCancelar = document.getElementById("btn-cancelar");
     const formUsuario = document.getElementById("form-usuario");
     const corpoTabela = document.getElementById("corpo-tabela");
+    const cnpjAdminLogado = '12345678000199';
 
     let usuarios = [];
     let editandoIndex = null;
+
+    fetch(`/funcionario/empresa/${cnpjAdminLogado}`)
+    .then(res => {
+        if (!res.ok) {
+        throw new Error('Erro na resposta do servidor');
+        }
+        return res.json();
+    })
+    .then(data => {
+        if (!Array.isArray(data)) {
+        throw new Error(data.message || 'Resposta inesperada do servidor');
+        }
+
+        usuarios = data.map(f => ({
+        nome: f.nome,
+        cargo: f.cargo,
+        telefone: f.telefone,
+        email: f.usuario?.email || 'sem email'
+        }));
+
+        atualizarTabela();
+    })
+    .catch(err => {
+        console.error('Erro ao buscar usuários da empresa:', err.message);
+        // opcional: alertar usuário ou mostrar na tela
+    });
+
+
 
     btnNovoUsuario.addEventListener("click", () => {
         formCadastro.style.display = "block";
@@ -42,6 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
         formCadastro.style.display = "none";
         editandoIndex = null;
     });
+
+
 
     function cadastrarInfoContato(usuario) {
         fetch("/usuario/cadastrar_info_contato", {

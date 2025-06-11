@@ -108,10 +108,38 @@ const excluirFuncionario = async (req, res) => {
   }
 };
 
+const listarUsuariosDaEmpresa = async (req, res) => {
+  try {
+    const { fk_cnpj } = req.params;
+
+    const funcionarios = await Funcionario.findAll({
+      where: { fk_cnpj: fk_cnpj },
+      include: {
+        model: Usuario,
+        as: 'usuario',
+        attributes: ['id_usuario', 'email', 'permissao']
+      }
+    });
+    
+    console.log("BODY FUNCIONARIO RECEBIDO:", req.body)
+
+    if (funcionarios.length === 0) {
+      return res.status(404).json({ message: 'Nenhum funcionário encontrado para este CNPJ.' });
+    }
+
+    res.json(funcionarios);
+  } catch (error) {
+    console.error('Erro ao listar usuários da empresa:', error);
+    res.status(500).json({ message: 'Erro no servidor.' });
+  }
+};
+
+
 
 module.exports = {  
   getFuncionarioByFkUsuario,
   criarFuncionario,
   atualizarFuncionario,
-  excluirFuncionario
+  excluirFuncionario,
+  listarUsuariosDaEmpresa
 };

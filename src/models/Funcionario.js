@@ -21,29 +21,27 @@ const Funcionario = sequelize.define("funcionario", {
   },
   fk_cnpj: {
     type: DataTypes.CHAR(14),
-    primaryKey: true,
     allowNull: false,
   },
   fk_informacao_contato_cadastro: {
     type: DataTypes.INTEGER,
-    primaryKey: true,
     allowNull: false,
   },
   fk_uf_sigla: {
     type: DataTypes.CHAR(2),
-    primaryKey: true,
     allowNull: true,
   },
   fk_endereco: {
     type: DataTypes.INTEGER,
-    primaryKey: true,
     allowNull: true,
   },
   fk_usuario: {
     type: DataTypes.INTEGER,
-    primaryKey: true,
     allowNull: true,
   },
+}, {
+  tableName: 'funcionario',
+  timestamps: false,
 });
 
 module.exports = Funcionario;
