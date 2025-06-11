@@ -312,6 +312,92 @@ async function buscarUsuarioCompleto(req, res) {
   }
 }
 
+async function criarUsuario(req, res) {
+  const { email, senha, permissao } = req.body;
+
+  if (!email || !senha || !permissao) {
+    return res.status(400).json({ mensagem: "Campos obrigatórios não informados." });
+  }
+
+  try {
+    const usuarioExistente = await usuario.findOne({ where: { email } });
+
+    if (usuarioExistente) {
+      return res.status(400).json({ mensagem: "Email já cadastrado." });
+    }
+
+    console.log("BODY USUARIO RECEBIDO:", req.body)
+
+    const novoUsuario = await usuario.create({ email, senha, permissao });
+
+    res.status(201).json(novoUsuario);
+  } catch (error) {
+    console.error("Erro ao criar usuário:", error);
+    res.status(500).json({ mensagem: "Erro interno no servidor" });
+  }
+}
+
+// PUT /usuario/:id_usuario
+async function atualizarUsuario(req, res) {
+  const { id_usuario } = req.params;
+  const { email, senha, permissao } = req.body;
+
+  if (!email && !senha && !permissao) {
+    return res.status(400).json({ mensagem: "Nenhum dado para atualizar foi enviado." });
+  }
+
+  try {
+    const usuarioEncontradoId = await usuario.findByPk(id_usuario);
+
+    if (!usuarioEncontradoId) {
+      return res.status(404).json({ mensagem: "Usuário não encontrado." });
+    }
+
+    if (email) usuarioEncontradoId.email = email;
+    if (senha) usuarioEncontradoId.senha = senha;
+    if (permissao) usuarioEncontradoId.permissao = permissao;
+
+    console.log("BODY USUARIO RECEBIDO:", req.body)
+
+    await usuarioEncontradoId.save();
+
+    res.json({ mensagem: "Usuário atualizado com sucesso!" });
+  } catch (erro) {
+    console.error("Erro ao atualizar usuário:", erro);
+    res.status(500).json({ mensagem: "Erro interno no servidor." });
+  }
+}
+
+const excluirUsuario = async (req, res) => {
+  try {
+    const { emailUsuarioServer} = req.body;
+
+    // Verificação se os campos foram enviados
+    if (!emailUsuarioServer) {
+      return res.status(400).json({ message: 'Email é obrigatório'});
+    }
+
+    const usuarioExcluido = await usuario.destroy({
+      where: {
+        email: emailUsuarioServer,
+      }
+    });
+
+    if (usuarioExcluido === 0) {
+      return res.status(404).json({ message: 'Usuário não encontrado com os dados informados.' });
+    }
+
+    console.log("BODY USUARIO RECEBIDO:", req.body)
+    
+
+    res.status(200).json({ message: 'Usuário excluído com sucesso.' });
+  } catch (error) {
+    console.error('Erro ao excluir Usuário:', error);
+    res.status(500).json({ message: 'Erro no servidor.' });
+  }
+};
+
+
 module.exports = {
   buscarUsuarioPorId,
   buscarSenhaUsuarioPorId,
@@ -320,5 +406,8 @@ module.exports = {
   alterarSenhaUsuario,
   cadastrarInfoContato,
   cadastrarFuncionario,
-  buscarUsuarioCompleto
+  buscarUsuarioCompleto,
+  criarUsuario,
+  atualizarUsuario,
+  excluirUsuario
 };

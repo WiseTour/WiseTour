@@ -1,24 +1,23 @@
 function cadastrarUsuario() {
-
     //Recupere o valor da nova input pelo nome do id
     // Agora vá para o método fetch logo abaixo
-    var emailUsuarioVar = usuario_email_input.value;
-    var senhaUsuarioVar = usuario_senha_input.value;
-    var permissaoUsuarioVar = usuario_permissao_input.value;
+    var email = usuario_email_input.value;
+    var senha = usuario_senha_input.value;
+    var permissao = usuario_permissao_input.value;
      
   
     // Verificando se há algum campo em branco
     if (
-      emailUsuarioVar == "" ||
-      senhaUsuarioVar == "" ||
-      permissaoUsuarioVar == ""
+      email == "" ||
+      senha == "" ||
+      permissao == ""
     ){
       alert("Mensagem de erro para todos os campos em branco")
   
       return false;
     }
   
-    fetch("/internal/cadastrarUsuario", {
+    fetch("/usuario", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -26,15 +25,16 @@ function cadastrarUsuario() {
       body: JSON.stringify({
         // crie um atributo que recebe o valor recuperado aqui
         // Agora vá para o arquivo routes/usuario.js
-        emailUsuarioServer: emailUsuarioVar,
-        senhaUsuarioServer: senhaUsuarioVar,
-        permissaoUsuarioServer: permissaoUsuarioVar
+        email: email,
+        senha: senha,
+        permissao: permissao
       }),
     })
       .then(function (resposta) {
         console.log("resposta: ", resposta);
   
         if (resposta.ok) {
+          alert("Cadastro do funcionário realizado com sucesso");
           cardErro.style.display = "block";
   
           mensagem_erro.innerHTML =
@@ -46,7 +46,8 @@ function cadastrarUsuario() {
   
           limparFormulario();
         } else {
-          throw "Houve um erro ao tentar realizar o cadastro!";
+          alert("Erro ao realizar cadastro do usuário! Verifique as informações passadas!")
+          throw "Houve um erro ao tentar realizar o cadastro do usuário!";
         }
       })
       .catch(function (resposta) {

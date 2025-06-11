@@ -12,8 +12,8 @@ function excluirUsuario() {
       return false;
     }
   
-    fetch("/internalRoutes/excluirUsuario", {
-      method: "POST",
+    fetch("/usuario", {
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
@@ -30,7 +30,8 @@ function excluirUsuario() {
 
         limparFormulario();
       } else {
-        throw "Houve um erro ao tentar realizar o cadastro!";
+        alert("Erro ao excluir o usuário! Verifique as informações passadas!")
+        throw "Houve um erro ao tentar excluir o usuário!";
       }
       })
       .catch(function (resposta) {

@@ -1,5 +1,4 @@
 function cadastrarFuncionario() {
-
   var nomeFuncionarioVar = cadastro_funcionario_nome_input.value;
   var cargoVar = cadastro_funcionario_cargo_input.value;
   var telefoneVar = cadastro_funcionario_telefone_input.value;
@@ -20,18 +19,20 @@ function cadastrarFuncionario() {
     return false;
   }
 
-  fetch("/internalRoutes/cadastrarFuncionario", {
+  fetch("/funcionario", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      nomeServer: nomeFuncionarioVar,
-      cargoServer: cargoVar,
-      telefoneServer: telefoneVar,
-      cnpjEmpresaServer: cnpjEmpresaVar,
-      idInformacaoServer: idInformacaoVar,
-      siglaUfServer: siglaUfVar
+      nome: nomeFuncionarioVar,
+      cargo: cargoVar,
+      telefone: telefoneVar,
+      fk_cnpj: cnpjEmpresaVar,
+      fk_informacao_contato_cadastro: idInformacaoVar,
+      fk_uf_sigla: siglaUfVar,
+      fk_endereco: 1,
+      fk_usuario: 1
     }),
   })
     .then(function (resposta) {
@@ -42,7 +43,8 @@ function cadastrarFuncionario() {
 
         limparFormulario();
       } else {
-        throw "Houve um erro ao tentar realizar o cadastro!";
+        alert("Erro ao realizar cadastro do funcionário! Verifique as informações passadas!")
+        throw "Houve um erro ao tentar realizar o cadastro do funcionário!";
       }
     })
     .catch(function (resposta) {

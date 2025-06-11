@@ -1,36 +1,35 @@
 function editarUsuario() {
-
-    var emailUsuarioVar = editar_usuario_email_input.value;
-    var emailNovoUsuarioVar = editar_usuario_email_novo_input.value;
-    var idFuncionarioVar = editar_usuario_id_funcionario_input.value;
-    var senhaUsuarioVar = editar_usuario_senha_input.value;
-    var permissaoUsuarioVar = editar_usuario_permissao_input.value;
+    var id_usuario = editar_id_usuario_email_input.value;
+    var emailNovo = editar_usuario_email_novo_input.value;
+    var idFuncionario = editar_usuario_id_responsavel_input.value;
+    var senha = editar_usuario_senha_input.value;
+    var permissao = editar_usuario_permissao_input.value;
      
   
     // Verificando se há algum campo em branco
     if (
-      emailUsuarioVar == "" ||
-      emailNovoUsuarioVar == "" ||
-      idFuncionarioVar == "" ||
-      senhaUsuarioVar == "" ||
-      permissaoUsuarioVar == ""
+      id_usuario == "" ||
+      emailNovo == "" ||
+      idFuncionario == "" ||
+      senha == "" ||
+      permissao == ""
     ){
       alert("Mensagem de erro para todos os campos em branco")
   
       return false;
     }
   
-    fetch("/internalRoutes/editarUsuario", {
-      method: "POST",
+    fetch(`/usuario/${id_usuario}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        emailNovoUsuarioServer: emailNovoUsuarioVar,
-        emailUsuarioServer: emailUsuarioVar,
-        idFuncionarioServer : idFuncionarioVar,
-        senhaUsuarioServer: senhaUsuarioVar,
-        permissaoUsuarioServer: permissaoUsuarioVar
+        email: emailNovo,
+        id_usuario: id_usuario,
+        idFuncionario: idFuncionario,
+        senha: senha,
+        permissao: permissao
       }),
       
     })
@@ -38,11 +37,12 @@ function editarUsuario() {
         console.log("resposta: ", resposta);
   
        if (resposta.ok) {
-        alert ("Cadastro do usuário atualizado!!!")
+        alert ("Cadastro do usuário atualizado com sucesso!")
 
         limparFormulario();
       } else {
-        throw "Houve um erro ao tentar realizar o cadastro!";
+        alert("Erro ao editar o usuário! Verifique as informações passadas!")
+        throw "Houve um erro ao tentar realizar a edição do usuário!";
       }
       })
       .catch(function (resposta) {

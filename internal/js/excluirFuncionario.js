@@ -1,24 +1,23 @@
 function excluirFuncionario() {
-
-  var idFuncionarioVar = excluir_funcionario_id_input.value;
+  var nomeFuncionarioVar = excluir_funcionario_nome_input.value;
   var cnpjEmpresaVar = excluir_funcionario_cnpj_empresa_input.value;
 
   // Verificando se há algum campo em branco
   if (
-    idFuncionarioVar == "" ||
+    nomeFuncionarioVar == "" ||
     cnpjEmpresaVar == ""
   ) {
     alert("Mensagem de erro para todos os campos em branco");
     return false;
   }
 
-  fetch("/internalRoutes/excluirFuncionario", {
-    method: "POST",
+  fetch("/funcionario", {
+    method: "DELETE",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      idServer: idFuncionarioVar,
+      nomeFuncionarioServer: nomeFuncionarioVar,
       cnpjEmpresaServer: cnpjEmpresaVar,
     }),
   })
@@ -30,7 +29,8 @@ function excluirFuncionario() {
 
         limparFormulario();
       } else {
-        throw "Houve um erro ao tentar realizar o cadastro!";
+        alert("Erro ao excluir o funcionário! Verifique as informações passadas!")
+        throw "Houve um erro ao tentar excluir o funcionario!";
       }
     })
     .catch(function (resposta) {
