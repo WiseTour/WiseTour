@@ -288,7 +288,7 @@ async function carregarDadosDashboardPrincipal() {
 
 // Adiciona os event listeners aos selects para chamar a função de carregamento quando o filtro mudar
 
-document.getElementsByClassName("funil").addEventListener("click", carregarDadosDashboardPrincipal)
+document.getElementById("funil").addEventListener("click", carregarDadosDashboardPrincipal)
 
 // Chama a função uma vez ao carregar a página para exibir os dados iniciais
 // document.addEventListener("DOMContentLoaded", carregarDadosDashboardPrincipal);
@@ -568,4 +568,4 @@ async function carregarDadosDoCache() {
 }
 
 // Chama a função de carregar dados do cache quando a página carrega
-document.addEventListener("DOMContentLoaded", carregarDadosDoCache);
+// document.addEventListener("DOMContentLoaded", carregarDadosDoCache);

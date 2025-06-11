@@ -467,3 +467,15 @@ select:hover {
     width: 25px;
     height: auto;
 }
+
+.funil{
+  cursor: pointer;
+  color: var(--cinza_escuro);
+  font-size: 1.5rem;
+  transition: 0.5s ease;
+  padding-left: 20px;
+}
+
+.funil:hover{
+  scale: 1.1;
+}

@@ -721,27 +721,8 @@ async function carregarTodosOsDadosDoDashboard(usarCache = false) {
     console.log("carregarTodosOsDadosDoDashboard(): Concluído.");
 }
 
-
-
 // Adiciona Event Listeners aos filtros para recarregar dados do dashboard.
-if (selectMes) {
-    selectMes.addEventListener('change', () => {
-        console.log("Evento 'change' no filtro Mês (id='mes') detectado.");
-        carregarTodosOsDadosDoDashboard();
-    });
-}
-if (selectAno) {
-    selectAno.addEventListener('change', () => {
-        console.log("Evento 'change' no filtro Ano (id='ano') detectado.");
-        carregarTodosOsDadosDoDashboard();
-    });
-}
-if (selectPais) {
-    selectPais.addEventListener('change', () => {
-        console.log("Evento 'change' no filtro País (id='pais') detectado.");
-        carregarTodosOsDadosDoDashboard();
-    });
-}
+document.getElementById("funil").addEventListener("click", carregarDadosDashboard)
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Evento 'DOMContentLoaded' disparado. Carregando dados do cache primeiro.");

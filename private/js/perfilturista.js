@@ -583,9 +583,7 @@ async function carregarDadosDoCache() {
 }
 
 // Adiciona event listeners aos filtros para recarregar a dashboard ao mudar.
-if (selectMes) selectMes.addEventListener('change', carregarDadosDashboard);
-if (selectAno) selectAno.addEventListener('change', carregarDadosDashboard);
-if (selectPais) selectPais.addEventListener('change', carregarDadosDashboard);
+document.getElementById("funil").addEventListener("click", carregarDadosDashboard)
 
 // Chama a função de carregamento ao carregar a página.
 // Prioriza o carregamento do cache para melhor performance inicial

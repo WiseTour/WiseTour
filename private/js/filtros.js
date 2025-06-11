@@ -30,6 +30,7 @@ async function carregarCache() {
     
     if (response.ok) {
       const data = await response.json();
+      console.log(data);
       dadosCache = normalizarDados(data);
       console.log("Dados do cache carregados:", dadosCache.length, "registros");
       return dadosCache;
@@ -99,26 +100,25 @@ async function inicializarDados() {
   }
 }
 
+// Função para verificar se um select existe
+function selectExiste(id) {
+  const elemento = document.getElementById(id);
+  return elemento !== null;
+}
+
 // Função para inicializar os selects pela primeira vez
 function inicializarSelects() {
-  const selectMes = document.getElementById("mes");
-  const selectAno = document.getElementById("ano");
-  const selectPais = document.getElementById("pais");
-
-  // Remove listeners antigos se existirem
-  selectMes.removeEventListener("change", atualizarFiltros);
-  selectAno.removeEventListener("change", atualizarFiltros);
-  selectPais.removeEventListener("change", atualizarFiltros);
-
-  // Adiciona os listeners
-  selectMes.addEventListener("change", atualizarFiltros);
-  selectAno.addEventListener("change", atualizarFiltros);
-  selectPais.addEventListener("change", atualizarFiltros);
-
-  // Preenche os selects inicialmente
-  preencherMeses();
-  preencherAnos();
-  preencherPaises();
+  if (selectExiste("mes")) {
+    preencherMeses();
+  }
+  
+  if (selectExiste("ano")) {
+    preencherAnos();
+  }
+  
+  if (selectExiste("pais")) {
+    preencherPaises();
+  }
 }
 
 // Função para atualizar todos os selects (preservando seleções)
@@ -127,24 +127,48 @@ function atualizarTodosSelects() {
   const selectAno = document.getElementById("ano");
   const selectPais = document.getElementById("pais");
 
-  // Salva os valores atuais
-  const valoresAtuais = {
-    mes: selectMes.value,
-    ano: selectAno.value,
-    pais: selectPais.value
-  };
+  // Salva os valores atuais apenas dos selects que existem
+  const valoresAtuais = {};
+  
+  if (selectMes) {
+    valoresAtuais.mes = selectMes.value;
+  }
+  
+  if (selectAno) {
+    valoresAtuais.ano = selectAno.value;
+  }
+  
+  if (selectPais) {
+    valoresAtuais.pais = selectPais.value;
+  }
 
-  // Atualiza os selects
-  preencherMeses();
-  preencherAnos();
-  preencherPaises();
+  // Atualiza os selects que existem
+  if (selectMes) {
+    preencherMeses();
+  }
+  
+  if (selectAno) {
+    preencherAnos();
+  }
+  
+  if (selectPais) {
+    preencherPaises();
+  }
 
   // Tenta restaurar os valores selecionados
-  if (valoresAtuais.mes) selectMes.value = valoresAtuais.mes;
-  if (valoresAtuais.ano) selectAno.value = valoresAtuais.ano;
-  if (valoresAtuais.pais) selectPais.value = valoresAtuais.pais;
+  if (selectMes && valoresAtuais.mes) {
+    selectMes.value = valoresAtuais.mes;
+  }
+  
+  if (selectAno && valoresAtuais.ano) {
+    selectAno.value = valoresAtuais.ano;
+  }
+  
+  if (selectPais && valoresAtuais.pais) {
+    selectPais.value = valoresAtuais.pais;
+  }
 
-  console.log("Todos os selects foram atualizados");
+  console.log("Todos os selects existentes foram atualizados");
 }
 
 const nomesMeses = [
@@ -157,9 +181,10 @@ function atualizarFiltros() {
   const selectAno = document.getElementById("ano");
   const selectPais = document.getElementById("pais");
 
-  const mesSelecionado = parseInt(selectMes.value);
-  const anoSelecionado = parseInt(selectAno.value);
-  const paisSelecionado = parseInt(selectPais.value);
+  // Só processa valores de selects que existem
+  const mesSelecionado = selectMes ? parseInt(selectMes.value) : NaN;
+  const anoSelecionado = selectAno ? parseInt(selectAno.value) : NaN;
+  const paisSelecionado = selectPais ? parseInt(selectPais.value) : NaN;
 
   const filtro = {
     mes: isNaN(mesSelecionado) ? null : mesSelecionado,
@@ -167,13 +192,28 @@ function atualizarFiltros() {
     pais: isNaN(paisSelecionado) ? null : paisSelecionado,
   };
 
-  preencherMeses(filtro);
-  preencherAnos(filtro);
-  preencherPaises(filtro);
+  // Só atualiza selects que existem
+  if (selectMes) {
+    preencherMeses(filtro);
+  }
+  
+  if (selectAno) {
+    preencherAnos(filtro);
+  }
+  
+  if (selectPais) {
+    preencherPaises(filtro);
+  }
 }
 
 function preencherMeses(filtro = {}) {
   const selectMes = document.getElementById("mes");
+  
+  // Verifica se o select existe
+  if (!selectMes) {
+    console.log("Select 'mes' não encontrado na página");
+    return;
+  }
   
   const mesesFiltrados = mesesAnosPaisesBanco
     .filter(
@@ -199,6 +239,12 @@ function preencherMeses(filtro = {}) {
 function preencherAnos(filtro = {}) {
   const selectAno = document.getElementById("ano");
   
+  // Verifica se o select existe
+  if (!selectAno) {
+    console.log("Select 'ano' não encontrado na página");
+    return;
+  }
+  
   const anosFiltrados = mesesAnosPaisesBanco
     .filter(
       (item) =>
@@ -222,6 +268,12 @@ function preencherAnos(filtro = {}) {
 
 function preencherPaises(filtro = {}) {
   const selectPais = document.getElementById("pais");
+  
+  // Verifica se o select existe
+  if (!selectPais) {
+    console.log("Select 'pais' não encontrado na página");
+    return;
+  }
   
   const paisesFiltrados = mesesAnosPaisesBanco
     .filter(
@@ -254,6 +306,12 @@ function preencherPaises(filtro = {}) {
 }
 
 function atualizarSelect(select, novasOpcoes) {
+  // Verifica se o select é válido
+  if (!select) {
+    console.log("Select não fornecido para atualização");
+    return;
+  }
+
   // Salva o valor atual selecionado
   const valorAtual = select.value;
   

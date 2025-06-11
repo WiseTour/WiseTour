@@ -1,3 +1,4 @@
+
 // var ambiente_processo = 'producao';
 var ambiente_processo = "desenvolvimento";
 var caminho_env = ambiente_processo === "producao" ? ".env" : ".env.dev";
@@ -25,48 +26,51 @@ var graficoRouter = require("./src/routes/graficoRoute");
 
 // Funções para formatação de logs padronizada
 function logFormatado(operacao, detalhes, tempoInicio = null) {
-  const timestamp = new Date().toISOString();
-  const separator = "=".repeat(150);
+  const timestamp = new Date().toLocaleString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
   
-  console.log(separator);
-  console.log(`[${timestamp}] ${operacao}:`);
+  console.log(`\n[${timestamp}] ${operacao}:`);
   
   if (typeof detalhes === 'string') {
-    console.log(detalhes);
+    console.log(`  ${detalhes}`);
   } else if (typeof detalhes === 'object') {
     Object.entries(detalhes).forEach(([chave, valor]) => {
-      console.log(`${chave}: ${valor}`);
+      console.log(`  ${chave}: ${valor}`);
     });
   }
   
   if (tempoInicio) {
     const tempoExecucao = Date.now() - tempoInicio;
-    console.log(`Execution time: ${tempoExecucao}ms`);
+    console.log(`  Tempo de execução: ${tempoExecucao}ms`);
   }
-  
-  console.log(separator);
 }
 
 // Função para log de requisições HTTP
 function logRequisicao(endpoint, parametros, tempoInicio = null) {
   const detalhes = {
-    'HTTP Request': `GET ${endpoint}`,
-    'Parameters': Object.entries(parametros).map(([k, v]) => `${k}=${v}`).join('&') || 'none'
+    'Requisição HTTP': `GET ${endpoint}`,
+    'Parâmetros': Object.entries(parametros).map(([k, v]) => `${k}=${v}`).join('&') || 'nenhum'
   };
   
-  logFormatado('API REQUEST', detalhes, tempoInicio);
+  logFormatado('REQUISIÇÃO API', detalhes, tempoInicio);
 }
 
 // Função para log de cache
 function logCache(operacao, periodo, dados) {
   const detalhes = {
-    'Cache Operation': operacao,
-    'Period': `${periodo.mes}/${periodo.ano}`,
-    'Data Status': dados ? 'SUCCESS' : 'FAILED',
-    'Data Size': dados ? `${JSON.stringify(dados).length} bytes` : '0 bytes'
+    'Operação de Cache': operacao === 'RETRIEVE' ? 'Recuperação' : operacao === 'MISS' ? 'Não encontrado' : operacao,
+    'Período': `${periodo.mes}/${periodo.ano}`,
+    'Status dos Dados': dados ? 'Sucesso' : 'Falhou',
+    'Tamanho dos Dados': dados ? `${JSON.stringify(dados).length} bytes` : '0 bytes'
   };
   
-  logFormatado('CACHE OPERATION', detalhes);
+  logFormatado('OPERAÇÃO DE CACHE', detalhes);
 }
 
 app.use(express.json());
@@ -102,10 +106,10 @@ app.get('/api/meses-anos-paises-cached', (req, res) => {
   
   const mesesAnosPaises = cacheService.getMesesAnosPaises();
   if (mesesAnosPaises) {
-    logFormatado('CACHE HIT', 'Meses-anos-paises data retrieved from cache');
+    logFormatado('CACHE ENCONTRADO', 'Dados de meses-anos-países recuperados do cache com sucesso');
     res.json(mesesAnosPaises);
   } else {
-    logFormatado('CACHE MISS', 'Meses-anos-paises data not found in cache');
+    logFormatado('CACHE VAZIO', 'Dados de meses-anos-países não encontrados no cache');
     res.status(404).json({ error: 'Dados ainda não carregados' });
   }
 });
@@ -117,10 +121,10 @@ app.get('/api/paises-origem-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.paisesOrigem) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.paisesOrigem);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.paisesOrigem);
     res.json(ultimoPeriodoCache.paisesOrigem);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -135,10 +139,10 @@ app.get('/api/presenca-uf-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.presencaUF) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.presencaUF);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.presencaUF);
     res.json(ultimoPeriodoCache.presencaUF);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -153,10 +157,10 @@ app.get('/api/chegadas-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.chegadas) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.chegadas);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.chegadas);
     res.json(ultimoPeriodoCache.chegadas);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -171,10 +175,10 @@ app.get('/api/chegadas-comparativas-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.chegadasComparativas) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.chegadasComparativas);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.chegadasComparativas);
     res.json(ultimoPeriodoCache.chegadasComparativas);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -187,23 +191,23 @@ app.post('/api/atualizar-cache', async (req, res) => {
   const tempoInicio = Date.now();
   const { mes, ano } = req.body;
   
-  logFormatado('MANUAL CACHE UPDATE', {
-    'Requested Period': `${mes}/${ano}`,
-    'Request Body': JSON.stringify(req.body)
+  logFormatado('ATUALIZAÇÃO MANUAL DO CACHE', {
+    'Período Solicitado': `${mes}/${ano}`,
+    'Dados da Requisição': JSON.stringify(req.body)
   });
   
   if (!mes || !ano) {
-    logFormatado('VALIDATION ERROR', 'Missing required parameters: mes and ano');
+    logFormatado('ERRO DE VALIDAÇÃO', 'Parâmetros obrigatórios ausentes: mês e ano');
     return res.status(400).json({ error: 'Mês e ano são obrigatórios' });
   }
   
   const sucesso = await cacheService.atualizarCachePeriodo(app, mes, ano);
   
   if (sucesso) {
-    logFormatado('CACHE UPDATE SUCCESS', `Cache updated for period ${mes}/${ano}`, tempoInicio);
+    logFormatado('CACHE ATUALIZADO COM SUCESSO', `Cache atualizado para o período ${mes}/${ano}`, tempoInicio);
     res.json({ message: `Cache atualizado para ${mes}/${ano}` });
   } else {
-    logFormatado('CACHE UPDATE FAILED', `Failed to update cache for period ${mes}/${ano}`, tempoInicio);
+    logFormatado('FALHA NA ATUALIZAÇÃO DO CACHE', `Não foi possível atualizar o cache para o período ${mes}/${ano}`, tempoInicio);
     res.status(500).json({ error: 'Erro ao atualizar cache' });
   }
 });
@@ -213,13 +217,13 @@ app.post('/api/recarregar-cache', async (req, res) => {
   const tempoInicio = Date.now();
   
   try {
-    logFormatado('CACHE RELOAD', 'Starting cache reload for latest period');
+    logFormatado('RECARREGAMENTO DO CACHE', 'Iniciando recarregamento do cache para o último período');
     await cacheService.carregarCacheUltimoPeriodo(app);
     const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
     
-    logFormatado('CACHE RELOAD SUCCESS', {
-      'Period': `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`,
-      'Status': 'Completed successfully'
+    logFormatado('CACHE RECARREGADO COM SUCESSO', {
+      'Período': `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`,
+      'Status': 'Concluído com sucesso'
     }, tempoInicio);
     
     res.json({ 
@@ -227,9 +231,9 @@ app.post('/api/recarregar-cache', async (req, res) => {
       periodo: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
     });
   } catch (error) {
-    logFormatado('CACHE RELOAD ERROR', {
-      'Error': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NO RECARREGAMENTO DO CACHE', {
+      'Erro': error.message,
+      'Detalhes': error.stack
     }, tempoInicio);
     res.status(500).json({ error: 'Erro ao recarregar cache' });
   }
@@ -241,10 +245,10 @@ app.get('/api/motivos-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.motivos) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.motivos);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.motivos);
     res.json(ultimoPeriodoCache.motivos);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -259,10 +263,10 @@ app.get('/api/fontes-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.fontes) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.fontes);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.fontes);
     res.json(ultimoPeriodoCache.fontes);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -277,10 +281,10 @@ app.get('/api/composicao-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.composicao) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.composicao);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.composicao);
     res.json(ultimoPeriodoCache.composicao);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -295,10 +299,10 @@ app.get('/api/vias-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.vias) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.vias);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.vias);
     res.json(ultimoPeriodoCache.vias);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -313,10 +317,10 @@ app.get('/api/genero-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.genero) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.genero);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.genero);
     res.json(ultimoPeriodoCache.genero);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -331,10 +335,10 @@ app.get('/api/faixa-etaria-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.faixaEtaria) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.faixaEtaria);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.faixaEtaria);
     res.json(ultimoPeriodoCache.faixaEtaria);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -349,10 +353,10 @@ app.get('/api/gasto-medio-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.gastoMedio) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.gastoMedio);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.gastoMedio);
     res.json(ultimoPeriodoCache.gastoMedio);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -366,10 +370,10 @@ app.get('/api/sazonalidade-variacao-turistas-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.sazonalidadeVariacaoTuristas) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.sazonalidadeVariacaoTuristas);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.sazonalidadeVariacaoTuristas);
     res.json(ultimoPeriodoCache.sazonalidadeVariacaoTuristas);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -383,10 +387,10 @@ app.get('/api/sazonalidade-top-estados-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.sazonalidadeTopEstados) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.sazonalidadeTopEstados);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.sazonalidadeTopEstados);
     res.json(ultimoPeriodoCache.sazonalidadeTopEstados);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -400,10 +404,10 @@ app.get('/api/sazonalidade-total-turistas-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.sazonalidadeTotalTuristas) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.sazonalidadeTotalTuristas);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.sazonalidadeTotalTuristas);
     res.json(ultimoPeriodoCache.sazonalidadeTotalTuristas);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -417,10 +421,10 @@ app.get('/api/sazonalidade-pico-visitas-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.sazonalidadePicoVisitas) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.sazonalidadePicoVisitas);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.sazonalidadePicoVisitas);
     res.json(ultimoPeriodoCache.sazonalidadePicoVisitas);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -434,10 +438,10 @@ app.get('/api/visitas-por-estado-cached', (req, res) => {
   
   const ultimoPeriodoCache = cacheService.getUltimoPeriodoCache();
   if (ultimoPeriodoCache.visitasPorEstado) {
-    logCache('RETRIEVE', ultimoPeriodoCache, ultimoPeriodoCache.visitasPorEstado);
+    logCache('Recuperação', ultimoPeriodoCache, ultimoPeriodoCache.visitasPorEstado);
     res.json(ultimoPeriodoCache.visitasPorEstado);
   } else {
-    logCache('MISS', ultimoPeriodoCache, null);
+    logCache('Não encontrado', ultimoPeriodoCache, null);
     res.status(404).json({ 
       error: 'Dados não encontrados no cache',
       periodoCache: `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`
@@ -477,10 +481,10 @@ app.get('/api/status-cache', (req, res) => {
     }
   };
   
-  logFormatado('CACHE STATUS', {
-    'Period': `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`,
-    'Active Components': Object.values(status.ultimoPeriodo).filter(Boolean).length,
-    'Total Components': Object.keys(status.ultimoPeriodo).length - 2 // Excluindo mes e ano
+  logFormatado('STATUS DO CACHE', {
+    'Período': `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`,
+    'Componentes Ativos': Object.values(status.ultimoPeriodo).filter(Boolean).length,
+    'Total de Componentes': Object.keys(status.ultimoPeriodo).length - 2 // Excluindo mes e ano
   });
   
   res.json(status);
@@ -518,9 +522,9 @@ app.get('/api/cache-data', (req, res) => {
     }
   };
   
-  logFormatado('CACHE DATA EXPORT', {
-    'Period': `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`,
-    'Data Size': `${JSON.stringify(data).length} bytes`
+  logFormatado('EXPORTAÇÃO DOS DADOS DO CACHE', {
+    'Período': `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}`,
+    'Tamanho dos Dados': `${JSON.stringify(data).length} bytes`
   });
   
   res.json(data);
@@ -528,11 +532,11 @@ app.get('/api/cache-data', (req, res) => {
 
 // Inicializar cache quando o servidor iniciar
 async function inicializarCache() {
-  logFormatado('CACHE INITIALIZATION', 'Starting cache initialization process...');
+  logFormatado('INICIALIZAÇÃO DO CACHE', 'Iniciando processo de inicialização do cache...');
   setTimeout(async () => {
     const tempoInicio = Date.now();
     await cacheService.carregarCacheUltimoPeriodo(app);
-    logFormatado('CACHE INITIALIZATION COMPLETE', 'Cache loaded successfully', tempoInicio);
+    logFormatado('INICIALIZAÇÃO DO CACHE CONCLUÍDA', 'Cache carregado com sucesso', tempoInicio);
   }, 3000);
 }
 
@@ -542,17 +546,17 @@ inicializarCache();
 // Atualizar cache periodicamente (a cada 1 hora) apenas para o último período
 setInterval(async () => {
   const tempoInicio = Date.now();
-  logFormatado('SCHEDULED CACHE UPDATE', 'Starting automatic cache update...');
+  logFormatado('ATUALIZAÇÃO AUTOMÁTICA DO CACHE', 'Iniciando atualização automática do cache...');
   await cacheService.carregarCacheUltimoPeriodo(app);
-  logFormatado('SCHEDULED CACHE UPDATE COMPLETE', 'Automatic cache update finished', tempoInicio);
+  logFormatado('ATUALIZAÇÃO AUTOMÁTICA CONCLUÍDA', 'Atualização automática do cache finalizada', tempoInicio);
 }, 60 * 60 * 1000); // 1 hora em millisegundos
 
 sequelize.authenticate().then(() => {
-  logFormatado('DATABASE CONNECTION', 'Sequelize connected successfully');
+  logFormatado('CONEXÃO COM BANCO DE DADOS', 'Sequelize conectado com sucesso');
 }).catch(err => {
-  logFormatado('DATABASE CONNECTION ERROR', {
-    'Error': err.message,
-    'Stack': err.stack
+  logFormatado('ERRO NA CONEXÃO COM BANCO DE DADOS', {
+    'Erro': err.message,
+    'Detalhes': err.stack
   });
 });
 

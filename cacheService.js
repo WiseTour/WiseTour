@@ -1,49 +1,58 @@
 const request = require('supertest');
 
-// Função para formatação de logs padronizada
+// Funções para formatação de logs padronizada
 function logFormatado(operacao, detalhes, tempoInicio = null) {
-  const timestamp = new Date().toISOString();
-  const separator = "=".repeat(150);
+  const timestamp = new Date().toLocaleString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
   
-  console.log(separator);
-  console.log(`[${timestamp}] ${operacao}:`);
+  console.log(`\n[${timestamp}] ${operacao}:`);
   
   if (typeof detalhes === 'string') {
-    console.log(detalhes);
+    console.log(`  ${detalhes}`);
   } else if (typeof detalhes === 'object') {
     Object.entries(detalhes).forEach(([chave, valor]) => {
-      console.log(`${chave}: ${valor}`);
+      console.log(`  ${chave}: ${valor}`);
     });
   }
   
   if (tempoInicio) {
     const tempoExecucao = Date.now() - tempoInicio;
-    console.log(`Execution time: ${tempoExecucao}ms`);
+    console.log(`  Tempo de execução: ${tempoExecucao}ms`);
   }
-  
-  console.log(separator);
 }
 
 // Função para log de requisições HTTP
 function logRequisicao(endpoint, parametros, tempoInicio = null) {
   const detalhes = {
-    'HTTP Request': `GET ${endpoint}`,
-    'Parameters': Object.entries(parametros).map(([k, v]) => `${k}=${v}`).join('&') || 'none'
+    'Chamada da API': `GET ${endpoint}`,
+    'Parametros enviados': Object.entries(parametros).map(([k, v]) => `${k}=${v}`).join('&') || 'nenhum'
   };
   
-  logFormatado('API REQUEST', detalhes, tempoInicio);
+  logFormatado('CHAMADA DE API', detalhes, tempoInicio);
 }
 
 // Função para log de cache
 function logCache(operacao, periodo, dados) {
-  const detalhes = {
-    'Cache Operation': operacao,
-    'Period': `${periodo.mes}/${periodo.ano}`,
-    'Data Status': dados ? 'SUCCESS' : 'FAILED',
-    'Data Size': dados ? `${JSON.stringify(dados).length} bytes` : '0 bytes'
+  const operacaoTexto = {
+    'RETRIEVE': 'Dados recuperados do cache',
+    'MISS': 'Dados não encontrados no cache',
+    'UPDATE': 'Cache atualizado'
   };
   
-  logFormatado('CACHE OPERATION', detalhes);
+  const detalhes = {
+    'Ação realizada': operacaoTexto[operacao] || operacao,
+    'Periodo consultado': `${periodo.mes}/${periodo.ano}`,
+    'Status da operação': dados ? 'Sucesso' : 'Falha',
+    'Tamanho dos dados': dados ? `${JSON.stringify(dados).length} caracteres` : '0 caracteres'
+  };
+  
+  logFormatado('GERENCIAMENTO DE CACHE', detalhes);
 }
 
 // Cache simplificado - apenas para o último período
@@ -62,7 +71,6 @@ let ultimoPeriodoCache = {
   genero: null,
   faixaEtaria: null,
   gastoMedio: null,
-  // Novas propriedades para as rotas de sazonalidade
   sazonalidadeVariacaoTuristas: null,
   sazonalidadeTopEstados: null,
   sazonalidadeTotalTuristas: null,
@@ -84,19 +92,19 @@ async function obterPaisesOrigem(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -116,19 +124,19 @@ async function obterPresencaUF(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -148,19 +156,19 @@ async function obterChegadas(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -180,19 +188,19 @@ async function obterChegadasComparativas(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -212,19 +220,19 @@ async function obterMotivos(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -244,19 +252,19 @@ async function obterFontes(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -276,19 +284,19 @@ async function obterComposicao(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -308,19 +316,19 @@ async function obterVias(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -340,19 +348,19 @@ async function obterGenero(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -372,19 +380,19 @@ async function obterFaixaEtaria(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -404,19 +412,19 @@ async function obterGastoMedio(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -435,19 +443,19 @@ async function obterSazonalidadeVariacaoTuristas(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -466,19 +474,19 @@ async function obterSazonalidadeTopEstados(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -497,19 +505,19 @@ async function obterSazonalidadeTotalTuristas(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -528,19 +536,19 @@ async function obterSazonalidadePicoVisitas(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -559,19 +567,19 @@ async function obterVisitasPorEstado(app, mes, ano) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -590,20 +598,20 @@ async function obterDados(app) {
     
     const resultado = response.body;
     
-    logFormatado('RESPONSE DATA', {
-      'Endpoint': endpoint,
-      'Status Code': response.status,
-      'Data Type': typeof resultado,
-      'Has Data': !!resultado,
-      'Is Array': Array.isArray(resultado)
+    logFormatado('RESPOSTA RECEBIDA', {
+      'Endpoint consultado': endpoint,
+      'Codigo de status': response.status,
+      'Tipo de dados': typeof resultado,
+      'Dados recebidos': resultado ? 'Sim' : 'Não',
+      'É um array': Array.isArray(resultado) ? 'Sim' : 'Não'
     }, tempoInicio);
     
     return resultado;
   } catch (error) {
-    logFormatado('ERROR', {
-      'Endpoint': endpoint,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('ERRO NA REQUISIÇÃO', {
+      'Endpoint que falhou': endpoint,
+      'Mensagem de erro': error.message,
+      'Detalhes técnicos': error.stack
     }, tempoInicio);
     return null;
   }
@@ -613,14 +621,14 @@ async function obterDados(app) {
 function encontrarUltimoPeriodo(dadosMesesAnosPaises) {
   const tempoInicio = Date.now();
   
-  logFormatado('PERIOD ANALYSIS', {
-    'Input Data Type': typeof dadosMesesAnosPaises,
-    'Is Array': Array.isArray(dadosMesesAnosPaises),
-    'Has Data': !!dadosMesesAnosPaises
+  logFormatado('ANÁLISE DE PERÍODOS', {
+    'Tipo de dados recebidos': typeof dadosMesesAnosPaises,
+    'É um array': Array.isArray(dadosMesesAnosPaises) ? 'Sim' : 'Não',
+    'Possui dados': dadosMesesAnosPaises ? 'Sim' : 'Não'
   });
   
   if (!dadosMesesAnosPaises) {
-    logFormatado('ERROR', 'Dados mesesAnosPaises são null ou undefined');
+    logFormatado('ERRO NA ANÁLISE', 'Os dados de meses/anos/países estão vazios ou indefinidos');
     return null;
   }
 
@@ -633,7 +641,7 @@ function encontrarUltimoPeriodo(dadosMesesAnosPaises) {
     
     for (const chave of possiveisChaves) {
       if (dados[chave] && Array.isArray(dados[chave])) {
-        logFormatado('DATA EXTRACTION', `Array encontrado na propriedade: ${chave}`);
+        logFormatado('EXTRAÇÃO DE DADOS', `Array de dados encontrado na propriedade: ${chave}`);
         dados = dados[chave];
         break;
       }
@@ -655,18 +663,18 @@ function encontrarUltimoPeriodo(dadosMesesAnosPaises) {
   }
 
   if (!Array.isArray(dados) || dados.length === 0) {
-    logFormatado('ERROR', {
-      'Message': 'Dados mesesAnosPaises inválidos ou vazios após verificação',
-      'Final Data Type': typeof dados,
-      'Is Array': Array.isArray(dados),
-      'Length': dados?.length || 0
+    logFormatado('ERRO NA VALIDAÇÃO', {
+      'Mensagem': 'Dados inválidos ou vazios após verificação completa',
+      'Tipo final dos dados': typeof dados,
+      'É um array': Array.isArray(dados) ? 'Sim' : 'Não',
+      'Quantidade de itens': dados?.length || 0
     });
     return null;
   }
 
-  logFormatado('DATA VALIDATION', {
-    'Array Length': dados.length,
-    'First Item Keys': Object.keys(dados[0]).join(', ')
+  logFormatado('VALIDAÇÃO DOS DADOS', {
+    'Quantidade de registros': dados.length,
+    'Propriedades do primeiro item': Object.keys(dados[0]).join(', ')
   });
 
   // Lista expandida de possíveis nomes para mês e ano
@@ -691,15 +699,15 @@ function encontrarUltimoPeriodo(dadosMesesAnosPaises) {
     }
   }
 
-  logFormatado('PROPERTY MAPPING', {
-    'Month Property': propriedadeMes || 'NOT FOUND',
-    'Year Property': propriedadeAno || 'NOT FOUND'
+  logFormatado('MAPEAMENTO DE PROPRIEDADES', {
+    'Propriedade do mês': propriedadeMes || 'Não encontrada',
+    'Propriedade do ano': propriedadeAno || 'Não encontrada'
   });
 
   if (!propriedadeMes || !propriedadeAno) {
-    logFormatado('ERROR', {
-      'Message': 'Não foi possível encontrar propriedades de mês e ano',
-      'Available Properties': Object.keys(dados[0]).join(', ')
+    logFormatado('ERRO NO MAPEAMENTO', {
+      'Mensagem': 'Não foi possível identificar as propriedades de mês e ano',
+      'Propriedades disponíveis': Object.keys(dados[0]).join(', ')
     });
     return null;
   }
@@ -718,13 +726,13 @@ function encontrarUltimoPeriodo(dadosMesesAnosPaises) {
     }
   });
 
-  logFormatado('PERIOD PROCESSING', {
-    'Unique Periods Found': periodosUnicos.size,
-    'Periods': Array.from(periodosUnicos).join(', ')
+  logFormatado('PROCESSAMENTO DE PERÍODOS', {
+    'Períodos únicos encontrados': periodosUnicos.size,
+    'Lista de períodos': Array.from(periodosUnicos).join(', ')
   });
 
   if (periodosUnicos.size === 0) {
-    logFormatado('ERROR', 'Nenhum período válido encontrado');
+    logFormatado('ERRO NO PROCESSAMENTO', 'Nenhum período válido foi encontrado nos dados');
     return null;
   }
 
@@ -738,41 +746,42 @@ function encontrarUltimoPeriodo(dadosMesesAnosPaises) {
 
   const resultado = { mes, ano };
   
-  logFormatado('PERIOD RESULT', {
-    'Latest Period': ultimoPeríodo,
-    'Month': mes,
-    'Year': ano
+  logFormatado('RESULTADO DA ANÁLISE', {
+    'Período mais recente identificado': ultimoPeríodo,
+    'Mês selecionado': mes,
+    'Ano selecionado': ano
   }, tempoInicio);
   
   return resultado;
 }
 
+
 // Função principal para carregar cache apenas do último período
 async function carregarCacheUltimoPeriodo(app) {
   const tempoInicio = Date.now();
   
-  logFormatado('CACHE INITIALIZATION', 'Iniciando carregamento do cache para o último período...');
+  logFormatado('Inicialização do Cache', 'Carregando dados do último período disponível...');
   
   try {
     // Carrega dados básicos primeiro
-    logFormatado('DATA LOADING', 'Buscando dados mesesAnosPaises...');
+    logFormatado('Carregamento de Dados', 'Buscando informações dos meses, anos e países...');
     const dadosMesesAnosPaises = await obterDados(app);
     
     if (!dadosMesesAnosPaises) {
-      logFormatado('ERROR', 'Falha ao obter dados mesesAnosPaises');
+      logFormatado('Erro', 'Não foi possível obter os dados básicos do sistema');
       return;
     }
     
     mesesAnosPaises = dadosMesesAnosPaises;
-    logFormatado('SUCCESS', 'Dados mesesAnosPaises carregados com sucesso');
+    logFormatado('Sucesso', 'Dados básicos carregados com sucesso');
     
     // Encontra o último período disponível
     const ultimoPeriodo = encontrarUltimoPeriodo(dadosMesesAnosPaises);
     
     if (!ultimoPeriodo) {
-      logFormatado('FALLBACK', {
-        'Message': 'Não foi possível determinar o último período',
-        'Action': 'Usando valores padrão: mes=12, ano=2024'
+      logFormatado('Fallback Ativado', {
+        'Motivo': 'Não foi possível determinar o último período disponível',
+        'Ação': 'Usando valores padrão - dezembro de 2024'
       });
       
       const mesPadrao = 12;
@@ -780,60 +789,60 @@ async function carregarCacheUltimoPeriodo(app) {
       
       await executarRequisicoesPeriodo(app, mesPadrao, anoPadrao);
       
-      logFormatado('CACHE COMPLETE', {
-        'Period': `${mesPadrao}/${anoPadrao}`,
-        'Status': 'FALLBACK SUCCESS'
+      logFormatado('Cache Finalizado', {
+        'Período': `${mesPadrao}/${anoPadrao}`,
+        'Status': 'Concluído com valores padrão'
       }, tempoInicio);
       return;
     }
     
     const { mes, ano } = ultimoPeriodo;
-    logFormatado('CACHE LOADING', `Carregando cache para o último período: ${mes}/${ano}`);
+    logFormatado('Carregamento do Cache', `Processando dados do período ${mes}/${ano}`);
     
     // Executa todas as requisições
     await executarRequisicoesPeriodo(app, mes, ano);
     
     // Log do status do cache
     const statusCache = {
-      'Period': `${mes}/${ano}`,
-      'paisesOrigem': !!ultimoPeriodoCache.paisesOrigem,
-      'presencaUF': !!ultimoPeriodoCache.presencaUF,
-      'chegadas': !!ultimoPeriodoCache.chegadas,
-      'chegadasComparativas': !!ultimoPeriodoCache.chegadasComparativas,
-      'motivos': !!ultimoPeriodoCache.motivos,
-      'fontes': !!ultimoPeriodoCache.fontes,
-      'composicao': !!ultimoPeriodoCache.composicao,
-      'vias': !!ultimoPeriodoCache.vias,
-      'genero': !!ultimoPeriodoCache.genero,
-      'faixaEtaria': !!ultimoPeriodoCache.faixaEtaria,
-      'gastoMedio': !!ultimoPeriodoCache.gastoMedio,
-      'sazonalidadeVariacaoTuristas': !!ultimoPeriodoCache.sazonalidadeVariacaoTuristas,
-      'sazonalidadeTopEstados': !!ultimoPeriodoCache.sazonalidadeTopEstados,
-      'sazonalidadeTotalTuristas': !!ultimoPeriodoCache.sazonalidadeTotalTuristas,
-      'sazonalidadePicoVisitas': !!ultimoPeriodoCache.sazonalidadePicoVisitas,
-      'visitasPorEstado': !!ultimoPeriodoCache.visitasPorEstado
+      'Período': `${mes}/${ano}`,
+      'Países de Origem': ultimoPeriodoCache.paisesOrigem ? 'Carregado' : 'Não disponível',
+      'Presença por UF': ultimoPeriodoCache.presencaUF ? 'Carregado' : 'Não disponível',
+      'Chegadas': ultimoPeriodoCache.chegadas ? 'Carregado' : 'Não disponível',
+      'Chegadas Comparativas': ultimoPeriodoCache.chegadasComparativas ? 'Carregado' : 'Não disponível',
+      'Motivos de Viagem': ultimoPeriodoCache.motivos ? 'Carregado' : 'Não disponível',
+      'Fontes de Informação': ultimoPeriodoCache.fontes ? 'Carregado' : 'Não disponível',
+      'Composição': ultimoPeriodoCache.composicao ? 'Carregado' : 'Não disponível',
+      'Vias de Acesso': ultimoPeriodoCache.vias ? 'Carregado' : 'Não disponível',
+      'Gênero': ultimoPeriodoCache.genero ? 'Carregado' : 'Não disponível',
+      'Faixa Etária': ultimoPeriodoCache.faixaEtaria ? 'Carregado' : 'Não disponível',
+      'Gasto Médio': ultimoPeriodoCache.gastoMedio ? 'Carregado' : 'Não disponível',
+      'Sazonalidade - Variação': ultimoPeriodoCache.sazonalidadeVariacaoTuristas ? 'Carregado' : 'Não disponível',
+      'Sazonalidade - Top Estados': ultimoPeriodoCache.sazonalidadeTopEstados ? 'Carregado' : 'Não disponível',
+      'Sazonalidade - Total': ultimoPeriodoCache.sazonalidadeTotalTuristas ? 'Carregado' : 'Não disponível',
+      'Sazonalidade - Picos': ultimoPeriodoCache.sazonalidadePicoVisitas ? 'Carregado' : 'Não disponível',
+      'Visitas por Estado': ultimoPeriodoCache.visitasPorEstado ? 'Carregado' : 'Não disponível'
     };
     
-    logFormatado('CACHE COMPLETE', statusCache, tempoInicio);
+    logFormatado('Cache Concluído', statusCache, tempoInicio);
     
   } catch (error) {
-    logFormatado('CACHE ERROR', {
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('Erro no Cache', {
+      'Mensagem': error.message,
+      'Detalhes': error.stack
     });
     
     // Fallback em caso de erro
-    logFormatado('FALLBACK EXECUTION', 'Executando fallback devido ao erro...');
+    logFormatado('Executando Fallback', 'Tentando carregar dados com valores padrão...');
     const mesPadrao = 12;
     const anoPadrao = 2024;
     
     try {
       await executarRequisicoesPeriodo(app, mesPadrao, anoPadrao);
-      logFormatado('FALLBACK SUCCESS', `Fallback executado com sucesso para ${mesPadrao}/${anoPadrao}`, tempoInicio);
+      logFormatado('Fallback Concluído', `Dados carregados com sucesso para ${mesPadrao}/${anoPadrao}`, tempoInicio);
     } catch (fallbackError) {
-      logFormatado('FALLBACK ERROR', {
-        'Error Message': fallbackError.message,
-        'Stack': fallbackError.stack
+      logFormatado('Erro no Fallback', {
+        'Mensagem': fallbackError.message,
+        'Detalhes': fallbackError.stack
       }, tempoInicio);
     }
   }
@@ -843,9 +852,9 @@ async function carregarCacheUltimoPeriodo(app) {
 async function executarRequisicoesPeriodo(app, mes, ano) {
   const tempoInicio = Date.now();
   
-  logFormatado('PERIOD REQUESTS', {
-    'Period': `${mes}/${ano}`,
-    'Total Requests': '15'
+  logFormatado('Requisições do Período', {
+    'Período': `${mes}/${ano}`,
+    'Total de Requisições': '15'
   });
   
   const [
@@ -901,35 +910,35 @@ async function executarRequisicoesPeriodo(app, mes, ano) {
     sazonalidadePicoVisitas, visitasPorEstado
   ].filter(Boolean).length;
 
-  logFormatado('PERIOD REQUESTS COMPLETE', {
-    'Period': `${mes}/${ano}`,
-    'Successful Requests': `${sucessos}/15`,
-    'Success Rate': `${((sucessos/15) * 100).toFixed(1)}%`
+  logFormatado('Requisições Finalizadas', {
+    'Período': `${mes}/${ano}`,
+    'Requisições Bem-sucedidas': `${sucessos} de 15`,
+    'Taxa de Sucesso': `${((sucessos/15) * 100).toFixed(1)}%`
   }, tempoInicio);
   
-  logCache('UPDATE', { mes, ano }, ultimoPeriodoCache);
+  logCache('Atualização', { mes, ano }, ultimoPeriodoCache);
 }
 
 // Função para atualizar cache para um período específico
 async function atualizarCachePeriodo(app, mes, ano) {
   const tempoInicio = Date.now();
   
-  logFormatado('CACHE UPDATE', `Atualizando cache para ${mes}/${ano}...`);
+  logFormatado('Atualização de Cache', `Processando dados para o período ${mes}/${ano}...`);
   
   try {
     await executarRequisicoesPeriodo(app, mes, ano);
     
-    logFormatado('CACHE UPDATE SUCCESS', {
-      'Period': `${mes}/${ano}`,
-      'Status': 'UPDATED'
+    logFormatado('Atualização Concluída', {
+      'Período': `${mes}/${ano}`,
+      'Status': 'Cache atualizado com sucesso'
     }, tempoInicio);
     
     return true;
   } catch (error) {
-    logFormatado('CACHE UPDATE ERROR', {
-      'Period': `${mes}/${ano}`,
-      'Error Message': error.message,
-      'Stack': error.stack
+    logFormatado('Erro na Atualização', {
+      'Período': `${mes}/${ano}`,
+      'Mensagem': error.message,
+      'Detalhes': error.stack
     }, tempoInicio);
     
     return false;
@@ -938,10 +947,10 @@ async function atualizarCachePeriodo(app, mes, ano) {
 
 // Getters para acessar os dados do cache
 function getMesesAnosPaises() {
-  logFormatado('CACHE ACCESS', {
-    'Operation': 'GET mesesAnosPaises',
-    'Has Data': !!mesesAnosPaises,
-    'Data Type': typeof mesesAnosPaises
+  logFormatado('Acesso ao Cache', {
+    'Operação': 'Buscar dados de meses, anos e países',
+    'Dados Disponíveis': mesesAnosPaises ? 'Sim' : 'Não',
+    'Tipo de Dados': typeof mesesAnosPaises
   });
   
   return mesesAnosPaises;
@@ -950,12 +959,12 @@ function getMesesAnosPaises() {
 function getUltimoPeriodoCache() {
   const periodo = ultimoPeriodoCache.mes && ultimoPeriodoCache.ano 
     ? `${ultimoPeriodoCache.mes}/${ultimoPeriodoCache.ano}` 
-    : 'NOT SET';
+    : 'Não definido';
     
-  logFormatado('CACHE ACCESS', {
-    'Operation': 'GET ultimoPeriodoCache',
-    'Period': periodo,
-    'Has Data': !!(ultimoPeriodoCache.mes && ultimoPeriodoCache.ano)
+  logFormatado('Acesso ao Cache', {
+    'Operação': 'Buscar dados do último período',
+    'Período': periodo,
+    'Dados Disponíveis': (ultimoPeriodoCache.mes && ultimoPeriodoCache.ano) ? 'Sim' : 'Não'
   });
   
   return ultimoPeriodoCache;
