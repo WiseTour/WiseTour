@@ -88,7 +88,7 @@ async function obterPaisesOrigem(app, mes, ano) {
     logRequisicao(endpoint, parametros);
     
     const response = await request(app)
-      .get(`${endpoint}?mes=${mes}&ano=${ano}`);
+      .get(`${endpoint}?ano=${ano}`);
     
     const resultado = response.body;
     
@@ -120,7 +120,7 @@ async function obterPresencaUF(app, mes, ano) {
     logRequisicao(endpoint, parametros);
     
     const response = await request(app)
-      .get(`${endpoint}?mes=${mes}&ano=${ano}`);
+      .get(`${endpoint}?ano=${ano}`);
     
     const resultado = response.body;
     
@@ -152,7 +152,7 @@ async function obterChegadas(app, mes, ano) {
     logRequisicao(endpoint, parametros);
     
     const response = await request(app)
-      .get(`${endpoint}?mes=${mes}&ano=${ano}`);
+      .get(`${endpoint}?ano=${ano}`);
     
     const resultado = response.body;
     
@@ -184,7 +184,7 @@ async function obterChegadasComparativas(app, mes, ano) {
     logRequisicao(endpoint, parametros);
     
     const response = await request(app)
-      .get(`${endpoint}?mes=${mes}&ano=${ano}`);
+      .get(`${endpoint}?ano=${ano}`);
     
     const resultado = response.body;
     
@@ -754,7 +754,6 @@ function encontrarUltimoPeriodo(dadosMesesAnosPaises) {
   
   return resultado;
 }
-
 
 // Função principal para carregar cache apenas do último período
 async function carregarCacheUltimoPeriodo(app) {

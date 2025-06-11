@@ -831,7 +831,7 @@ document
 // Prioriza o carregamento do cache para melhor performance inicial
 document.addEventListener("DOMContentLoaded", () => {
   aplicarPreferenciasDoUsuario();
-  aplicarPermissaoUsuario();
+  // aplicarPermissaoUsuario();
   // Verifica se deve carregar do cache ou fazer consulta normal
   const urlParams = new URLSearchParams(window.location.search);
   const forceRefresh = urlParams.get("refresh") === "true";

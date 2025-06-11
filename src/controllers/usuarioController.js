@@ -4,7 +4,7 @@ const {
   funcionario, 
   informacaoContatoCadastro,
   empresa,
-  configuracaoSlackk,
+  configuracaoSlack,
   preferenciaVisualizacaoDashboard,
   telaDashboard
 } = require("../models");
@@ -27,6 +27,8 @@ async function autenticar(req, res) {
     if (usuarioEncontrado) {
       const usuarioPlain = usuarioEncontrado.get({ plain: true });
       delete usuarioPlain.senha;
+      console.log("PASSEI NO AUTENTICAR");
+      console.log(usuarioEncontrado);
       res.json(usuarioPlain);
     } else {
       res.status(403).send("Email e/ou senha inválido(s)");
@@ -279,7 +281,7 @@ async function buscarUsuarioCompleto(req, res) {
           ]
         },
         {
-          model: configuracaoSlackk, // Corrigido o nome da importação
+          model: configuracaoSlack,
           as: 'configuracao_slack',
           required: false
         },

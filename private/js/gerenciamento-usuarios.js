@@ -69,7 +69,7 @@ function aplicarPermissaoUsuario() {
 
 document.addEventListener("DOMContentLoaded", () => {
   aplicarPreferenciasDoUsuario();
-  aplicarPermissaoUsuario();
+  // aplicarPermissaoUsuario();
   const btnNovoUsuario = document.getElementById("btn-novo-usuario");
   const formCadastro = document.getElementById("form-cadastro");
   const btnCancelar = document.getElementById("btn-cancelar");

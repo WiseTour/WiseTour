@@ -227,10 +227,10 @@ function preencherMeses(filtro = {}) {
   const mesesUnicos = Array.from(new Set(mesesFiltrados)).sort((a, b) => a - b);
 
   const novasOpcoes = [
-    { value: "", label: "MÊS:" },
+    { value: "", label: "TODOS:" },
     ...mesesUnicos.map((mes) => ({
       value: `${mes}`,
-      label: nomesMeses[mes - 1] || `Mês ${mes}`,
+      label: nomesMeses[mes - 1] || `TODOS ${mes}`,
     })),
   ];
 
@@ -257,7 +257,7 @@ function preencherAnos(filtro = {}) {
   const anosUnicos = Array.from(new Set(anosFiltrados)).sort((a, b) => b - a);
 
   const novasOpcoes = [
-    { value: "", label: "ANO:" },
+    { value: "", label: "TODOS:" },
     ...anosUnicos.map((ano) => ({
       value: `${ano}`,
       label: `${ano}`,
@@ -296,7 +296,7 @@ function preencherPaises(filtro = {}) {
   );
 
   const novasOpcoes = [
-    { value: "", label: "PAÍS:" },
+    { value: "", label: "TODOS:" },
     ...paisesOrdenados.map(([id, nome]) => ({
       value: `${id}`,
       label: nome.toUpperCase(),

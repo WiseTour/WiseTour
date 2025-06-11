@@ -1105,7 +1105,7 @@ document.getElementById("funil").addEventListener("click", () => {
 // Event listener para quando a página carrega
 document.addEventListener("DOMContentLoaded", () => {
   aplicarPreferenciasDoUsuario();
-  aplicarPermissaoUsuario();
+  // aplicarPermissaoUsuario();
 
   // Chama a função de carregamento ao carregar a página
   // Prioriza o carregamento do cache para melhor performance inicial

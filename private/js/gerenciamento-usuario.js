@@ -86,7 +86,7 @@ function aplicarPermissaoUsuario() {
 }
 
   aplicarPreferenciasDoUsuario();
-  aplicarPermissaoUsuario();
+  // aplicarPermissaoUsuario();
 
   containers.forEach((container, index) => {
     container.style.display = index === 0 ? "flex" : "none";

@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   aplicarPreferenciasDoUsuario();
-  aplicarPermissaoUsuario();
+  // aplicarPermissaoUsuario();
 
   inputs.forEach((input) => {
     input.disabled = true;
