@@ -222,7 +222,7 @@ async function carregarDadosDashboard() {
                       ...estiloDoTextoDoGrafico,
                       font: {
                         ...estiloDoTextoDoGrafico.font,
-                        size: 15,
+                        size: 10,
                       },
                     },
                   },
@@ -554,14 +554,14 @@ async function carregarDadosDoCache() {
                 grid: { display: false },
                 ticks: {
                   ...estiloDoTextoDoGrafico,
-                  font: { ...estiloDoTextoDoGrafico.font, size: 15 },
+                  font: { ...estiloDoTextoDoGrafico.font, size: 10 },
                 },
               },
               y: {
                 grid: { display: false },
                 ticks: {
                   ...estiloDoTextoDoGrafico,
-                  font: { ...estiloDoTextoDoGrafico.font, size: 15 },
+                  font: { ...estiloDoTextoDoGrafico.font, size: 10 },
                 },
               },
             },
