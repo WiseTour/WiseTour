@@ -46,36 +46,36 @@ let graficoViasInstance;
 
 // Funções para controlar o loading
 function mostrarLoading() {
-  const loadingContainer = document.querySelector('.loading-container');
-  const mainGrafico = document.querySelector('.main-grafico');
-  
+  const loadingContainer = document.querySelector(".loading-container");
+  const mainGrafico = document.querySelector(".main-grafico");
+
   if (loadingContainer) {
-    loadingContainer.style.display = 'flex';
+    loadingContainer.style.display = "flex";
   }
   if (mainGrafico) {
-    mainGrafico.style.display = 'none';
+    mainGrafico.style.display = "none";
   }
-  
+
   console.log("Loading ativado - Dashboard oculta");
 }
 
 function ocultarLoading() {
-  const loadingContainer = document.querySelector('.loading-container');
-  const mainGrafico = document.querySelector('.main-grafico');
-  
+  const loadingContainer = document.querySelector(".loading-container");
+  const mainGrafico = document.querySelector(".main-grafico");
+
   if (loadingContainer) {
-    loadingContainer.style.display = 'none';
+    loadingContainer.style.display = "none";
   }
   if (mainGrafico) {
-    mainGrafico.style.display = 'flex';
+    mainGrafico.style.display = "flex";
   }
-  
+
   console.log("Loading desativado - Dashboard visível");
 }
 
 async function carregarDadosDashboard() {
   console.log("carregarDadosDashboard: Função iniciada.");
-  
+
   // Ativa o loading no início
   mostrarLoading();
 
@@ -105,7 +105,8 @@ async function carregarDadosDashboard() {
             throw new Error(errorData.erro || `Erro HTTP: ${res.status}`);
           }
           const data = await res.json();
-          document.getElementById("kpiGenero").textContent = data.genero || "N/A";
+          document.getElementById("kpiGenero").textContent =
+            data.genero || "N/A";
         })
         .catch((err) => {
           console.error("Erro ao buscar o gênero mais recorrente:", err);
@@ -122,7 +123,8 @@ async function carregarDadosDashboard() {
             throw new Error(errorData.erro || `Erro HTTP: ${res.status}`);
           }
           const data = await res.json();
-          document.getElementById("kpiGastoMedio").textContent = data.gastoMedio || "N/A";
+          document.getElementById("kpiGastoMedio").textContent =
+            data.gastoMedio || "N/A";
         })
         .catch((err) => {
           console.error("Erro ao buscar o gasto médio:", err);
@@ -139,7 +141,8 @@ async function carregarDadosDashboard() {
             throw new Error(errorData.mensagem || `Erro HTTP: ${res.status}`);
           }
           const data = await res.json();
-          document.getElementById("kpiFaixaEtaria").textContent = data.faixa_etaria || "N/A";
+          document.getElementById("kpiFaixaEtaria").textContent =
+            data.faixa_etaria || "N/A";
         })
         .catch((err) => {
           console.error("Erro ao buscar a faixa etária mais recorrente:", err);
@@ -154,7 +157,9 @@ async function carregarDadosDashboard() {
           const data = await res.json();
 
           // Ordenar inicialmente de forma decrescente
-          const sortedData = [...data].sort((a, b) => b.percentual - a.percentual);
+          const sortedData = [...data].sort(
+            (a, b) => b.percentual - a.percentual
+          );
           const labels = sortedData.map((item) => item.motivo);
           const valores = sortedData.map((item) => item.percentual);
           const ctxMotivos = document.getElementById("graficoMotivos");
@@ -236,7 +241,9 @@ async function carregarDadosDashboard() {
           const data = await res.json();
 
           // Ordenar inicialmente de forma decrescente
-          const sortedData = [...data].sort((a, b) => b.percentual - a.percentual);
+          const sortedData = [...data].sort(
+            (a, b) => b.percentual - a.percentual
+          );
           const labels = sortedData.map((item) => item.fonte);
           const valores = sortedData.map((item) => item.percentual);
           const ctxFontes = document.getElementById("graficoFontes");
@@ -298,10 +305,15 @@ async function carregarDadosDashboard() {
                       ...estiloDoTextoDoGrafico,
                       font: {
                         ...estiloDoTextoDoGrafico.font,
-                        size: 9,
+                        size: 10,
                       },
+                      autoSkip: false,
                       maxRotation: 0,
                       minRotation: 0,
+                      callback: function (value, index, ticks) {
+                        const label = this.getLabelForValue(value);
+                        return label.split(" ");
+                      },
                     },
                   },
                 },
@@ -428,7 +440,6 @@ async function carregarDadosDashboard() {
 
     // Aguarda todas as requisições terminarem
     await Promise.allSettled(promises);
-
   } finally {
     // Desativa o loading após todas as requisições terminarem (sucesso ou erro)
     ocultarLoading();
@@ -438,7 +449,7 @@ async function carregarDadosDashboard() {
 
 async function carregarDadosDoCache() {
   console.log("carregarDadosDoCache: Função iniciada.");
-  
+
   // Ativa o loading no início
   mostrarLoading();
 
@@ -596,18 +607,24 @@ async function carregarDadosDoCache() {
                 grid: { display: false },
                 ticks: {
                   ...estiloDoTextoDoGrafico,
-                  callback: function (value) {
-                    return value + "%";
-                  },
+                  callback: (value) => value + "%",
                 },
               },
               x: {
                 grid: { display: false },
                 ticks: {
                   ...estiloDoTextoDoGrafico,
-                  font: { ...estiloDoTextoDoGrafico.font, size: 9 },
+                  font: {
+                    ...estiloDoTextoDoGrafico.font,
+                    size: 10,
+                  },
+                  autoSkip: false,
                   maxRotation: 0,
                   minRotation: 0,
+                  callback: function (value, index, ticks) {
+                    const label = this.getLabelForValue(value);
+                    return label.split(" ");
+                  },
                 },
               },
             },

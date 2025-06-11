@@ -143,7 +143,15 @@ async function carregarDadosDoCache() {
     console.error("Erro ao carregar dados do cache:", error);
     // Se falhar ao carregar do cache, carrega normalmente via API
     console.log("Fallback: Carregando dados via API devido ao erro no cache.");
-    await carregarTodosOsDadosDoDashboard();
+
+    // Executa as funções individuais em paralelo
+    await Promise.all([
+      carregarKPITotalTuristas(),
+      carregarKPIVariacaoTuristas(),
+      carregarKPITopEstados(),
+      carregarMapaEstadosVisitados(),
+      carregarPicoVisitasSazonalidadeChart(),
+    ]);
   }
 }
 
@@ -153,7 +161,7 @@ function carregarMapaComDadosCache(dadosDoCache) {
   );
   const chartDom = document.getElementById("mapaBrasil");
   if (!chartDom) return;
-  
+
   if (!dadosDoCache || dadosDoCache.length === 0) {
     chartDom.innerHTML =
       '<div style="text-align: center; padding: 20px;">Nenhum dado de visita disponível.</div>';
@@ -162,53 +170,55 @@ function carregarMapaComDadosCache(dadosDoCache) {
 
   // Mapeamento dos nomes dos estados para os códigos do mapa do Highcharts
   const estadosParaCodigo = {
-    'Acre': 'br-ac',
-    'Alagoas': 'br-al',
-    'Amapá': 'br-ap',
-    'Amazonas': 'br-am',
-    'Bahia': 'br-ba',
-    'Ceará': 'br-ce',
-    'Distrito Federal': 'br-df',
-    'Espírito Santo': 'br-es',
-    'Goiás': 'br-go',
-    'Maranhão': 'br-ma',
-    'Mato Grosso': 'br-mt',
-    'Mato Grosso do Sul': 'br-ms',
-    'Minas Gerais': 'br-mg',
-    'Pará': 'br-pa',
-    'Paraíba': 'br-pb',
-    'Paraná': 'br-pr',
-    'Pernambuco': 'br-pe',
-    'Piauí': 'br-pi',
-    'Rio de Janeiro': 'br-rj',
-    'Rio Grande do Norte': 'br-rn',
-    'Rio Grande do Sul': 'br-rs',
-    'Rondônia': 'br-ro',
-    'Roraima': 'br-rr',
-    'Santa Catarina': 'br-sc',
-    'São Paulo': 'br-sp',
-    'Sergipe': 'br-se',
-    'Tocantins': 'br-to'
+    Acre: "br-ac",
+    Alagoas: "br-al",
+    Amapá: "br-ap",
+    Amazonas: "br-am",
+    Bahia: "br-ba",
+    Ceará: "br-ce",
+    "Distrito Federal": "br-df",
+    "Espírito Santo": "br-es",
+    Goiás: "br-go",
+    Maranhão: "br-ma",
+    "Mato Grosso": "br-mt",
+    "Mato Grosso do Sul": "br-ms",
+    "Minas Gerais": "br-mg",
+    Pará: "br-pa",
+    Paraíba: "br-pb",
+    Paraná: "br-pr",
+    Pernambuco: "br-pe",
+    Piauí: "br-pi",
+    "Rio de Janeiro": "br-rj",
+    "Rio Grande do Norte": "br-rn",
+    "Rio Grande do Sul": "br-rs",
+    Rondônia: "br-ro",
+    Roraima: "br-rr",
+    "Santa Catarina": "br-sc",
+    "São Paulo": "br-sp",
+    Sergipe: "br-se",
+    Tocantins: "br-to",
   };
 
   // Mapear os dados para o formato esperado pelo Highcharts
-  const dadosMapeados = dadosDoCache.map(item => {
-    const codigoEstado = estadosParaCodigo[item.estado];
-    if (!codigoEstado) {
-      console.warn(`Estado não encontrado no mapeamento: ${item.estado}`);
-    }
-    return {
-      'hc-key': codigoEstado,
-      name: item.estado,
-      value: parseInt(item.total_turistas) || 0
-    };
-  }).filter(item => item['hc-key']); // Remove itens sem código válido
+  const dadosMapeados = dadosDoCache
+    .map((item) => {
+      const codigoEstado = estadosParaCodigo[item.estado];
+      if (!codigoEstado) {
+        console.warn(`Estado não encontrado no mapeamento: ${item.estado}`);
+      }
+      return {
+        "hc-key": codigoEstado,
+        name: item.estado,
+        value: parseInt(item.total_turistas) || 0,
+      };
+    })
+    .filter((item) => item["hc-key"]); // Remove itens sem código válido
 
   // Calcular o valor máximo dos dados convertidos
   const maxValor = Math.max(...dadosMapeados.map((d) => d.value));
-  
-  console.log('Dados mapeados:', dadosMapeados);
-  console.log('Valor máximo:', maxValor);
+
+  console.log("Dados mapeados:", dadosMapeados);
+  console.log("Valor máximo:", maxValor);
 
   if (myMapaChart) {
     myMapaChart.series[0].setData(dadosMapeados);
@@ -539,7 +549,7 @@ async function carregarMapaEstadosVisitados() {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const dadosRawDoBackend = await response.json();
     console.log(
       "carregarMapaEstadosVisitados(): Dados brutos recebidos:",
@@ -553,86 +563,103 @@ async function carregarMapaEstadosVisitados() {
 
     // CORREÇÃO: Verificar estrutura dos dados e processar corretamente
     if (!dadosRawDoBackend || dadosRawDoBackend.length === 0) {
-      console.log("carregarMapaEstadosVisitados(): Nenhum dado retornado da API");
+      console.log(
+        "carregarMapaEstadosVisitados(): Nenhum dado retornado da API"
+      );
       mostrarMensagemSemDados(chartDom);
       return;
     }
 
     // Mapeamento dos nomes dos estados para os códigos do Highcharts
     const estadosParaCodigo = {
-      'Acre': 'br-ac',
-      'Alagoas': 'br-al',
-      'Amapá': 'br-ap',
-      'Amazonas': 'br-am',
-      'Bahia': 'br-ba',
-      'Ceará': 'br-ce',
-      'Distrito Federal': 'br-df',
-      'Espírito Santo': 'br-es',
-      'Goiás': 'br-go',
-      'Maranhão': 'br-ma',
-      'Mato Grosso': 'br-mt',
-      'Mato Grosso do Sul': 'br-ms',
-      'Minas Gerais': 'br-mg',
-      'Pará': 'br-pa',
-      'Paraíba': 'br-pb',
-      'Paraná': 'br-pr',
-      'Pernambuco': 'br-pe',
-      'Piauí': 'br-pi',
-      'Rio de Janeiro': 'br-rj',
-      'Rio Grande do Norte': 'br-rn',
-      'Rio Grande do Sul': 'br-rs',
-      'Rondônia': 'br-ro',
-      'Roraima': 'br-rr',
-      'Santa Catarina': 'br-sc',
-      'São Paulo': 'br-sp',
-      'Sergipe': 'br-se',
-      'Tocantins': 'br-to'
+      Acre: "br-ac",
+      Alagoas: "br-al",
+      Amapá: "br-ap",
+      Amazonas: "br-am",
+      Bahia: "br-ba",
+      Ceará: "br-ce",
+      "Distrito Federal": "br-df",
+      "Espírito Santo": "br-es",
+      Goiás: "br-go",
+      Maranhão: "br-ma",
+      "Mato Grosso": "br-mt",
+      "Mato Grosso do Sul": "br-ms",
+      "Minas Gerais": "br-mg",
+      Pará: "br-pa",
+      Paraíba: "br-pb",
+      Paraná: "br-pr",
+      Pernambuco: "br-pe",
+      Piauí: "br-pi",
+      "Rio de Janeiro": "br-rj",
+      "Rio Grande do Norte": "br-rn",
+      "Rio Grande do Sul": "br-rs",
+      Rondônia: "br-ro",
+      Roraima: "br-rr",
+      "Santa Catarina": "br-sc",
+      "São Paulo": "br-sp",
+      Sergipe: "br-se",
+      Tocantins: "br-to",
     };
 
     // CORREÇÃO: Processar os dados corretamente
-    const dadosProcessados = dadosRawDoBackend.map(item => {
-      // Converter total_turistas para número
-      let totalTuristas = 0;
-      
-      if (item.total_turistas) {
-        // Remove vírgulas se houver e converte para número
-        const turistasString = item.total_turistas.toString().replace(/,/g, '');
-        totalTuristas = parseInt(turistasString, 10) || 0;
-      }
-      
-      const codigoEstado = estadosParaCodigo[item.estado];
-      
-      if (!codigoEstado) {
-        console.warn(`Estado não encontrado no mapeamento: ${item.estado}`);
-      }
-      
-      return {
-        'hc-key': codigoEstado,
-        name: item.estado,
-        value: totalTuristas,
-        // Manter dados originais para debug
-        originalData: item
-      };
-    }).filter(item => item['hc-key']); // Remove itens sem código válido
+    const dadosProcessados = dadosRawDoBackend
+      .map((item) => {
+        // Converter total_turistas para número
+        let totalTuristas = 0;
 
-    console.log("carregarMapaEstadosVisitados(): Dados processados:", dadosProcessados);
+        if (item.total_turistas) {
+          // Remove vírgulas se houver e converte para número
+          const turistasString = item.total_turistas
+            .toString()
+            .replace(/,/g, "");
+          totalTuristas = parseInt(turistasString, 10) || 0;
+        }
+
+        const codigoEstado = estadosParaCodigo[item.estado];
+
+        if (!codigoEstado) {
+          console.warn(`Estado não encontrado no mapeamento: ${item.estado}`);
+        }
+
+        return {
+          "hc-key": codigoEstado,
+          name: item.estado,
+          value: totalTuristas,
+          // Manter dados originais para debug
+          originalData: item,
+        };
+      })
+      .filter((item) => item["hc-key"]); // Remove itens sem código válido
+
+    console.log(
+      "carregarMapaEstadosVisitados(): Dados processados:",
+      dadosProcessados
+    );
 
     // CORREÇÃO: Verificar se há dados válidos após processamento
-    const dadosComValor = dadosProcessados.filter(item => item.value > 0);
-    
+    const dadosComValor = dadosProcessados.filter((item) => item.value > 0);
+
     if (dadosComValor.length === 0) {
-      console.log("carregarMapaEstadosVisitados(): Todos os valores são zero ou inválidos");
+      console.log(
+        "carregarMapaEstadosVisitados(): Todos os valores são zero ou inválidos"
+      );
       mostrarMensagemSemDados(chartDom);
       return;
     }
 
     // CORREÇÃO: Calcular o valor máximo corretamente
-    const maxValor = Math.max(...dadosProcessados.map(d => d.value));
-    console.log("carregarMapaEstadosVisitados(): Valor máximo calculado:", maxValor);
+    const maxValor = Math.max(...dadosProcessados.map((d) => d.value));
+    console.log(
+      "carregarMapaEstadosVisitados(): Valor máximo calculado:",
+      maxValor
+    );
 
     // Verificar se maxValor é válido
     if (isNaN(maxValor) || maxValor <= 0) {
-      console.error("carregarMapaEstadosVisitados(): Valor máximo inválido:", maxValor);
+      console.error(
+        "carregarMapaEstadosVisitados(): Valor máximo inválido:",
+        maxValor
+      );
       mostrarMensagemSemDados(chartDom);
       return;
     }
@@ -645,13 +672,18 @@ async function carregarMapaEstadosVisitados() {
       myMapaChart.hideLoading();
     } else {
       console.log("carregarMapaEstadosVisitados(): Criando novo mapa");
-      
-      if (typeof Highcharts === "undefined" || typeof Highcharts.mapChart === "undefined") {
-        console.error("Highcharts não está carregado. Verifique a inclusão dos scripts Highcharts no HTML.");
+
+      if (
+        typeof Highcharts === "undefined" ||
+        typeof Highcharts.mapChart === "undefined"
+      ) {
+        console.error(
+          "Highcharts não está carregado. Verifique a inclusão dos scripts Highcharts no HTML."
+        );
         if (chartDom) chartDom.textContent = "Erro: Highcharts não carregado.";
         return;
       }
-      
+
       myMapaChart = Highcharts.mapChart("mapaBrasil", {
         chart: { map: "countries/br/br-all" },
         title: { text: "" },
@@ -669,7 +701,8 @@ async function carregarMapaEstadosVisitados() {
             data: dadosProcessados,
             name: "Turistas estrangeiros",
             tooltip: {
-              pointFormat: "<b>{point.name}</b><br>Turistas: {point.value:,.0f}",
+              pointFormat:
+                "<b>{point.name}</b><br>Turistas: {point.value:,.0f}",
             },
           },
         ],
@@ -677,11 +710,13 @@ async function carregarMapaEstadosVisitados() {
     }
 
     console.log("carregarMapaEstadosVisitados(): Mapa carregado com sucesso");
-
   } catch (error) {
-    console.error("Erro ao carregar o mapa de calor de estados mais visitados:", error);
+    console.error(
+      "Erro ao carregar o mapa de calor de estados mais visitados:",
+      error
+    );
     const chartDom = document.getElementById("mapaBrasil");
-    
+
     if (myMapaChart) {
       myMapaChart.series[0].setData([]);
       myMapaChart.hideLoading();
@@ -689,7 +724,8 @@ async function carregarMapaEstadosVisitados() {
     } else if (chartDom) {
       chartDom.innerHTML = "";
       const errorText = document.createElement("div");
-      errorText.textContent = "Erro ao carregar o mapa. Verifique os logs do console.";
+      errorText.textContent =
+        "Erro ao carregar o mapa. Verifique os logs do console.";
       errorText.style.textAlign = "center";
       errorText.style.padding = "20px";
       errorText.style.color = "red";
@@ -703,11 +739,12 @@ function mostrarMensagemSemDados(chartDom) {
     myMapaChart.destroy();
     myMapaChart = null;
   }
-  
+
   if (chartDom) {
     chartDom.innerHTML = "";
     const noDataText = document.createElement("div");
-    noDataText.textContent = "Nenhum dado de visita disponível para o mapa com os filtros selecionados.";
+    noDataText.textContent =
+      "Nenhum dado de visita disponível para o mapa com os filtros selecionados.";
     noDataText.style.textAlign = "center";
     noDataText.style.padding = "20px";
     noDataText.style.color = "#666";
@@ -923,23 +960,70 @@ async function carregarPicoVisitasSazonalidadeChart() {
   }
 }
 
+// Funções para controlar o loading
+function mostrarLoading() {
+  const loadingContainer = document.querySelector(".loading-container");
+  const mainGrafico = document.querySelector(".main-grafico");
+
+  if (loadingContainer) {
+    loadingContainer.style.display = "flex";
+  }
+
+  if (mainGrafico) {
+    mainGrafico.style.display = "none";
+  }
+
+  console.log("Loading: Exibindo tela de carregamento");
+}
+
+function esconderLoading() {
+  const loadingContainer = document.querySelector(".loading-container");
+  const mainGrafico = document.querySelector(".main-grafico");
+
+  if (loadingContainer) {
+    loadingContainer.style.display = "none";
+  }
+
+  if (mainGrafico) {
+    mainGrafico.style.display = "flex";
+  }
+
+  console.log("Loading: Exibindo dashboard com dados carregados");
+}
+
+// Função modificada para incluir controle de loading
 async function carregarTodosOsDadosDoDashboard(usarCache = false) {
   console.log(
     "carregarTodosOsDadosDoDashboard(): Iniciado.",
     usarCache ? "Usando cache." : "Usando API."
   );
 
-  if (usarCache) {
-    await carregarDadosDoCache();
-  } else {
-    await carregarKPITotalTuristas();
-    await carregarKPIVariacaoTuristas();
-    await carregarKPITopEstados();
-    await carregarMapaEstadosVisitados();
-    await carregarPicoVisitasSazonalidadeChart();
-  }
+  // Mostra o loading no início
+  mostrarLoading();
 
-  console.log("carregarTodosOsDadosDoDashboard(): Concluído.");
+  try {
+    if (usarCache) {
+      await carregarDadosDoCache();
+    } else {
+      // Executa todas as funções de carregamento
+      await Promise.all([
+        carregarKPITotalTuristas(),
+        carregarKPIVariacaoTuristas(),
+        carregarKPITopEstados(),
+        carregarMapaEstadosVisitados(),
+        carregarPicoVisitasSazonalidadeChart(),
+      ]);
+    }
+
+    console.log("carregarTodosOsDadosDoDashboard(): Concluído com sucesso.");
+  } catch (error) {
+    console.error("Erro ao carregar dados do dashboard:", error);
+    // Mesmo com erro, esconde o loading para mostrar o dashboard
+    // (os componentes individuais já tratam seus próprios erros)
+  } finally {
+    // Sempre esconde o loading ao final, independente de sucesso ou erro
+    esconderLoading();
+  }
 }
 
 function aplicarPreferenciasDoUsuario() {
@@ -1011,18 +1095,17 @@ function aplicarPermissaoUsuario() {
   }
 }
 // Adiciona os event listeners ao funil para chamar a função de carregamento da dashboard
-document
-  .getElementById("funil")
-  .addEventListener("click", () => {
-    // Força o carregamento via API, não via cache
-    carregarTodosOsDadosDoDashboard(false);
-  });
+document.getElementById("funil").addEventListener("click", () => {
+  // Força o carregamento via API, não via cache
+  carregarTodosOsDadosDoDashboard(false);
+});
 
-
-// Chama a função de carregamento ao carregar a página.
-// Prioriza o carregamento do cache para melhor performance inicial
+// Event listener para quando a página carrega
 document.addEventListener("DOMContentLoaded", () => {
   aplicarPreferenciasDoUsuario();
   aplicarPermissaoUsuario();
+
+  // Chama a função de carregamento ao carregar a página
+  // Prioriza o carregamento do cache para melhor performance inicial
   carregarTodosOsDadosDoDashboard(true);
 });

@@ -362,3 +362,4 @@ if (document.readyState === 'loading') {
 } else {
   inicializarDados();
 }
+

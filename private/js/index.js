@@ -116,8 +116,8 @@ async function carregarDadosDashboard() {
                 ticks: {
                   ...estiloDoTextoDoGrafico,
                   autoSkip: false,
-                  maxRotation: 90,
-                  minRotation: 90,
+                  maxRotation: 0,
+                  minRotation: 0,
                 },
               },
               y: {
@@ -130,7 +130,10 @@ async function carregarDadosDashboard() {
       }
     })
     .catch((err) => {
-      console.error("Erro ao buscar dados dos principais países de origem:", err);
+      console.error(
+        "Erro ao buscar dados dos principais países de origem:",
+        err
+      );
     });
 
   carregamentos.push(carregarPaisesOrigem);
@@ -203,7 +206,10 @@ async function carregarDadosDashboard() {
       }
     })
     .catch((err) => {
-      console.error("Erro ao buscar dados de presença de turistas por UF:", err);
+      console.error(
+        "Erro ao buscar dados de presença de turistas por UF:",
+        err
+      );
     });
 
   carregamentos.push(carregarPresencaUF);
@@ -318,39 +324,39 @@ async function carregarDadosDashboard() {
 
 // Função para mostrar a tela de loading
 function mostrarLoading() {
-  const loadingContainer = document.querySelector('.loading-container');
-  const mainGrafico = document.querySelector('.main-grafico');
-  
+  const loadingContainer = document.querySelector(".loading-container");
+  const mainGrafico = document.querySelector(".main-grafico");
+
   if (loadingContainer) {
-    loadingContainer.style.display = 'block';
+    loadingContainer.style.display = "block";
   }
-  
+
   if (mainGrafico) {
-    mainGrafico.style.display = 'none';
+    mainGrafico.style.display = "none";
   }
 }
 
 // Função para esconder a tela de loading
 function esconderLoading() {
-  const loadingContainer = document.querySelector('.loading-container');
-  const mainGrafico = document.querySelector('.main-grafico');
-  
+  const loadingContainer = document.querySelector(".loading-container");
+  const mainGrafico = document.querySelector(".main-grafico");
+
   if (loadingContainer) {
-    loadingContainer.style.display = 'none';
+    loadingContainer.style.display = "none";
   }
-  
+
   if (mainGrafico) {
-    mainGrafico.style.display = 'flex';
+    mainGrafico.style.display = "flex";
   }
 }
 
 // Função para carregar dados do cache ao inicializar a dashboard
 async function carregarDadosDoCache() {
   console.log("carregarDadosDoCache: Função iniciada.");
-  
+
   // Mostrar loading e esconder o dashboard principal
   mostrarLoading();
-  
+
   const basePath = "/api"; // Base path para as APIs de cache
 
   try {
@@ -426,10 +432,9 @@ async function carregarDadosDoCache() {
     await Promise.allSettled(carregamentosCache);
 
     console.log("Dashboard carregada com dados do cache");
-    
+
     // Esconder loading após todos os dados serem carregados
     esconderLoading();
-
   } catch (err) {
     console.error("Erro geral ao carregar dados do cache:", err);
     // Em caso de erro, carregar dados normalmente
@@ -443,9 +448,9 @@ function definirValorSelect(selectElement, valor, tipo) {
   try {
     // Procurar pela option com o valor correspondente
     const option = Array.from(selectElement.options).find(
-      opt => opt.value === valor.toString()
+      (opt) => opt.value === valor.toString()
     );
-    
+
     if (option) {
       selectElement.value = valor;
       console.log(`Select de ${tipo} definido para:`, valor);
@@ -460,65 +465,6 @@ function definirValorSelect(selectElement, valor, tipo) {
 // Funções de carregamento de cache individuais (exemplo de implementação)
 // Adapte conforme suas necessidades específicas
 
-async function carregarGraficoPaisesOrigemCache(ultimoPeriodo) {
-  try {
-    console.log("Carregando gráfico de países de origem do cache...");
-    
-    const queryParams = new URLSearchParams();
-    if (ultimoPeriodo.mes) queryParams.append("mes", ultimoPeriodo.mes);
-    if (ultimoPeriodo.ano) queryParams.append("ano", ultimoPeriodo.ano);
-    
-    const res = await fetch(`/api/cache/paises-origem?${queryParams.toString()}`);
-    const data = await res.json();
-    
-    // Implementar lógica de renderização do gráfico
-    // Similar ao que você tem na função principal
-    console.log("Gráfico de países de origem carregado do cache");
-    
-  } catch (err) {
-    console.error("Erro ao carregar gráfico de países de origem do cache:", err);
-    throw err;
-  }
-}
-
-async function carregarGraficoPresencaUFCache() {
-  try {
-    console.log("Carregando gráfico de presença UF do cache...");
-    
-    // Implementar lógica específica do cache
-    console.log("Gráfico de presença UF carregado do cache");
-    
-  } catch (err) {
-    console.error("Erro ao carregar gráfico de presença UF do cache:", err);
-    throw err;
-  }
-}
-
-async function carregarGraficoChegadasCache() {
-  try {
-    console.log("Carregando gráfico de chegadas do cache...");
-    
-    // Implementar lógica específica do cache
-    console.log("Gráfico de chegadas carregado do cache");
-    
-  } catch (err) {
-    console.error("Erro ao carregar gráfico de chegadas do cache:", err);
-    throw err;
-  }
-}
-
-async function carregarKPIsComparativosCache() {
-  try {
-    console.log("Carregando KPIs comparativos do cache...");
-    
-    // Implementar lógica específica do cache
-    console.log("KPIs comparativos carregados do cache");
-    
-  } catch (err) {
-    console.error("Erro ao carregar KPIs comparativos do cache:", err);
-    throw err;
-  }
-}
 
 // Função auxiliar para definir valor do select corretamente
 function definirValorSelect(selectElement, valor, tipoSelect) {
@@ -528,13 +474,13 @@ function definirValorSelect(selectElement, valor, tipoSelect) {
   console.log(`Tentando definir ${tipoSelect} para:`, valorString);
 
   // Primeiro, remover a seleção atual
-  Array.from(selectElement.options).forEach(option => {
+  Array.from(selectElement.options).forEach((option) => {
     option.selected = false;
   });
 
   // Procurar e selecionar a opção correta
   let optionEncontrada = false;
-  Array.from(selectElement.options).forEach(option => {
+  Array.from(selectElement.options).forEach((option) => {
     if (option.value === valorString) {
       option.selected = true;
       optionEncontrada = true;
@@ -545,17 +491,19 @@ function definirValorSelect(selectElement, valor, tipoSelect) {
   if (optionEncontrada) {
     // Definir o valor do select
     selectElement.value = valorString;
-    
+
     // Disparar evento change para atualizar qualquer listener
-    const changeEvent = new Event('change', { bubbles: true });
+    const changeEvent = new Event("change", { bubbles: true });
     selectElement.dispatchEvent(changeEvent);
-    
+
     console.log(`Select ${tipoSelect} atualizado para:`, valorString);
     return true;
   } else {
     console.warn(`Opção de ${tipoSelect} não encontrada:`, valorString);
     // Listar todas as opções disponíveis para debug
-    const opcoesDisponiveis = Array.from(selectElement.options).map(opt => opt.value);
+    const opcoesDisponiveis = Array.from(selectElement.options).map(
+      (opt) => opt.value
+    );
     console.log(`Opções disponíveis para ${tipoSelect}:`, opcoesDisponiveis);
     return false;
   }
@@ -565,10 +513,10 @@ function definirValorSelect(selectElement, valor, tipoSelect) {
 async function carregarGraficoPaisesOrigemCache(ultimoPeriodo) {
   try {
     console.log("Carregando gráfico de países de origem do cache...");
-    
+
     // Primeiro tentar buscar os dados específicos do cache
     let dadosPaises;
-    
+
     // Tentar diferentes estruturas de dados que podem vir do cache
     if (ultimoPeriodo && ultimoPeriodo.paisesOrigem) {
       dadosPaises = ultimoPeriodo.paisesOrigem;
@@ -639,8 +587,8 @@ async function carregarGraficoPaisesOrigemCache(ultimoPeriodo) {
               ticks: {
                 ...estiloDoTextoDoGrafico,
                 autoSkip: false,
-                maxRotation: 90,
-                minRotation: 90,
+                maxRotation: 0,
+                minRotation: 0,
               },
             },
             y: {
@@ -664,7 +612,7 @@ async function carregarGraficoPaisesOrigemCache(ultimoPeriodo) {
 async function carregarGraficoPresencaUFCache() {
   try {
     console.log("Carregando gráfico de presença por UF do cache...");
-    
+
     const res = await fetch("/api/presenca-uf-cached");
     if (!res.ok) {
       console.warn("Dados de presença por UF não encontrados no cache");
@@ -751,7 +699,7 @@ async function carregarGraficoPresencaUFCache() {
 async function carregarGraficoChegadasCache() {
   try {
     console.log("Carregando gráfico de chegadas do cache...");
-    
+
     const res = await fetch("/api/chegadas-cached");
     if (!res.ok) {
       console.warn("Dados de chegadas não encontrados no cache");
@@ -830,7 +778,7 @@ async function carregarGraficoChegadasCache() {
 async function carregarKPIsComparativosCache() {
   try {
     console.log("Carregando KPIs comparativos do cache...");
-    
+
     const res = await fetch("/api/chegadas-comparativas-cached");
     if (!res.ok) {
       console.warn("Dados de chegadas comparativas não encontrados no cache");
@@ -846,7 +794,9 @@ async function carregarKPIsComparativosCache() {
       labelAnoAnterior: document.getElementById("labelAnoAnterior"),
       kpiChegadasAnoAtual: document.getElementById("kpiChegadasAnoAtual"),
       labelAnoAtual: document.getElementById("labelAnoAtual"),
-      kpiPorcentagemComparativa: document.getElementById("kpiPorcentagemComparativa"),
+      kpiPorcentagemComparativa: document.getElementById(
+        "kpiPorcentagemComparativa"
+      ),
     };
 
     if (elementos.kpiChegadasAnoAnterior) {
@@ -854,7 +804,9 @@ async function carregarKPIsComparativosCache() {
         data.chegadasAnoAnterior || "N/A";
     }
     if (elementos.labelAnoAnterior) {
-      elementos.labelAnoAnterior.textContent = `em ${data.anoAnterior || "---"}`;
+      elementos.labelAnoAnterior.textContent = `em ${
+        data.anoAnterior || "---"
+      }`;
     }
     if (elementos.kpiChegadasAnoAtual) {
       elementos.kpiChegadasAnoAtual.textContent =
@@ -966,7 +918,6 @@ function aplicarPermissaoUsuario() {
 document
   .getElementById("funil")
   .addEventListener("click", carregarDadosDashboard);
-
 
 // Chama a função de carregamento ao carregar a página.
 // Prioriza o carregamento do cache para melhor performance inicial
