@@ -10,12 +10,16 @@
   <title>WiseTour</title>
 
   <link rel="stylesheet" href="css/style.css">
+  <link rel="shortcut icon" href="../common/assets/logo/logo_padrao.svg" type="image/x-icon">
 
   <script src="https://kit.fontawesome.com/041dbc8823.js" crossorigin="anonymous"></script>
   <script src="/common/js/nav-bar.js"></script>
   <script src="js/cadastroEmpresa.js"></script>
+  <script src="js/cadastroEnderecoEmpresa.js"></script>
+  <script src="js/cadastroEmpresaCompleta.js"></script>
   <script src="js/excluirEmpresa.js"></script>
   <script src="js/editarEmpresa.js"></script>
+  <script src="js/editarEnderecoEmpresa.js"></script>
 
 </head>
 
@@ -54,6 +58,9 @@
             <div class="container">
               <input id="informacao_cadastro_id_input" type="text" placeholder="| Número de registro de contato">
             </div>
+             <div class="container">
+              <input id="endereco_id_input" type="text" placeholder="| Número de registro do endereco">
+            </div>
             <div class="container">
               <input id="empresa_cnpj_input" type="text" placeholder="| CNPJ">
             </div>
@@ -88,7 +95,7 @@
               <input id="empresa_sigla_uf_input" type="text" placeholder="| Sigla UF">
             </div>
             <div class="botoes">
-              <button class="btn" onclick="cadastrarEmpresa()" type="button">CADASTRAR</button>
+              <button class="btn" onclick="cadastrarEmpresaCompleta()" type="button">CADASTRAR</button>
             </div>
           </form>
         </div>
@@ -117,9 +124,6 @@
               <input id="editar_informacoes_empresariais_cnpj_input" type="text" placeholder="| CNPJ">
             </div>
             <p>Novas informações:</p>
-            <div class="container">
-              <input id="editar_informacoes_empresariais_novo_cnpj_input" type="text" placeholder="| CNPJ">
-            </div>
             <div class="container">
               <input id="editar_informacoes_empresariais_nome_fantasia_input" type="text" placeholder="| Nome Fantasia">
             </div>

@@ -9,7 +9,7 @@ const empresa = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    nome_fanatasia: {
+    nome_fantasia: {
       type: DataTypes.STRING(255),
       allowNull: false,
     },

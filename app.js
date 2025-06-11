@@ -20,6 +20,9 @@ var funcionarioRoutes = require('./src/routes/funcionario');
 var preferenciaVisualizacaoDashboardRoutes = require('./src/routes/preferenciaVisualizacaoDashboard');
 var telaDashboardRoutes = require("./src/routes/telaDashboardRoutes");
 var configuracaoSlackRoutes = require("./src/routes/configuracaoSlack");
+var empresaRouter = require("./src/routes/empresaRoutes");
+var enderecoRouter= require("./src/routes/enderecoRoutes");
+
 var ipRouter = require("./src/routes/ipRoute"); // Nova rota para IP
 var { sequelize } = require('./src/database/sequelizeConfig');
 var graficoRouter = require("./src/routes/graficoRoute");
@@ -83,6 +86,7 @@ app.use("/common", express.static(path.join(__dirname, "common")));
 app.use("/auth", express.static(path.join(__dirname, "auth")));
 app.use("/internal", express.static(path.join(__dirname, "internal")));
 app.use("/private", express.static(path.join(__dirname, "private")));
+app.use("/internal", express.static(path.join(__dirname, "internal")));
 app.use(cors());
 
 app.use("/", indexRouter);
@@ -92,6 +96,8 @@ app.use("/preferenciaVisualizacaoDashboard", preferenciaVisualizacaoDashboardRou
 app.use("/telaDashboard", telaDashboardRoutes);
 app.use("/grafico", graficoRouter);
 app.use("/configuracaoSlackRoutes", configuracaoSlackRoutes)
+app.use("/empresa", empresaRouter);
+app.use("/endereco", enderecoRouter);
 
 app.use("/ip", ipRouter); // Rota para serviços de IP
 

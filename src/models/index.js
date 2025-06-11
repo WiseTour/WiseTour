@@ -222,6 +222,7 @@ module.exports = {
   informacaoContatoCadastro,
   historicoContato,
   empresa,
+  endereco,
   funcionario,
   perfilEstimadoTuristas,
   destino,
