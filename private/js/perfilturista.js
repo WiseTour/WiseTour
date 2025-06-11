@@ -137,7 +137,7 @@ async function carregarDadosDashboard() {
                         legend: { display: false },
                         tooltip: {
                             callbacks: {
-                                label: function(context) {
+                                label: function (context) {
                                     return `${context.parsed.x}%`;
                                 }
                             }
@@ -147,25 +147,25 @@ async function carregarDadosDashboard() {
                         x: {
                             beginAtZero: true,
                             grid: { display: false },
-                            ticks: { 
-                                ...estiloDoTextoDoGrafico, 
-                                font: { 
-                                    ...estiloDoTextoDoGrafico.font, 
-                                    size: 15 
+                            ticks: {
+                                ...estiloDoTextoDoGrafico,
+                                font: {
+                                    ...estiloDoTextoDoGrafico.font,
+                                    size: 15
                                 },
-                                callback: function(value) {
+                                callback: function (value) {
                                     return value + '%';
                                 }
                             }
                         },
                         y: {
                             grid: { display: false },
-                            ticks: { 
-                                ...estiloDoTextoDoGrafico, 
-                                font: { 
-                                    ...estiloDoTextoDoGrafico.font, 
-                                    size: 15 
-                                } 
+                            ticks: {
+                                ...estiloDoTextoDoGrafico,
+                                font: {
+                                    ...estiloDoTextoDoGrafico.font,
+                                    size: 15
+                                }
                             }
                         }
                     }
@@ -213,7 +213,7 @@ async function carregarDadosDashboard() {
                         legend: { display: false },
                         tooltip: {
                             callbacks: {
-                                label: function(context) {
+                                label: function (context) {
                                     return `${context.parsed.y}%`;
                                 }
                             }
@@ -223,24 +223,30 @@ async function carregarDadosDashboard() {
                         y: {
                             beginAtZero: true,
                             grid: { display: false },
-                            ticks: { 
-                                ...estiloDoTextoDoGrafico, 
-                                callback: function (value) { 
-                                    return value + '%'; 
-                                } 
+                            ticks: {
+                                ...estiloDoTextoDoGrafico,
+                                callback: function (value) {
+                                    return value + '%';
+                                }
                             }
                         },
                         x: {
                             grid: { display: false },
-                            ticks: { 
-                                ...estiloDoTextoDoGrafico, 
-                                font: { 
-                                    ...estiloDoTextoDoGrafico.font, 
-                                    size: 9 
-                                }, 
-                                maxRotation: 0, 
-                                minRotation: 0 
+                            ticks: {
+                                ...estiloDoTextoDoGrafico,
+                                font: {
+                                    ...estiloDoTextoDoGrafico.font,
+                                    size: 10
+                                },
+                                autoSkip: false,
+                                maxRotation: 0,
+                                minRotation: 0,
+                                callback: function (value, index, ticks) {
+                                    const label = this.getLabelForValue(value);
+                                    return label.split(" ");
+                                }
                             }
+
                         }
                     }
                 }
@@ -249,6 +255,7 @@ async function carregarDadosDashboard() {
     } catch (err) {
         console.error('Erro ao buscar dados das fontes de informação:', err);
     }
+
 
     // Gráfico: Composição do Grupo Turístico (Pizza)
     try {
@@ -272,7 +279,7 @@ async function carregarDadosDashboard() {
                         data: valores,
                         backgroundColor: [
                             coresUsadas.amarelo, coresUsadas.marrom, coresUsadas.marromBege,
-                            coresUsadas.amareloClaro
+                            coresUsadas.amareloClaro, coresUsadas.esverdeado
                         ],
                         borderWidth: 0
                     }]
@@ -352,10 +359,10 @@ async function carregarDadosDoCache() {
         if (!cacheRes.ok) {
             throw new Error(`Erro ao buscar dados do cache: ${cacheRes.status}`);
         }
-        
+
         const cacheData = await cacheRes.json();
         console.log('Dados do cache:', cacheData);
-        
+
         // Verifica se há dados em cache disponíveis
         if (!cacheData.ultimoPeriodo || (!cacheData.ultimoPeriodo.mes && !cacheData.ultimoPeriodo.ano)) {
             console.warn('Nenhum dado em cache disponível. Carregando dados normalmente...');
@@ -365,7 +372,7 @@ async function carregarDadosDoCache() {
 
         const { ultimoPeriodo } = cacheData;
         console.log('Dados do último período:', ultimoPeriodo);
-        
+
         // Atualiza os filtros com os valores do último período em cache
         if (selectMes && ultimoPeriodo.mes) {
             selectMes.value = ultimoPeriodo.mes.toString();
@@ -435,7 +442,7 @@ async function carregarDadosDoCache() {
             }
         }
 
-        // Carrega gráfico de Fontes do cache
+        // Carrega gráfico de Fontes Informação do cache
         if (ultimoPeriodo.fontes && Array.isArray(ultimoPeriodo.fontes)) {
             const labels = ultimoPeriodo.fontes.map(item => item.fonte);
             const valores = ultimoPeriodo.fontes.map(item => item.percentual);
@@ -463,22 +470,43 @@ async function carregarDadosDoCache() {
                     },
                     options: {
                         ...opcoesPadrao,
-                        plugins: { legend: { display: false } },
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
                         scales: {
                             y: {
                                 beginAtZero: true,
                                 grid: { display: false },
-                                ticks: { ...estiloDoTextoDoGrafico, callback: function (value) { return value + '%'; } }
+                                ticks: {
+                                    ...estiloDoTextoDoGrafico,
+                                    callback: value => value + '%'
+                                }
                             },
                             x: {
                                 grid: { display: false },
-                                ticks: { ...estiloDoTextoDoGrafico, font: { ...estiloDoTextoDoGrafico.font, size: 9 }, maxRotation: 0, minRotation: 0 }
+                                ticks: {
+                                    ...estiloDoTextoDoGrafico,
+                                    font: {
+                                        ...estiloDoTextoDoGrafico.font,
+                                        size: 10
+                                    },
+                                    autoSkip: false,
+                                    maxRotation: 0,
+                                    minRotation: 0,
+                                    callback: function (value, index, ticks) {
+                                        const label = this.getLabelForValue(value);
+                                        return label.split(" ");
+                                    }
+                                }
+
                             }
                         }
                     }
                 });
             }
         }
+
 
         // Carrega gráfico de Composição do cache
         if (ultimoPeriodo.composicao && Array.isArray(ultimoPeriodo.composicao)) {
@@ -499,7 +527,7 @@ async function carregarDadosDoCache() {
                             data: valores,
                             backgroundColor: [
                                 coresUsadas.amarelo, coresUsadas.marrom, coresUsadas.marromBege,
-                                coresUsadas.amareloClaro
+                                coresUsadas.amareloClaro, coresUsadas.esverdeado
                             ],
                             borderWidth: 0
                         }]

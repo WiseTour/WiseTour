@@ -177,6 +177,7 @@ exports.listarTopEstadosVisitadosSazonalidade = async (req, res) => {
       JOIN 
         unidade_federativa_brasil AS UF ON D.fk_uf_destino = UF.sigla
       ${whereConditions}
+      AND UF.unidade_federativa <> 'Outras Unidades da Federação'
       GROUP BY 
         UF.unidade_federativa
       ORDER BY 
@@ -220,16 +221,24 @@ exports.listarMotivos = async (req, res) => {
       (sum, item) => sum + parseFloat(item.dataValues.total_turistas),
       0
     );
-    const dadosFormatados = resultados.map((item) => ({
-      motivo: item.motivo_viagem,
-      percentual:
-        totalGeral > 0
-          ? (
+
+    const dadosFormatados = resultados.map((item) => {
+      let motivo = item.motivo_viagem;
+      if (motivo.trim().toLowerCase() === "visita a amigos/parentes") {
+        motivo = "Visita";
+      }
+
+      return {
+        motivo,
+        percentual:
+          totalGeral > 0
+            ? (
               (parseFloat(item.dataValues.total_turistas) / totalGeral) *
               100
             ).toFixed(2)
-          : "0.00",
-    }));
+            : "0.00",
+      };
+    });
 
     res.json(dadosFormatados);
   } catch (error) {
@@ -237,6 +246,7 @@ exports.listarMotivos = async (req, res) => {
     res.status(500).json({ erro: "Erro interno ao buscar motivos de viagem." });
   }
 };
+
 
 exports.listarFontesInformacao = async (req, res) => {
   try {
@@ -255,16 +265,37 @@ exports.listarFontesInformacao = async (req, res) => {
       (sum, item) => sum + parseFloat(item.dataValues.total_turistas),
       0
     );
-    const dadosFormatados = resultados.map((item) => ({
-      fonte: item.fonte_informacao_viagem,
-      percentual:
-        totalGeral > 0
-          ? (
+
+    const dadosFormatados = resultados.map((item) => {
+      let fonte = item.fonte_informacao_viagem;
+      const fonteNormalizada = fonte
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+      if (fonteNormalizada === "agencia de viagens") {
+        fonte = "Agência";
+      } else if (fonteNormalizada === "amigos e parentes") {
+        fonte = "Conhecidos";
+      } else if (fonteNormalizada === "guias, brochuras e outras publicacoes") {
+        fonte = "Guias";
+      } else if (fonteNormalizada === "escritorios brasileiros de turismo") {
+        fonte = "Escritórios brasileiros";
+      } else if (fonteNormalizada === "feiras, eventos e congressos") {
+        fonte = "Eventos";
+      }
+
+      return {
+        fonte,
+        percentual:
+          totalGeral > 0
+            ? (
               (parseFloat(item.dataValues.total_turistas) / totalGeral) *
               100
             ).toFixed(2)
-          : "0.00",
-    }));
+            : "0.00",
+      };
+    });
 
     res.json(dadosFormatados);
   } catch (error) {
@@ -274,6 +305,7 @@ exports.listarFontesInformacao = async (req, res) => {
       .json({ erro: "Erro interno ao buscar fontes de informação." });
   }
 };
+
 
 exports.listarComposicao = async (req, res) => {
   try {
@@ -286,6 +318,7 @@ exports.listarComposicao = async (req, res) => {
       where,
       group: ["composicao_grupo_familiar"],
       order: [[literal("total_turistas"), "DESC"]],
+      limit: 4
     });
 
     const totalGeral = resultados.reduce(
@@ -297,9 +330,9 @@ exports.listarComposicao = async (req, res) => {
       percentual:
         totalGeral > 0
           ? (
-              (parseFloat(item.dataValues.total_turistas) / totalGeral) *
-              100
-            ).toFixed(2)
+            (parseFloat(item.dataValues.total_turistas) / totalGeral) *
+            100
+          ).toFixed(2)
           : "0.00",
     }));
 
@@ -334,9 +367,9 @@ exports.listarVias = async (req, res) => {
       percentual:
         totalGeral > 0
           ? (
-              (parseFloat(item.dataValues.total_turistas) / totalGeral) *
-              100
-            ).toFixed(2)
+            (parseFloat(item.dataValues.total_turistas) / totalGeral) *
+            100
+          ).toFixed(2)
           : "0.00",
     }));
 
@@ -495,16 +528,23 @@ exports.listarPrincipaisPaisesOrigem = async (req, res) => {
       0
     );
 
-    const dadosFormatados = resultados.map((item) => ({
-      pais: item.pais.pais,
-      percentual:
-        totalGeral > 0
-          ? (
+    const dadosFormatados = resultados.map((item) => {
+      let nomePais = item.pais.pais;
+      if (nomePais.trim().toLowerCase() === "estados unidos") {
+        nomePais = "EUA";
+      }
+
+      return {
+        pais: nomePais,
+        percentual:
+          totalGeral > 0
+            ? (
               (parseFloat(item.dataValues.total_turistas) / totalGeral) *
               100
             ).toFixed(2)
-          : "0.00",
-    }));
+            : "0.00",
+      };
+    });
 
     if (dadosFormatados.length === 0) {
       console.log(
@@ -522,6 +562,7 @@ exports.listarPrincipaisPaisesOrigem = async (req, res) => {
       .json({ erro: "Erro interno ao buscar principais países de origem." });
   }
 };
+
 
 // 2. Gráfico PRESENÇA DE TURISTAS POR UNIDADE FEDERATIVA
 exports.listarPresencaTuristasUF = async (req, res) => {

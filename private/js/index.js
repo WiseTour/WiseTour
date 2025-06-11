@@ -105,8 +105,8 @@ async function carregarDadosDashboard() {
                             ticks: {
                                 ...estiloDoTextoDoGrafico,
                                 autoSkip: false,
-                                maxRotation: 90,
-                                minRotation: 90
+                                maxRotation: 0,
+                                minRotation: 0
                             }
                         },
                         y: {
@@ -340,8 +340,8 @@ async function carregarDadosDoCache() {
                 ticks: {
                   ...estiloDoTextoDoGrafico,
                   autoSkip: false,
-                  maxRotation: 90,
-                  minRotation: 90
+                  maxRotation: 0,
+                  minRotation: 0
                 }
               },
               y: {
