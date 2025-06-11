@@ -1,6 +1,3 @@
-// perfilturista.js
-
-// Definição de cores padronizadas para os gráficos.
 const coresUsadas = {
     amarelo: '#F8CA26',
     marrom: '#735900',
@@ -14,7 +11,6 @@ const coresUsadas = {
     esverdeado: '#6B8E23'
 };
 
-// Opções padrão para os gráficos Chart.js.
 const opcoesPadrao = {
     responsive: true,
     maintainAspectRatio: false,
@@ -28,7 +24,6 @@ const opcoesPadrao = {
     }
 };
 
-// Estilo de texto padrão para ticks e legendas dos gráficos.
 const estiloDoTextoDoGrafico = {
     color: '#000000',
     font: {
@@ -49,9 +44,7 @@ let graficoFontesInstance;
 let graficoComposicaoInstance;
 let graficoViasInstance;
 
-/**
- * Carrega e atualiza todas as KPIs e gráficos da dashboard com base nos filtros.
- */
+
 async function carregarDadosDashboard() {
     console.log('carregarDadosDashboard: Função iniciada.');
 
@@ -350,10 +343,6 @@ async function carregarDadosDashboard() {
     }
 }
 
-/**
- * Carrega e atualiza a dashboard com dados do cache (último período consultado).
- * Utiliza diretamente os dados do cache sem fazer novas consultas ao banco.
- */
 async function carregarDadosDoCache() {
     console.log('carregarDadosDoCache: Função iniciada.');
 
@@ -582,7 +571,7 @@ async function carregarDadosDoCache() {
     }
 }
 
-// Adiciona event listeners aos filtros para recarregar a dashboard ao mudar.
+// Adiciona os event listeners ao funil para chamar a função de carregamento da dashboard
 document.getElementById("funil").addEventListener("click", carregarDadosDashboard)
 
 // Chama a função de carregamento ao carregar a página.
@@ -597,5 +586,3 @@ document.addEventListener('DOMContentLoaded', () => {
         carregarDadosDoCache();
     }
 });
-
-console.log('perfilturista.js: Script carregado.');

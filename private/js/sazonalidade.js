@@ -1,6 +1,3 @@
-// public/js/sazonalidade.js
-
-// --- Replicando definições de estilo do index.js para consistência ---
 const coresUsadas = {
     amarelo: '#F8CA26',
     marrom: '#735900',
@@ -36,12 +33,8 @@ const estiloDoTextoDoGrafico = {
         size: 12
     }
 };
-// --- Fim das definições replicadas ---
 
-
-// Variável global para a instância do Highcharts MapChart.
 let myMapaChart;
-// Variável global para a instância do gráfico de "Pico de Visitas - Sazonalidade" (linha única).
 let myPicoVisitasSazonalidadeChart;
 
 // Referências dos elementos de filtro
@@ -62,20 +55,6 @@ const picoVisitasChartContainer = document.getElementById('picoVisitasChartConta
 const picoVisitasChartCanvas = document.getElementById('picoVisitasChart');
 const picoVisitasNoDataMessage = document.getElementById('picoVisitasNoDataMessage');
 
-
-// --- Adicionando LOGS de inicialização para depuração ---
-console.log("sazonalidade.js: Script carregado.");
-console.log("sazonalidade.js: selectMes (id='mes') encontrado?", !!selectMes);
-console.log("sazonalidade.js: selectAno (id='ano') encontrado?", !!selectAno);
-console.log("sazonalidade.js: selectPais (id='pais') encontrado?", !!selectPais);
-console.log("sazonalidade.js: picoVisitasChartContainer encontrado?", !!picoVisitasChartContainer);
-console.log("sazonalidade.js: picoVisitasChartCanvas encontrado?", !!picoVisitasChartCanvas);
-console.log("sazonalidade.js: picoVisitasNoDataMessage encontrado?", !!picoVisitasNoDataMessage);
-
-
-/**
- * Obtém os valores selecionados nos filtros.
- */
 function getFiltros() {
     const filtros = {
         mes: selectMes ? selectMes.value : '',
@@ -85,7 +64,6 @@ function getFiltros() {
     console.log("getFiltros(): Filtros atuais:", filtros); // LOG
     return filtros;
 }
-
 
 async function carregarDadosDoCache() {
     console.log("carregarDadosDoCache(): Iniciado.");
@@ -151,7 +129,6 @@ async function carregarDadosDoCache() {
     }
 }
 
-
 function carregarMapaComDadosCache(dadosDoCache) {
     console.log("carregarMapaComDadosCache(): Carregando mapa com dados do cache.");
     
@@ -191,7 +168,6 @@ function carregarMapaComDadosCache(dadosDoCache) {
         }
     }
 }
-
 
 function carregarPicoVisitasComDadosCache(dadosDoCache) {
     console.log("carregarPicoVisitasComDadosCache(): Carregando gráfico com dados do cache.");
@@ -268,18 +244,11 @@ function carregarPicoVisitasComDadosCache(dadosDoCache) {
     }
 }
 
-/**
- * Função para formatar números com vírgula como separador decimal e ponto como separador de milhar.
- * Ex: 6435.87 -> 6.435,87
- */
 function formatNumber(num) {
     if (typeof num !== 'number') return num; // Garante que é um número
     return num.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 }
 
-/**
- * Função para carregar e atualizar a KPI "Quantidade Total de Turistas" via API.
- */
 async function carregarKPITotalTuristas() {
     console.log("carregarKPITotalTuristas(): Iniciado.");
     const { mes, ano, pais } = getFiltros();
@@ -324,9 +293,6 @@ async function carregarKPITotalTuristas() {
     }
 }
 
-/**
- * Função para carregar e atualizar a KPI "Variação de Turistas" via API.
- */
 async function carregarKPIVariacaoTuristas() {
     console.log("carregarKPIVariacaoTuristas(): Iniciado.");
     const { mes, ano, pais } = getFiltros();
@@ -369,10 +335,6 @@ async function carregarKPIVariacaoTuristas() {
     }
 }
 
-
-/**
- * Função para carregar e atualizar a KPI "TOP 3 Estados Mais Visitados" via API.
- */
 async function carregarKPITopEstados() {
     console.log("carregarKPITopEstados(): Iniciado."); // LOG
     const { mes, ano, pais } = getFiltros();
@@ -421,10 +383,6 @@ async function carregarKPITopEstados() {
     }
 }
 
-
-/**
- * Função para carregar e atualizar o mapa de calor dos estados visitados (Highcharts) via API.
- */
 async function carregarMapaEstadosVisitados() {
     console.log("carregarMapaEstadosVisitados(): Iniciado.");
     const { mes, ano, pais } = getFiltros();
@@ -539,10 +497,6 @@ async function carregarMapaEstadosVisitados() {
     }
 }
 
-
-/**
- * Função para carregar e atualizar o gráfico de "Pico de Visitas - Sazonalidade" (Chart.js).
- */
 async function carregarPicoVisitasSazonalidadeChart() {
     console.log("carregarPicoVisitasSazonalidadeChart(): Iniciado.");
     const chartCtxElement = picoVisitasChartCanvas; // Esta é a referência direta ao <canvas>
@@ -701,10 +655,6 @@ async function carregarPicoVisitasSazonalidadeChart() {
 }
 
 
-/**
- * Função para carregar TODOS os dados que dependem dos filtros.
- * Chamada na inicialização e ao mudar qualquer filtro.
- */
 async function carregarTodosOsDadosDoDashboard(usarCache = false) {
     console.log("carregarTodosOsDadosDoDashboard(): Iniciado.", usarCache ? "Usando cache." : "Usando API.");
     
@@ -721,10 +671,18 @@ async function carregarTodosOsDadosDoDashboard(usarCache = false) {
     console.log("carregarTodosOsDadosDoDashboard(): Concluído.");
 }
 
-// Adiciona Event Listeners aos filtros para recarregar dados do dashboard.
-document.getElementById("funil").addEventListener("click", carregarDadosDashboard)
+// Adiciona os event listeners ao funil para chamar a função de carregamento da dashboard
+document.getElementById("funil").addEventListener("click", carregarTodosOsDadosDoDashboard)
 
+// Chama a função de carregamento ao carregar a página.
+// Prioriza o carregamento do cache para melhor performance inicial
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Evento 'DOMContentLoaded' disparado. Carregando dados do cache primeiro.");
-    carregarTodosOsDadosDoDashboard(true); // true = usar cache na inicialização
+    // Verifica se deve carregar do cache ou fazer consulta normal
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceRefresh = urlParams.get('refresh') === 'true';
+    if (forceRefresh) {
+        carregarTodosOsDadosDoDashboard(false);
+    } else {
+        carregarTodosOsDadosDoDashboard(true);
+    }
 });
