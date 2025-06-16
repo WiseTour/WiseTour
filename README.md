@@ -1,170 +1,253 @@
-# 🌐 WiseTour - Análise de Dados Turísticos ✈️
+# 🌐 WiseTour - Aplicação Web ✈️
+
+**Sistema de análise de dados turísticos** com dashboard interativo para agências de turismo internacional com foco no Brasil.
+
 ---
 
-## 📖 Visão Geral
+## 📋 Visão Geral
 
-**WiseTour** é um sistema voltado para **agências de turismo estrangeiro com foco no Brasil**, desenvolvido para oferecer suporte à análise de dados estratégicos do setor, como:
+A aplicação web do WiseTour oferece uma **plataforma completa** para análise estratégica de dados turísticos, permitindo que agências de turismo tomem decisões baseadas em dados oficiais do governo brasileiro.
 
-- **Nacionalidade dos turistas** por estado;
-- **Meios de transporte mais utilizados** para entrada no país;
-- **Distribuição geográfica e sazonalidade** da demanda turística.
+### 🎯 Funcionalidades Principais
+- **Site institucional** com informações sobre a plataforma
+- **Sistema de autenticação** (cadastro e login de usuários)
+- **Dashboard interativo** com gráficos e visualizações
+- **Filtros dinâmicos** para exploração personalizada dos dados
+- **Análises estratégicas** por nacionalidade, estado e sazonalidade
+
+---
+
+## 🏗️ Arquitetura da Aplicação
+
+### 🖥️ **Frontend**
+- **Site institucional** responsivo
+- **Interface de autenticação** (login/cadastro)
+- **Dashboard** com gráficos interativos
+- **Filtros avançados** para análise de dados
+
+### ⚙️ **Backend**
+- **API RESTful** para comunicação com frontend
+- **Sistema de autenticação** e autorização
+- **Endpoints** para consulta de dados turísticos
+- **Integração** com banco de dados MySQL
+
+### 📊 **Dashboard Features**
+- Visualização de **chegadas por nacionalidade**
+- Análise de **meios de transporte** utilizados
+- **Distribuição geográfica** por estado
+- **Tendências sazonais** e temporais
+- **Filtros interativos** por período e região
 
 ---
 
 ## 🗂️ Estrutura do Projeto
 
-O projeto **WiseTour** é dividido em quatro módulos principais:
-
-### 1. WiseTour (Aplicação Web - Frontend + Backend)
-
-- Site institucional
-- Área de cadastro e login de usuários
-- Dashboard com gráficos interativos
-- Filtros dinâmicos para exploração de dados
-
-🔗 Repositório: [WiseTour - Aplicação Web](https://github.com/WiseTour/wise-tour)
-
----
-
-### 2. ETL (Extração, Transformação e Carga de Dados)
-
-- Processos de extração dos datasets oficiais
-- Limpeza, transformação e carregamento dos dados no banco
-- Registro de logs por etapa (extração, transformação, finalização)
-
-🔗 Repositório: [WiseTour - ETL](https://github.com/WiseTour/etl)
-
----
-
-### 3. Database (Banco de Dados e Modelo MER)
-
-- Modelagem do banco de dados relacional
-- Scripts de criação de tabelas, constraints e relacionamentos
-- Scripts de inserção inicial de dados
-
-🔗 Repositório: [WiseTour - Database](https://github.com/WiseTour/database)
-
----
-
-### 4. Shell Scripts (Infraestrutura AWS)
-
-- Automatização da criação do ambiente em nuvem (AWS)
-- Configuração de servidor, banco de dados, backend e frontend
-- Scripts de deploy para facilitar a instalação completa
-
-🔗 Repositório: [WiseTour - Shell Scripts](https://github.com/WiseTour/shell-scripts)
-
----
-
-## 📊 Fontes Oficiais de Dados
-
-O projeto WiseTour utiliza dois conjuntos de dados públicos fundamentais para o turismo brasileiro:
-
-### 📌 1. Estimativas de Chegadas de Turistas Internacionais ao Brasil
-
-Este conjunto de dados contém informações detalhadas sobre o número de turistas internacionais que chegam ao Brasil, por país de origem, período e ponto de entrada.
-
-🔗 [Acessar o dataset oficial](https://www.gov.br/turismo/pt-br/assuntos/estudos-e-pesquisas/demanda-internacional/estimativas-de-chegadas-de-turistas-internacionais)
-
----
-
-### 📌 2. Estudo da Demanda Turística Internacional
-
-Documento técnico que analisa tendências de fluxo turístico, perfil dos visitantes, motivos de viagem e fatores que influenciam a vinda de turistas ao Brasil.
-
-🔗 [Acessar o estudo completo](https://www.gov.br/turismo/pt-br/assuntos/estudos-e-pesquisas/demanda-internacional/estudo-da-demanda-turistica-internacional)
-
----
-
-## 🚀 Tecnologias Utilizadas
-
-- **MySQL** (Banco de Dados)
-- **Node.js + Express** (Backend)
-- **Sequelize** (ORM)
-- **HTML + CSS + JavaScript** (Frontend)
-- **AWS EC2 e RDS** (Infraestrutura)
-- **Apache POI + Java** (Processos ETL)
-- **Shell Scripts** (Automação de infraestrutura)
-
----
-
-## 🛠️ Como Executar o Projeto
-
-1. Configure o ambiente AWS com os **[Shell Scripts](https://github.com/WiseTour/shell-scripts)**
-2. Ajuste o script de inserção do banco de dados, caso seja necessário **[Database](https://github.com/WiseTour/database)**
-3. Rode os processos de ETL para carregar os dados via **[ETL](https://github.com/WiseTour/etl)**
-4. Acesse a aplicação Web que já estará clonada em seu ambiente da AWS**[WiseTour](https://github.com/WiseTour/wise-tour)**
-
-> **⚠️ Importante:** o shell script prepara todo o ambiente, não será necessário clonar um repositório por vez.
-
----
-
-## 💡 Motivação
-
-Durante visita técnica à **Agaxtur Viagens**, com o executivo **Ricardo Braga**, foram identificadas dores recorrentes do setor:
-
-- **Alta concorrência entre agências**;
-- **Dificuldade na previsão de sazonalidade** de turistas;
-- **Dificuldade com a constante atualização** no mercado;
-
-WiseTour surge como uma resposta a esses desafios, utilizando dados reais e públicos para **direcionar ações de forma assertiva**, transformando **informações em inteligência de mercado**.
+```
+├── auth/                 -> Sistema de autenticação
+├── common/               -> Recursos compartilhados
+├── internal/             -> Módulos internos
+├── node_modules/         -> Dependências do Node.js
+├── private/              -> Dashboard
+├── public/               -> Site Institucional
+├── src/                  -> Back-end
+├── .env                  -> Variáveis de ambiente
+├── .env.dev              -> Configurações de desenvolvimento
+├── .gitignore            -> Arquivos ignorados pelo Git
+├── app.js                -> Arquivo principal da aplicação
+├── cacheService.js       -> Serviço de cache
+├── LICENSE               -> Licença do projeto
+├── package-lock.json     -> Lock das dependências
+├── package.json          -> Configurações e dependências
+└── README.md             -> Documentação do projeto
+```
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
-| Camada                            | Tecnologias                                                                                   |
-| --------------------------------- | --------------------------------------------------------------------------------------------- |
-| **Frontend**                      | HTML, CSS, JavaScript                                                                         |
-| **Backend**                       | Java + Apache POI (processo ETL) + Node e Sequelize (Dashboard)                               |
-| **Banco de Dados**                | MySQL (estrutura relacional e consultas analíticas)                                           |
-| **Design e Prototipação**         | Figma, Miro                                                                                   |
-| **Infraestrutura em Nuvem**       | AWS EC2 (hospedagem da aplicação), AWS S3 (armazenamento das bases de dados), Docker na AWS   |
-| **Versionamento e Gerenciamento** | GitHub, Planner                                                                               |
+### Frontend
+| Tecnologia | Finalidade |
+|------------|------------|
+| **HTML** | Estrutura das páginas |
+| **CSS** | Estilização e responsividade |
+| **JavaScript** | Interatividade e consumo da API |
+| **Chart.js** | Gráficos e visualizações |
 
-> O processo de ETL (Extração, Transformação e Carga) foi realizado com o uso da biblioteca Apache POI, permitindo a leitura e conversão de arquivos de dados governamentais em estruturas úteis para análise e exibição.  
-> Toda a estrutura foi implementada em nuvem, utilizando **serviços da AWS**, com destaque para:
-> - **EC2**: hospedagem da aplicação;
-> - **S3**: armazenamento dos arquivos e bases utilizadas no processo de ETL com Java;
-> - **Docker**: utilizado para containerizar a aplicação, garantindo portabilidade, escalabilidade e facilidade de gerenciamento no ambiente da AWS.
+### Backend
+| Tecnologia | Finalidade |
+|------------|------------|
+| **Node.js** | Runtime JavaScript |
+| **Express.js** | Framework web |
+| **Sequelize** | ORM para MySQL |
+| **cors** | Política de CORS |
 
----
-
-## 🔍 Funcionalidades
-
-- 📊 Dashboard com visualização de **tendências por nacionalidade e estado**;
-- 🛫 Análise de **meios de transporte mais utilizados por turistas**;
-- 🗓️ Previsão de sazonalidade para ações promocionais;
-- 📦 Criação de pacotes turísticos com **base nos dados analisados**.
+### Banco de Dados
+| Tecnologia | Finalidade |
+|------------|------------|
+| **MySQL** | Banco de dados relacional |
+| **AWS RDS** | Hospedagem do banco em nuvem |
 
 ---
 
-## 🧪 Metodologia
+## 🚀 Configuração e Instalação
 
-O desenvolvimento foi conduzido com base em metodologias ágeis, organizadas em **Sprints quinzenais**, com entregas iterativas que envolveram:
+### 1. **Configuração do Ambiente**
 
-1. Levantamento de requisitos com base em **entrevista com stakeholders reais**;
-2. Pesquisa e coleta de **bases de dados públicas** (ex.: IBGE, Ministério do Turismo);
-3. Prototipação e validação de interfaces com ferramentas como **Figma**;
-4. Desenvolvimento orientado a dados com foco em **análises estratégicas**;
-5. Testes de usabilidade e consistência com possíveis usuários do setor.
+O projeto utiliza arquivos `.env` e `.env.dev` para configuração das variáveis de ambiente necessárias para conexão com o banco MySQL via Sequelize.
+
+### 2. **Instalação das Dependências**
+
+```bash
+# Clone o repositório
+git clone https://github.com/WiseTour/wise-tour.git
+cd wise-tour
+
+# Instale as dependências
+npm install
+
+# Inicie a aplicação
+node app.js
+```
+
+### 3. **Arquivos de Configuração**
+
+- **`.env`** - Variáveis de ambiente para produção
+- **`.env.dev`** - Configurações para desenvolvimento
+- **`app.js`** - Arquivo principal que inicia a aplicação
+---
+
+## 📊 Funcionalidades do Dashboard
+
+### 📈 **Análises Disponíveis**
+
+#### 🌍 **Por Nacionalidade**
+- Países que mais enviam turistas
+- Evolução temporal por nacionalidade
+
+#### 🗺️ **Por Estado/Região**
+- Distribuição geográfica dos turistas
+- Estados mais visitados por nacionalidade
+
+#### ✈️ **Por Meio de Transporte**
+- Aéreo vs. Terrestre vs. Marítimo
+- Preferências por nacionalidade
+
+#### 📅 **Análise Temporal**
+- Sazonalidade mensal e anual
+- Picos e vales de visitação
+
+### 🔍 **Filtros**
+- **Período:** Seleção de datas específicas
+- **Nacionalidade:** Filtro por país de origem
+- **Estado:** Foco em regiões específicas
 
 ---
 
-## 📈 Benefícios da Solução
+## 🔐 Sistema de Autenticação
 
-- 🎯 **Precisão na segmentação de campanhas** de marketing internacional;
-- 🧠 **Decisões orientadas por dados reais**, reduzindo riscos;
-- 🧭 **Antecipação de tendências e sazonalidades** de mercado;
-- ⚙️ Otimização da criação e oferta de **pacotes turísticos personalizados**;
-- 📊 Melhoria contínua por meio de indicadores analíticos.
+A aplicação possui sistema de **cadastro e login** de usuários para acesso ao dashboard.
+
+---
+
+## 🌐 API Backend
+
+O backend foi desenvolvido com **Node.js**, **Express.js** e **Sequelize** para integração com o banco MySQL, fornecendo dados para o dashboard através de APIs RESTful.
+
+---
+
+## 🎨 Interface e Experiência
+
+### 🏠 **Site Institucional**
+- **Landing page** atrativa e informativa
+- **Seções:** Sobre, Funcionalidades, Contato
+- **Design responsivo** para todos os dispositivos
+- **Call-to-action** para cadastro
+
+### 📊 **Dashboard**
+- **Interface intuitiva** e limpa
+- **Gráficos interativos** com hover e zoom
+- **Filtros em tempo real** sem reload da página
+- **Exportação** de dados e gráficos
+- **Temas** claro e escuro
+
+### 📱 **Responsividade - Site Institucional**
+- **Mobile-first** design
+- **Adaptação** para tablets e desktops
+- **Navegação touch-friendly**
+- **Performance otimizada**
+
+---
+
+## 🌐 Contexto no Projeto WiseTour
+
+Esta aplicação web é o **frontend principal** do ecossistema WiseTour, integrando-se com:
+
+### 📦 **Outros Módulos**
+
+| Módulo | Integração | Repositório |
+|--------|------------|-------------|
+| **ETL** | Consome dados processados | [etl](https://github.com/WiseTour/etl) |
+| **Database** | Conecta via Sequelize ORM | [database](https://github.com/WiseTour/database) |
+| **Shell Scripts** | Deploy automatizado | [shell-scripts](https://github.com/WiseTour/shell-scripts) |
+
+### 🔄 **Fluxo de Dados**
+```
+Dados Oficiais → ETL → MySQL → API Backend → Frontend Dashboard
+```
+
+### 🎯 **Usuários-Alvo**
+- **Agências de turismo** internacional
+- **Gestores** de marketing turístico
+- **Analistas** de mercado
+- **Profissionais** do setor de turismo
+
+---
+
+## 🚀 Deploy e Hospedagem
+
+### ☁️ **AWS Infrastructure**
+- **EC2:** Hospedagem da aplicação
+- **RDS:** Banco de dados MySQL
+- **S3:** Assets estáticos (opcional)
+- **CloudFront:** CDN (opcional)
+
+### 🐳 **Docker (Opcional)**
+```bash
+# Build da imagem
+docker build -t wisetour-web .
+
+# Executar container
+docker run -p 3000:3000 --env-file .env wisetour-web
+```
+
+### 🔧 **Scripts de Deploy**
+O deploy é automatizado via **shell scripts** do projeto:
+```bash
+# Execute via módulo shell-scripts
+./deploy-wisetour-web.sh
+```
+
+---
+
+## 💡 Benefícios para Agências
+
+### 📈 **Vantagens Competitivas**
+- **Decisões baseadas em dados** oficiais
+- **Antecipação de tendências** sazonais
+- **Segmentação precisa** de campanhas
+- **Otimização** de pacotes turísticos
+
+### 🎯 **Casos de Uso**
+- **Planejamento** de campanhas por nacionalidade
+- **Identificação** de períodos de alta demanda
+- **Análise** de concorrência regional
+- **Criação** de ofertas personalizadas
 
 ---
 
 ## 📄 Licença
 
-Este projeto foi desenvolvido exclusivamente para fins acadêmicos, como parte do **Projeto Integrador** da SPTECH School.  
+Projeto acadêmico desenvolvido para o **Projeto Integrador da SPTECH School**.
 Todos os direitos reservados aos autores e à instituição.
 
-> **WiseTour — Transformando dados em decisões inteligentes no turismo internacional.**
-
+> **WiseTour Web — Interface inteligente para análise estratégica do turismo internacional.**
