@@ -32,7 +32,7 @@ function aplicarPreferenciasDoUsuario() {
     if (ativo === "nao" || ativo === undefined) {
       el.style.display = "none";
     } else {
-      el.style.display = "block"; // ou "flex" se preferir
+      el.style.display = "block";
       botoesVisiveis++;
     }
   });
@@ -48,7 +48,7 @@ function aplicarPreferenciasDoUsuario() {
 }
 
 function aplicarPermissaoUsuario() {
-  const idElementoAdmin = "btnAdmin"; // Altere conforme o ID real no HTML
+  const idElementoAdmin = "btnAdmin";
   const el = document.getElementById(idElementoAdmin);
 
   if (el) {
@@ -61,7 +61,7 @@ function aplicarPermissaoUsuario() {
 
     // Se for admin, mostra e aplica a classe ativado
     if (usuario && usuario.permissao === "admin") {
-      el.style.display = "block"; // ou "flex", conforme necessário
+      el.style.display = "block";
       el.classList.add("ativado");
     }
   }
@@ -69,7 +69,6 @@ function aplicarPermissaoUsuario() {
 
 document.addEventListener("DOMContentLoaded", () => {
   aplicarPreferenciasDoUsuario();
-  // aplicarPermissaoUsuario();
   const btnNovoUsuario = document.getElementById("btn-novo-usuario");
   const formCadastro = document.getElementById("form-cadastro");
   const btnCancelar = document.getElementById("btn-cancelar");

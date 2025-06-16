@@ -8,13 +8,12 @@ async function buscarTelasUsuario(req, res) {
 
   try {
     // Busca as preferências do usuário incluindo as telas relacionadas
-    // Usando o modelo correto (preferenciaVisualizacaoDashboard) e os aliases definidos
     const preferencias = await preferenciaVisualizacaoDashboard.findAll({
       where: { fk_usuario: id_usuario },
       include: [
         {
           model: telaDashboard,
-          as: 'tela_dashboard', // Alias definido no relacionamento
+          as: 'tela_dashboard',
           required: false
         }
       ]
@@ -26,8 +25,8 @@ async function buscarTelasUsuario(req, res) {
 
     // Extrai apenas as telas das preferências
     const telas = preferencias
-      .map(pref => pref.tela_dashboard) // Usando o alias correto
-      .filter(tela => tela !== null); // Remove telas null
+      .map(pref => pref.tela_dashboard)
+      .filter(tela => tela !== null);
 
     res.json(telas);
   } catch (error) {
@@ -43,7 +42,7 @@ async function buscarTodasTelas(req, res) {
       include: [
         {
           model: preferenciaVisualizacaoDashboard,
-          as: 'preferencias_visualizacao_dashboard', // Alias definido no relacionamento
+          as: 'preferencias_visualizacao_dashboard',
           required: false
         }
       ]
@@ -67,10 +66,10 @@ async function buscarPreferenciasTelaUsuario(req, res) {
         {
           model: telaDashboard,
           as: 'tela_dashboard',
-          required: true // INNER JOIN para garantir que só retorne preferências com telas válidas
+          required: true
         }
       ],
-      order: [['id_preferencia_visualizacao_dashboard', 'ASC']] // Ordena por ID
+      order: [['id_preferencia_visualizacao_dashboard', 'ASC']]
     });
 
     if (!preferencias || preferencias.length === 0) {
@@ -98,13 +97,11 @@ async function criarPreferenciaTela(req, res) {
   }
 
   try {
-    // Verifica se a tela existe
     const telaExiste = await telaDashboard.findByPk(id_tela_dashboard);
     if (!telaExiste) {
       return res.status(404).json({ mensagem: "Tela não encontrada" });
     }
 
-    // Verifica se já existe essa preferência para o usuário
     const preferenciaExistente = await preferenciaVisualizacaoDashboard.findOne({
       where: {
         fk_usuario: id_usuario,
@@ -125,7 +122,6 @@ async function criarPreferenciaTela(req, res) {
       ativo: ativo !== undefined ? ativo : true
     });
 
-    // Busca a preferência criada com a tela incluída
     const preferenciaCompleta = await preferenciaVisualizacaoDashboard.findByPk(
       novaPreferencia.id_preferencia_visualizacao_dashboard,
       {

@@ -1,7 +1,7 @@
 const coresUsadas = {
   amarelo: "#F8CA26",
   marrom: "#735900",
-  marromBeige: "#C49F1B", // Renomeado para consistência
+  marromBeige: "#C49F1B",
   amareloClaro: "#FFE483",
   avermelhado: "#A66D44",
   cimento: "#87826E",
@@ -9,7 +9,7 @@ const coresUsadas = {
   cinza: "#E0E0E0",
   marromForte: "#A98400",
   esverdeado: "#6B8E23",
-  begeMedio: "#D9C7A7", // Adicionado para consistência com o uso no gráfico
+  begeMedio: "#D9C7A7",
 };
 
 const opcoesPadrao = {
@@ -34,18 +34,14 @@ const estiloDoTextoDoGrafico = {
   },
 };
 
-// Referências aos elementos de filtro (certifique-se de que esses IDs existem no seu HTML)
 const selectMes = document.getElementById("mes");
 const selectAno = document.getElementById("ano");
 
-// Variáveis para armazenar as instâncias dos gráficos
-let myChartInstance; // Para o gráfico de Principais Países de Origem
-let presencaTuristaChartInstance; // Para o gráfico de Presença de Turistas por UF
-let chegadasTuristasChartInstance; // Para o gráfico de Chegadas
+let myChartInstance;
+let presencaTuristaChartInstance;
+let chegadasTuristasChartInstance;
 
-// Função assíncrona para carregar e atualizar todos os dados da dashboard principal
 async function carregarDadosDashboard() {
-  // Mostrar loading e esconder o dashboard principal
   mostrarLoading();
 
   const mes = selectMes ? selectMes.value : "";
@@ -56,16 +52,11 @@ async function carregarDadosDashboard() {
   if (ano) queryParams.append("ano", ano);
 
   const queryString = queryParams.toString();
-  const basePath = "/grafico"; // Base path para suas APIs
+  const basePath = "/grafico";
 
-  // Array para controlar o carregamento de todos os gráficos
   const carregamentos = [];
 
-  // ----------------------------------------------------
   // 1. Gráfico PRINCIPAIS PAÍSES DE ORIGEM
-  // Rota esperada no backend: /grafico/paises-origem
-  // Exemplo de retorno: [{ pais: 'Argentina', percentual: 20 }, ...]
-  // ----------------------------------------------------
   const carregarPaisesOrigem = fetch(`${basePath}/paises-origem?${queryString}`)
     .then(async (res) => {
       const data = await res.json();
@@ -138,11 +129,7 @@ async function carregarDadosDashboard() {
 
   carregamentos.push(carregarPaisesOrigem);
 
-  // ----------------------------------------------------
   // 2. Gráfico PRESENÇA DE TURISTAS POR UF
-  // Rota esperada no backend: /grafico/presenca-uf
-  // Exemplo de retorno: [{ uf: 'SP', quantidade: 5000 }, ...]
-  // ----------------------------------------------------
   const carregarPresencaUF = fetch(`${basePath}/presenca-uf?${queryString}`)
     .then(async (res) => {
       const data = await res.json();
@@ -214,11 +201,7 @@ async function carregarDadosDashboard() {
 
   carregamentos.push(carregarPresencaUF);
 
-  // ----------------------------------------------------
   // 3. Gráfico de CHEGADAS
-  // Rota esperada no backend: /grafico/chegadas (anteriormente /grafico/dados)
-  // Exemplo de retorno: [{ mes_nome: 'Janeiro', chegadas: 1000 }, ...]
-  // ----------------------------------------------------
   const carregarChegadas = fetch(`${basePath}/chegadas?${queryString}`)
     .then(async (res) => {
       const data = await res.json();
@@ -279,9 +262,7 @@ async function carregarDadosDashboard() {
 
   carregamentos.push(carregarChegadas);
 
-  // ----------------------------------------------------
   // 4. KPIs Comparativos
-  // ----------------------------------------------------
   const carregarKPIs = fetch(`${basePath}/chegadas-comparativas?${queryString}`)
     .then(async (res) => {
       if (!res.ok) {
@@ -310,16 +291,13 @@ async function carregarDadosDashboard() {
 
   carregamentos.push(carregarKPIs);
 
-  // Aguardar todos os carregamentos terminarem
   try {
     await Promise.all(carregamentos);
-    // Todos os dados foram carregados, esconder loading e mostrar dashboard
     setTimeout(() => {
       esconderLoading();
     }, 5000);
   } catch (error) {
     console.error("Erro durante o carregamento dos dados:", error);
-    // Mesmo com erro, esconder o loading
     setTimeout(() => {
       esconderLoading();
     }, 5000);
@@ -361,12 +339,11 @@ async function carregarDadosDoCache() {
   // Mostrar loading e esconder o dashboard principal
   mostrarLoading();
 
-  const basePath = "/api"; // Base path para as APIs de cache
+  const basePath = "/api";
 
   try {
-    // ----------------------------------------------------
-    // 1. Buscar dados principais do cache
-    // ----------------------------------------------------
+
+    // Buscar dados principais do cache
     const resCache = await fetch(`${basePath}/cache-data`);
     if (!resCache.ok) {
       console.warn(
@@ -394,9 +371,8 @@ async function carregarDadosDoCache() {
     const { ultimoPeriodo } = dataCache;
     console.log("Último período encontrado:", ultimoPeriodo);
 
-    // ----------------------------------------------------
-    // 3. Atualizar os selects com os valores do cache
-    // ----------------------------------------------------
+
+    // Atualizar os selects com os valores do cache
     const selectMesElement =
       document.getElementById("selectMes") ||
       document.getElementById("mes") ||
@@ -422,9 +398,7 @@ async function carregarDadosDoCache() {
       definirValorSelect(selectAnoElement, ultimoPeriodo.ano, "ano");
     }
 
-    // ----------------------------------------------------
-    // 4. Carregar todos os gráficos do cache em paralelo
-    // ----------------------------------------------------
+    // Carregar todos os gráficos do cache em paralelo
     const carregamentosCache = [
       carregarGraficoPaisesOrigemCache(ultimoPeriodo),
       carregarGraficoPresencaUFCache(),
@@ -432,19 +406,14 @@ async function carregarDadosDoCache() {
       carregarKPIsComparativosCache(),
     ];
 
-    // Aguardar todos os carregamentos do cache terminarem
     await Promise.allSettled(carregamentosCache);
 
     console.log("Dashboard carregada com dados do cache");
-
-    // Esconder loading após todos os dados serem carregados
     setTimeout(() => {
       esconderLoading();
     }, 5000);
   } catch (err) {
     console.error("Erro geral ao carregar dados do cache:", err);
-    // Em caso de erro, carregar dados normalmente
-    // O loading será controlado pela função carregarDadosDashboard
     await carregarDadosDashboard();
   }
 }
@@ -452,7 +421,6 @@ async function carregarDadosDoCache() {
 // Função auxiliar para definir valor do select (caso não exista)
 function definirValorSelect(selectElement, valor, tipo) {
   try {
-    // Procurar pela option com o valor correspondente
     const option = Array.from(selectElement.options).find(
       (opt) => opt.value === valor.toString()
     );
@@ -469,7 +437,6 @@ function definirValorSelect(selectElement, valor, tipo) {
 }
 
 // Funções de carregamento de cache individuais (exemplo de implementação)
-// Adapte conforme suas necessidades específicas
 
 // Função auxiliar para definir valor do select corretamente
 function definirValorSelect(selectElement, valor, tipoSelect) {
@@ -505,7 +472,6 @@ function definirValorSelect(selectElement, valor, tipoSelect) {
     return true;
   } else {
     console.warn(`Opção de ${tipoSelect} não encontrada:`, valorString);
-    // Listar todas as opções disponíveis para debug
     const opcoesDisponiveis = Array.from(selectElement.options).map(
       (opt) => opt.value
     );
@@ -519,16 +485,15 @@ async function carregarGraficoPaisesOrigemCache(ultimoPeriodo) {
   try {
     console.log("Carregando gráfico de países de origem do cache...");
 
-    // Primeiro tentar buscar os dados específicos do cache
+    // Tenta buscar os dados específicos do cache
     let dadosPaises;
 
-    // Tentar diferentes estruturas de dados que podem vir do cache
+    // Tenta diferentes estruturas de dados que podem vir do cache
     if (ultimoPeriodo && ultimoPeriodo.paisesOrigem) {
       dadosPaises = ultimoPeriodo.paisesOrigem;
     } else if (ultimoPeriodo && ultimoPeriodo.paises) {
       dadosPaises = ultimoPeriodo.paises;
     } else {
-      // Se não estiver no ultimoPeriodo, tentar buscar diretamente da API
       const res = await fetch("/api/paises-origem-cached");
       if (res.ok) {
         const data = await res.json();
@@ -851,7 +816,6 @@ function definirKPIsPadrao() {
 }
 
 function aplicarPreferenciasDoUsuario() {
-  // IDs dos elementos relacionados às preferências
   const mapeamentoIds = {
     panoramaGeral: "btnPanoramaGeral",
     perfilTurista: "btnPerfilTurista",
@@ -924,8 +888,7 @@ document
   .getElementById("funil")
   .addEventListener("click", carregarDadosDashboard);
 
-// Chama a função de carregamento ao carregar a página.
-// Prioriza o carregamento do cache para melhor performance inicial
+// Chama a função de carregamento ao carregar a página
 document.addEventListener("DOMContentLoaded", () => {
   aplicarPreferenciasDoUsuario();
   aplicarPermissaoUsuario();
@@ -1020,13 +983,12 @@ function ordenarBarrasCrescentePresencaTuristicaUF() {
 
   const data = presencaTuristaChartInstance.data;
 
-  // Verifica se há datasets e labels
   if (!data.datasets || !data.datasets[0] || !data.labels) {
     console.error("Dados do gráfico não encontrados");
     return;
   }
 
-  const dataset = data.datasets[0]; // Assume o primeiro dataset
+  const dataset = data.datasets[0];
   const labels = data.labels;
   const values = dataset.data;
 

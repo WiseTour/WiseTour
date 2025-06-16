@@ -2,7 +2,6 @@ const { configuracaoSlack, tipoNotificacaoDados, etapa, usuario } = require("../
 
 const buscarConfiguracaoUsuario = async (req, res) => {
   try {
-    // ✅ Capturando o parâmetro do query string
     const usuarioId = req.query.id_usuario;
     
     if (!usuarioId) {
@@ -15,17 +14,17 @@ const buscarConfiguracaoUsuario = async (req, res) => {
       include: [
         {
           model: tipoNotificacaoDados,
-          as: 'tipos_notificacao', // ✅ Usando o alias correto
+          as: 'tipos_notificacao',
           include: [
             {
               model: etapa,
-              as: 'etapa' // ✅ Usando o alias definido no relacionamento
+              as: 'etapa'
             }
           ]
         },
         {
-          model: usuario, // ✅ Agora está definido
-          as: 'usuario' // ✅ Usando o alias correto
+          model: usuario,
+          as: 'usuario'
         }
       ],
       where: { fk_usuario: usuarioId }
@@ -57,7 +56,6 @@ async function atualizarConfiguracaoSlack(req, res) {
   }
 
   try {
-    // Usar o nome importado (camelCase minúsculo)
     await configuracaoSlack.update(
       {
         webhook_canal_padrao: configuracao_slack.canal_padrao,
@@ -70,18 +68,15 @@ async function atualizarConfiguracaoSlack(req, res) {
       }
     );
 
-    // Usar o nome importado (camelCase minúsculo)
     await tipoNotificacaoDados.destroy({
       where: {
         fk_configuracao_slack: configuracao_slack.id_configuracao_slack,
       },
     });
 
-    // Cria os novos tipos de notificação
     for (const notificacao of tipos_notificacoes) {
       const { fk_etapa, fk_configuracao_slack, fk_usuario } = notificacao;
 
-      // Usar o nome importado (camelCase minúsculo)
       await tipoNotificacaoDados.create({
         fk_etapa,
         fk_configuracao_slack,

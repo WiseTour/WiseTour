@@ -1,10 +1,6 @@
-// src/controllers/graficoController.js
-
 const { Op, fn, col, literal, QueryTypes } = require("sequelize");
 const { perfilEstimadoTuristas, unidadeFederativaBrasil, destino, pais } = require('../models/index');
 const { sequelize } = require('../models/index');
-
-//modificações
 
 const construirWhereClause = (req) => {
   const { mes, ano, pais } = req.query;
@@ -16,14 +12,12 @@ const construirWhereClause = (req) => {
   if (ano) {
     where.ano = parseInt(ano, 10);
   }
-  // Se 'pais' for o ID do país, usar como fk_pais_origem
   if (pais) {
     where.fk_pais_origem = parseInt(pais, 10);
   }
   return where;
 };
 
-// Mapeamento de números de mês para nomes
 const nomesDosMeses = [
   "Janeiro",
   "Fevereiro",
@@ -39,8 +33,6 @@ const nomesDosMeses = [
   "Dezembro",
 ];
 
-// --- FUNÇÃO AUXILIAR PARA GERAR CORES ALEATÓRIAS (NECESSÁRIA AQUI) ---
-// Esta função é usada para gerar as cores das linhas do gráfico de nacionalidade.
 function getRandomColor() {
   const letters = "0123456789ABCDEF";
   let color = "#";
@@ -49,8 +41,6 @@ function getRandomColor() {
   }
   return color;
 }
-
-// --- FUNÇÕES DE KPI PARA SAZONALIDADE ---
 
 exports.buscarDadosParaDashboard = async (req, res) => {
   try {
@@ -147,7 +137,6 @@ exports.listarTopEstadosVisitadosSazonalidade = async (req, res) => {
   try {
     const { mes, ano, pais } = req.query;
 
-    // Construindo a cláusula WHERE dinamicamente
     let whereConditions = `WHERE 1=1`;
     const replacements = {};
 
@@ -185,7 +174,6 @@ exports.listarTopEstadosVisitadosSazonalidade = async (req, res) => {
       LIMIT 3;
     `;
 
-    // CORREÇÃO: Usar QueryTypes.SELECT em vez de sequelize.QueryTypes.SELECT
     const resultados = await sequelize.query(querySQL, {
       replacements: replacements,
       type: QueryTypes.SELECT,
@@ -200,10 +188,7 @@ exports.listarTopEstadosVisitadosSazonalidade = async (req, res) => {
   }
 };
 
-// ====================================================================================
 // Funções para a dashboard do Perfil do Turista (perfilturista.js)
-// ====================================================================================
-
 exports.listarMotivos = async (req, res) => {
   try {
     const where = construirWhereClause(req);
@@ -471,53 +456,49 @@ exports.calcularGastoMedio = async (req, res) => {
   }
 };
 
-// 1. Gráfico PRINCIPAIS PAÍSES DE ORIGEM
+// Gráfico PRINCIPAIS PAÍSES DE ORIGEM
 exports.listarPrincipaisPaisesOrigem = async (req, res) => {
   try {
-    const { mes, ano } = req.query; // Pega os filtros como strings do frontend
+    const { mes, ano } = req.query;
 
-    // --- LINHAS DE DEBUG INÍCIO ---
     console.log("--- DEBUG: listarPrincipaisPaisesOrigem ---");
     console.log("req.query recebido:", req.query);
     console.log("Valor de 'mes' (string):", mes);
     console.log("Valor de 'ano' (string):", ano);
-    // --- LINHAS DE DEBUG FIM ---
 
-    const where = {}; // Inicializa o objeto where vazio
+    const where = {};
 
-    // Adiciona a condição de filtro para 'mes' APENAS se um valor válido foi fornecido
     if (mes && !isNaN(parseInt(mes, 10))) {
       where.mes = parseInt(mes, 10);
-      console.log("Parsed 'mes':", where.mes); // DEBUG: Valor inteiro do mês
+      console.log("Parsed 'mes':", where.mes);
     } else {
       console.log(
         "'mes' não é um número válido ou está vazio. Não será aplicado filtro de mês."
       );
     }
 
-    // Adiciona a condição de filtro para 'ano' APENAS se um valor válido foi fornecido
     if (ano && !isNaN(parseInt(ano, 10))) {
       where.ano = parseInt(ano, 10);
-      console.log("Parsed 'ano':", where.ano); // DEBUG: Valor inteiro do ano
+      console.log("Parsed 'ano':", where.ano);
     } else {
       console.log(
         "'ano' não é um número válido ou está vazio. Não será aplicado filtro de ano."
       );
     }
 
-    console.log("Objeto 'where' final para a query:", where); // DEBUG: Objeto where antes da query Sequelize
+    console.log("Objeto 'where' final para a query:", where);
 
     const resultados = await perfilEstimadoTuristas.findAll({
       attributes: [[fn("SUM", col("quantidade_turistas")), "total_turistas"]],
       include: [
         {
           model: pais,
-          as: 'pais', // Usando o alias correto definido nos relacionamentos
+          as: 'pais',
           attributes: ["pais"],
           required: true,
         },
       ],
-      where, // Aplica as condições construídas acima (ou permanece {} para todos os dados)
+      where,
       group: ["pais.pais", "pais.id_pais"],
       order: [[literal("total_turistas"), "DESC"]],
       limit: 5,
@@ -549,11 +530,11 @@ exports.listarPrincipaisPaisesOrigem = async (req, res) => {
     if (dadosFormatados.length === 0) {
       console.log(
         "Nenhum dado encontrado para os filtros aplicados. Retornando array vazio."
-      ); // DEBUG
+      );
       return res.status(200).json([]);
     }
 
-    console.log("Dados formatados retornados:", dadosFormatados); // DEBUG
+    console.log("Dados formatados retornados:", dadosFormatados);
     res.json(dadosFormatados);
   } catch (error) {
     console.error("Erro ao buscar principais países de origem:", error);
@@ -564,35 +545,32 @@ exports.listarPrincipaisPaisesOrigem = async (req, res) => {
 };
 
 
-// 2. Gráfico PRESENÇA DE TURISTAS POR UNIDADE FEDERATIVA
+// Gráfico PRESENÇA DE TURISTAS POR UNIDADE FEDERATIVA
 exports.listarPresencaTuristasUF = async (req, res) => {
   try {
     const where = construirWhereClause(req);
 
     const resultados = await perfilEstimadoTuristas.findAll({
       attributes: [
-        [fn('SUM', col('quantidade_turistas')), 'quantidade'] // Renomeado para 'quantidade' para ser mais direto e consistente com o frontend
+        [fn('SUM', col('quantidade_turistas')), 'quantidade']
       ],
       include: [{
         model: unidadeFederativaBrasil,
-        as: 'unidade_federativa_brasil', // Usando o alias correto definido nos relacionamentos
-        // ATENÇÃO: Mudança aqui para incluir a sigla
-        attributes: ['sigla'], // Inclui APENAS a sigla da UF
+        as: 'unidade_federativa_brasil',
+        attributes: ['sigla'],
         required: true
       }],
       where,
       group: ['unidade_federativa_brasil.sigla'],
-      order: [[literal('quantidade'), 'DESC']], // Ordena pela quantidade de turistas
-      limit: 5 // Limite mantido em 5, como estava no seu código
+      order: [[literal('quantidade'), 'DESC']],
+      limit: 5
     });
 
     const dadosFormatados = resultados.map(item => ({
-      // ATENÇÃO: Acessa a sigla, não o nome completo
-      uf: item.unidade_federativa_brasil.sigla, // Acessa a sigla da UF
-      quantidade: parseFloat(item.dataValues.quantidade) // Retorna a quantidade bruta
+      uf: item.unidade_federativa_brasil.sigla,
+      quantidade: parseFloat(item.dataValues.quantidade)
     }));
 
-    // Retorna um array vazio se não houver dados
     if (dadosFormatados.length === 0) {
       return res.status(200).json([]);
     }
@@ -604,10 +582,10 @@ exports.listarPresencaTuristasUF = async (req, res) => {
   }
 };
 
-// 3. Gráfico de CHEGADAS DE TURISTAS ESTRANGEIROS (por mês)
+// Gráfico de CHEGADAS DE TURISTAS ESTRANGEIROS
 exports.listarChegadasTuristasEstrangeiros = async (req, res) => {
   try {
-    const { ano, pais } = req.query; // Para este gráfico, 'mes' não é usado na query, mas 'ano' e 'pais' são importantes.
+    const { ano, pais } = req.query;
     const where = {};
     if (ano) {
       where.ano = parseInt(ano, 10);
@@ -620,10 +598,9 @@ exports.listarChegadasTuristasEstrangeiros = async (req, res) => {
       attributes: ["mes", [fn("SUM", col("quantidade_turistas")), "chegadas"]],
       where,
       group: ["mes"],
-      order: [["mes", "ASC"]], // Garante a ordem correta dos meses
+      order: [["mes", "ASC"]],
     });
 
-    // Mapear os resultados para incluir os nomes dos meses e garantir todos os meses
     const dadosCompletosPorMes = nomesDosMeses.map((nomeMes, index) => {
       const mesNumero = index + 1;
       const encontrado = resultados.find((item) => item.mes === mesNumero);
@@ -644,12 +621,11 @@ exports.listarChegadasTuristasEstrangeiros = async (req, res) => {
   }
 };
 
-// 4. KPIs de Chegadas Comparativas (Ano Atual vs. Ano Anterior)
+// KPIs de Chegadas Comparativas (Ano Atual vs. Ano Anterior)
 exports.calcularChegadasComparativas = async (req, res) => {
   try {
     let anoAtualFiltro = parseInt(req.query.ano, 10);
     if (!anoAtualFiltro || isNaN(anoAtualFiltro)) {
-      // Se nenhum ano for fornecido no filtro, use o ano atual como padrão (ex: 2024)
       anoAtualFiltro = new Date().getFullYear();
     }
     const anoAnteriorFiltro = anoAtualFiltro - 1;
@@ -658,7 +634,6 @@ exports.calcularChegadasComparativas = async (req, res) => {
       : undefined;
     const mesFiltro = req.query.mes ? parseInt(req.query.mes, 10) : undefined;
 
-    // Condição base para as consultas
     const baseWhere = {};
     if (paisFiltro) {
       baseWhere.fk_pais_origem = paisFiltro;
@@ -667,7 +642,6 @@ exports.calcularChegadasComparativas = async (req, res) => {
       baseWhere.mes = mesFiltro;
     }
 
-    // Total de chegadas para o ano atual
     const resultAnoAtual = await perfilEstimadoTuristas.findOne({
       attributes: [[fn("SUM", col("quantidade_turistas")), "total_chegadas"]],
       where: {
@@ -678,7 +652,6 @@ exports.calcularChegadasComparativas = async (req, res) => {
     });
     const chegadasAnoAtual = parseFloat(resultAnoAtual.total_chegadas || 0);
 
-    // Total de chegadas para o ano anterior
     const resultAnoAnterior = await perfilEstimadoTuristas.findOne({
       attributes: [[fn("SUM", col("quantidade_turistas")), "total_chegadas"]],
       where: {
@@ -699,14 +672,14 @@ exports.calcularChegadasComparativas = async (req, res) => {
           100
         ).toFixed(2) + "%";
     } else if (chegadasAnoAtual > 0) {
-      porcentagemComparativa = "+100.00%"; // Se o ano anterior tinha 0 e o atual tem > 0
+      porcentagemComparativa = "+100.00%";
     }
 
     res.json({
       anoAnterior: anoAnteriorFiltro,
-      chegadasAnoAnterior: chegadasAnoAnterior.toLocaleString("pt-BR"), // Formatar para exibição
+      chegadasAnoAnterior: chegadasAnoAnterior.toLocaleString("pt-BR"),
       anoAtual: anoAtualFiltro,
-      chegadasAnoAtual: chegadasAnoAtual.toLocaleString("pt-BR"), // Formatar para exibição
+      chegadasAnoAtual: chegadasAnoAtual.toLocaleString("pt-BR"),
       porcentagemComparativa: porcentagemComparativa,
     });
   } catch (error) {
@@ -717,7 +690,7 @@ exports.calcularChegadasComparativas = async (req, res) => {
   }
 };
 
-// --- NOVA FUNÇÃO PARA PICO DE VISITAS POR NACIONALIDADE ---
+// PICO DE VISITAS POR NACIONALIDADE
 exports.listarPicoVisitasSazonalidade = async (req, res) => {
   try {
     const { ano, pais } = req.query;
@@ -732,7 +705,7 @@ exports.listarPicoVisitasSazonalidade = async (req, res) => {
 
     const resultados = await perfilEstimadoTuristas.findAll({
       attributes: ["mes", [fn("SUM", col("quantidade_turistas")), "chegadas"]],
-      where, // Aplica os filtros condicionalmente
+      where,
       group: ["mes"],
       order: [["mes", "ASC"]],
     });
@@ -760,7 +733,6 @@ exports.listarPicoVisitasSazonalidade = async (req, res) => {
   }
 };
 
-// controllers/graficoController.js (Trecho relevante da função getKPITotalTuristasSazonalidade)
 exports.getKPITotalTuristasSazonalidade = async (req, res) => {
   try {
     const { mes, ano, pais } = req.query;
@@ -794,35 +766,30 @@ exports.getKPIVariacaoTuristasSazonalidade = async (req, res) => {
     let mesNome = "período";
     let anoComparado = "anterior";
     let variacao = 0;
-    let podeCalcular = false; // Flag para indicar se temos filtros suficientes para calcular
+    let podeCalcular = false; 
 
-    // Construir a parte da condição 'where' comum para ambos os anos
     const commonWhereConditions = {};
     if (pais) {
       commonWhereConditions.fk_pais_origem = parseInt(pais, 10);
     }
 
     if (anoAtual) {
-      // Cenário 1: Ano está selecionado (com ou sem mês)
       podeCalcular = true;
 
-      // Condições para o período atual
       const whereAtual = { ...commonWhereConditions, ano: anoAtual };
       if (mesAtual) {
         whereAtual.mes = mesAtual;
-        mesNome = nomesDosMeses[mesAtual - 1]; // Nome do mês selecionado
+        mesNome = nomesDosMeses[mesAtual - 1];
       } else {
-        mesNome = "o ano"; // Se não há mês, é o ano completo
+        mesNome = "o ano";
       }
 
-      // Condições para o período anterior
       const whereAnterior = { ...commonWhereConditions, ano: anoAtual - 1 };
       if (mesAtual) {
         whereAnterior.mes = mesAtual;
       }
       anoComparado = anoAtual - 1;
 
-      // Busca as chegadas
       chegadasAtual = await perfilEstimadoTuristas.sum("quantidade_turistas", {
         where: whereAtual,
       });
@@ -841,13 +808,12 @@ exports.getKPIVariacaoTuristasSazonalidade = async (req, res) => {
         variacao =
           ((chegadasAtual - chegadasAnterior) / chegadasAnterior) * 100;
       } else if (chegadasAtual > 0) {
-        variacao = 100; // Houve chegadas agora, mas nenhuma no período anterior (aumento de 100%)
+        variacao = 100;
       } else {
-        variacao = 0; // Nenhuma chegada em nenhum dos períodos
+        variacao = 0;
       }
     } else {
-      // Se não pode calcular, definir valores de retorno para indicar isso
-      variacao = null; // Ou um valor que o frontend possa interpretar como "N/A"
+      variacao = null;
       mesNome = null;
       anoComparado = null;
     }
@@ -867,7 +833,6 @@ exports.getKPIVariacaoTuristasSazonalidade = async (req, res) => {
   }
 };
 
-// FUNÇÃO CORRIGIDA - Alias corrigido para corresponder ao relacionamento
 exports.getMesesAnosPaises = async (req, res) => {
   try {
     const resultados = await perfilEstimadoTuristas.findAll({
@@ -875,11 +840,11 @@ exports.getMesesAnosPaises = async (req, res) => {
       include: [
         {
           model: pais,
-          as: "pais", // CORREÇÃO: Usado o alias correto definido no relacionamento
+          as: "pais",
           attributes: ["id_pais", "pais"],
         },
       ],
-      group: ["ano", "mes", "pais.id_pais", "pais.pais"], // CORREÇÃO: Ajustado o group para usar o alias correto
+      group: ["ano", "mes", "pais.id_pais", "pais.pais"],
       order: [["ano", "ASC"], ["mes", "ASC"]],
       raw: true,
       nest: true,

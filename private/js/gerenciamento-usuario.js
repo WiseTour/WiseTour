@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 function aplicarPreferenciasDoUsuario() {
-  // IDs dos elementos relacionados às preferências
   const mapeamentoIds = {
     panoramaGeral: "btnPanoramaGeral",
     perfilTurista: "btnPerfilTurista",
@@ -50,7 +49,7 @@ function aplicarPreferenciasDoUsuario() {
     if (ativo === "nao" || ativo === undefined) {
       el.style.display = "none";
     } else {
-      el.style.display = "block"; // ou "flex" se preferir
+      el.style.display = "block";
       botoesVisiveis++;
     }
   });
@@ -66,7 +65,7 @@ function aplicarPreferenciasDoUsuario() {
 }
 
 function aplicarPermissaoUsuario() {
-  const idElementoAdmin = "btnAdmin"; // Altere conforme o ID real no HTML
+  const idElementoAdmin = "btnAdmin";
   const el = document.getElementById(idElementoAdmin);
 
   if (el) {
@@ -79,14 +78,13 @@ function aplicarPermissaoUsuario() {
 
     // Se for admin, mostra e aplica a classe ativado
     if (usuario && usuario.permissao === "admin") {
-      el.style.display = "block"; // ou "flex", conforme necessário
+      el.style.display = "block";
       el.classList.add("ativado");
     }
   }
 }
 
   aplicarPreferenciasDoUsuario();
-  // aplicarPermissaoUsuario();
 
   containers.forEach((container, index) => {
     container.style.display = index === 0 ? "flex" : "none";
@@ -204,7 +202,6 @@ function aplicarPermissaoUsuario() {
         return response.json();
       })
       .then((data) => {
-        // Preenche os campos do formulário de senha
         preencherCamposGerenciamentoSenha(
           JSON.parse(sessionStorage.getItem("usuario")),
           data.senha

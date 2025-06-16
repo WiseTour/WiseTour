@@ -158,7 +158,6 @@ async function carregarDadosDashboard() {
         .then(async (res) => {
           const data = await res.json();
 
-          // Ordenar inicialmente de forma decrescente
           const sortedData = [...data].sort(
             (a, b) => b.percentual - a.percentual
           );
@@ -242,7 +241,6 @@ async function carregarDadosDashboard() {
         .then(async (res) => {
           const data = await res.json();
 
-          // Ordenar inicialmente de forma decrescente
           const sortedData = [...data].sort(
             (a, b) => b.percentual - a.percentual
           );
@@ -440,10 +438,8 @@ async function carregarDadosDashboard() {
         })
     );
 
-    // Aguarda todas as requisições terminarem
     await Promise.allSettled(promises);
   } finally {
-    // Desativa o loading após todas as requisições terminarem (sucesso ou erro)
     setTimeout(() => {
       ocultarLoading();
     }, 3000);
@@ -475,7 +471,6 @@ async function carregarDadosDoCache() {
       console.warn(
         "Nenhum dado em cache disponível. Carregando dados normalmente..."
       );
-      // Remove o loading aqui pois carregarDadosDashboard() vai controlar
       setTimeout(() => {
         ocultarLoading();
       }, 3000);
@@ -739,13 +734,11 @@ async function carregarDadosDoCache() {
   } catch (err) {
     console.error("Erro ao carregar dados do cache:", err);
     console.log("Fallback: Carregando dados normalmente...");
-    // Remove o loading aqui pois carregarDadosDashboard() vai controlar
     setTimeout(() => {
       ocultarLoading();
     }, 3000);
     await carregarDadosDashboard();
   } finally {
-    // Desativa o loading após carregar do cache
     setTimeout(() => {
       ocultarLoading();
     }, 3000);
@@ -754,7 +747,6 @@ async function carregarDadosDoCache() {
 }
 
 function aplicarPreferenciasDoUsuario() {
-  // IDs dos elementos relacionados às preferências
   const mapeamentoIds = {
     panoramaGeral: "btnPanoramaGeral",
     perfilTurista: "btnPerfilTurista",
@@ -765,7 +757,6 @@ function aplicarPreferenciasDoUsuario() {
 
   let botoesVisiveis = 0;
 
-  // Recuperar preferências do localStorage
   const preferencias = JSON.parse(
     localStorage.getItem("preferenciaUsuario") || "[]"
   );
@@ -803,11 +794,10 @@ function aplicarPreferenciasDoUsuario() {
 }
 
 function aplicarPermissaoUsuario() {
-  const idElementoAdmin = "btnAdmin"; // Altere conforme o ID real no HTML
+  const idElementoAdmin = "btnAdmin";
   const el = document.getElementById(idElementoAdmin);
 
   if (el) {
-    // Remove classe e garante que o botão não esteja visível por padrão
     el.classList.remove("ativado");
     el.style.display = "none";
 
@@ -816,7 +806,7 @@ function aplicarPermissaoUsuario() {
 
     // Se for admin, mostra e aplica a classe ativado
     if (usuario && usuario.permissao === "admin") {
-      el.style.display = "block"; // ou "flex", conforme necessário
+      el.style.display = "block";
       el.classList.add("ativado");
     }
   }
@@ -831,8 +821,6 @@ document
 // Prioriza o carregamento do cache para melhor performance inicial
 document.addEventListener("DOMContentLoaded", () => {
   aplicarPreferenciasDoUsuario();
-  // aplicarPermissaoUsuario();
-  // Verifica se deve carregar do cache ou fazer consulta normal
   const urlParams = new URLSearchParams(window.location.search);
   const forceRefresh = urlParams.get("refresh") === "true";
   if (forceRefresh) {
@@ -843,7 +831,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function ordenarBarrasCrescenteGraficoMotivosInstance() {
-  // Verifica se a instância do gráfico é válida
   if (!graficoMotivosInstance || !graficoMotivosInstance.data) {
     console.error("Instância do gráfico inválida");
     return;
@@ -851,40 +838,33 @@ function ordenarBarrasCrescenteGraficoMotivosInstance() {
 
   const data = graficoMotivosInstance.data;
 
-  // Verifica se há datasets e labels
   if (!data.datasets || !data.datasets[0] || !data.labels) {
     console.error("Dados do gráfico não encontrados");
     return;
   }
 
-  const dataset = data.datasets[0]; // Assume o primeiro dataset
+  const dataset = data.datasets[0];
   const labels = data.labels;
   const values = dataset.data;
 
-  // Cria um array de objetos combinando labels e valores
   const combined = labels.map((label, index) => ({
     label: label,
     value: values[index],
   }));
 
-  // Ordena por valor em ordem crescente
   combined.sort((a, b) => a.value - b.value);
 
-  // Separa novamente os labels e valores ordenados
   const sortedLabels = combined.map((item) => item.label);
   const sortedValues = combined.map((item) => item.value);
 
-  // Atualiza os dados do gráfico
   data.labels = sortedLabels;
   dataset.data = sortedValues;
 
-  // Redesenha o gráfico com os novos dados
   graficoMotivosInstance.update();
 
   console.log("Gráfico reordenado em ordem crescente!");
 }
 
-// Função alternativa para ordem decrescente
 function ordenarBarrasDecrescenteGraficoMotivosInstance() {
   if (!graficoMotivosInstance || !graficoMotivosInstance.data) {
     console.error("Instância do gráfico inválida");
@@ -907,7 +887,6 @@ function ordenarBarrasDecrescenteGraficoMotivosInstance() {
     value: values[index],
   }));
 
-  // Ordena por valor em ordem decrescente
   combined.sort((a, b) => b.value - a.value);
 
   const sortedLabels = combined.map((item) => item.label);
@@ -922,7 +901,6 @@ function ordenarBarrasDecrescenteGraficoMotivosInstance() {
 }
 
 function ordenarBarrasCrescenteFonteInformacao() {
-  // Verifica se a instância do gráfico é válida
   if (!graficoFontesInstance || !graficoFontesInstance.data) {
     console.error("Instância do gráfico inválida");
     return;
@@ -930,40 +908,33 @@ function ordenarBarrasCrescenteFonteInformacao() {
 
   const data = graficoFontesInstance.data;
 
-  // Verifica se há datasets e labels
   if (!data.datasets || !data.datasets[0] || !data.labels) {
     console.error("Dados do gráfico não encontrados");
     return;
   }
 
-  const dataset = data.datasets[0]; // Assume o primeiro dataset
+  const dataset = data.datasets[0];
   const labels = data.labels;
   const values = dataset.data;
 
-  // Cria um array de objetos combinando labels e valores
   const combined = labels.map((label, index) => ({
     label: label,
     value: values[index],
   }));
 
-  // Ordena por valor em ordem crescente
   combined.sort((a, b) => a.value - b.value);
 
-  // Separa novamente os labels e valores ordenados
   const sortedLabels = combined.map((item) => item.label);
   const sortedValues = combined.map((item) => item.value);
 
-  // Atualiza os dados do gráfico
   data.labels = sortedLabels;
   dataset.data = sortedValues;
 
-  // Redesenha o gráfico com os novos dados
   graficoFontesInstance.update();
 
   console.log("Gráfico reordenado em ordem crescente!");
 }
 
-// Função alternativa para ordem decrescente
 function ordenarBarrasDecrescenteFonteInformacao() {
   if (!graficoFontesInstance || !graficoFontesInstance.data) {
     console.error("Instância do gráfico inválida");
@@ -986,7 +957,6 @@ function ordenarBarrasDecrescenteFonteInformacao() {
     value: values[index],
   }));
 
-  // Ordena por valor em ordem decrescente
   combined.sort((a, b) => b.value - a.value);
 
   const sortedLabels = combined.map((item) => item.label);
