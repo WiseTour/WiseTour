@@ -141,7 +141,6 @@ async function carregarDadosDoCache() {
     );
   } catch (error) {
     console.error("Erro ao carregar dados do cache:", error);
-    // Se falhar ao carregar do cache, carrega normalmente via API
     console.log("Fallback: Carregando dados via API devido ao erro no cache.");
 
     // Executa as funções individuais em paralelo
@@ -212,7 +211,7 @@ function carregarMapaComDadosCache(dadosDoCache) {
         value: parseInt(item.total_turistas) || 0,
       };
     })
-    .filter((item) => item["hc-key"]); // Remove itens sem código válido
+    .filter((item) => item["hc-key"]);
 
   // Calcular o valor máximo dos dados convertidos
   const maxValor = Math.max(...dadosMapeados.map((d) => d.value));
@@ -349,7 +348,7 @@ function carregarPicoVisitasComDadosCache(dadosDoCache) {
 }
 
 function formatNumber(num) {
-  if (typeof num !== "number") return num; // Garante que é um número
+  if (typeof num !== "number") return num;
   return num.toLocaleString("pt-BR", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
@@ -375,7 +374,7 @@ async function carregarKPITotalTuristas() {
       console.error(
         "Elemento 'totalTuristasSazonalidade' não encontrado no DOM para a KPI de Total de Turistas."
       );
-      return; // Sai da função se o elemento não for encontrado
+      return;
     }
 
     const response = await fetch(apiUrl);
@@ -386,11 +385,10 @@ async function carregarKPITotalTuristas() {
     console.log("carregarKPITotalTuristas(): Dados recebidos da API:", data);
 
     if (totalTuristasKPI) {
-      // Verifica se 'data' e 'data.total' existem e são números
       if (data && typeof data.total === "number") {
-        totalTuristasKPI.textContent = formatNumber(data.total); // Usa sua função formatNumber
+        totalTuristasKPI.textContent = formatNumber(data.total);
       } else {
-        totalTuristasKPI.textContent = "N/A"; // Exibe N/A se o dado não for válido
+        totalTuristasKPI.textContent = "N/A";
         console.error(
           "carregarKPITotalTuristas(): Dados.total não é um número válido:",
           data
@@ -561,7 +559,7 @@ async function carregarMapaEstadosVisitados() {
       chartDom.querySelector('div[style*="Carregando mapa"]').remove();
     }
 
-    // CORREÇÃO: Verificar estrutura dos dados e processar corretamente
+    // Verificar estrutura dos dados e processar corretamente
     if (!dadosRawDoBackend || dadosRawDoBackend.length === 0) {
       console.log(
         "carregarMapaEstadosVisitados(): Nenhum dado retornado da API"
@@ -601,14 +599,12 @@ async function carregarMapaEstadosVisitados() {
       Tocantins: "br-to",
     };
 
-    // CORREÇÃO: Processar os dados corretamente
+    // Processar os dados corretamente
     const dadosProcessados = dadosRawDoBackend
       .map((item) => {
-        // Converter total_turistas para número
         let totalTuristas = 0;
 
         if (item.total_turistas) {
-          // Remove vírgulas se houver e converte para número
           const turistasString = item.total_turistas
             .toString()
             .replace(/,/g, "");
@@ -625,18 +621,17 @@ async function carregarMapaEstadosVisitados() {
           "hc-key": codigoEstado,
           name: item.estado,
           value: totalTuristas,
-          // Manter dados originais para debug
           originalData: item,
         };
       })
-      .filter((item) => item["hc-key"]); // Remove itens sem código válido
+      .filter((item) => item["hc-key"]);
 
     console.log(
       "carregarMapaEstadosVisitados(): Dados processados:",
       dadosProcessados
     );
 
-    // CORREÇÃO: Verificar se há dados válidos após processamento
+    // Verificar se há dados válidos após processamento
     const dadosComValor = dadosProcessados.filter((item) => item.value > 0);
 
     if (dadosComValor.length === 0) {
@@ -647,7 +642,7 @@ async function carregarMapaEstadosVisitados() {
       return;
     }
 
-    // CORREÇÃO: Calcular o valor máximo corretamente
+    // Calcular o valor máximo corretamente
     const maxValor = Math.max(...dadosProcessados.map((d) => d.value));
     console.log(
       "carregarMapaEstadosVisitados(): Valor máximo calculado:",
@@ -755,9 +750,9 @@ function mostrarMensagemSemDados(chartDom) {
 
 async function carregarPicoVisitasSazonalidadeChart() {
   console.log("carregarPicoVisitasSazonalidadeChart(): Iniciado.");
-  const chartCtxElement = picoVisitasChartCanvas; // Esta é a referência direta ao <canvas>
-  const container = picoVisitasChartContainer; // O div pai do canvas (usado para mensagens)
-  const noDataMessageDiv = picoVisitasNoDataMessage; // O div para a mensagem de "carregando"
+  const chartCtxElement = picoVisitasChartCanvas;
+  const container = picoVisitasChartContainer;
+  const noDataMessageDiv = picoVisitasNoDataMessage;
 
   // Verifica se todos os elementos necessários foram encontrados
   if (!chartCtxElement || !container || !noDataMessageDiv) {
@@ -776,13 +771,12 @@ async function carregarPicoVisitasSazonalidadeChart() {
 
   // --- Lógica de Carregamento e Estado Inicial ---
   // Sempre mostrar o canvas, mas exibir mensagem de "carregando"
-  noDataMessageDiv.style.display = "flex"; // Mostrar o div de mensagem (flex para centralizar)
-  noDataMessageDiv.textContent = "Carregando dados de pico de visitas..."; // Mensagem de carregamento
-  chartCtxElement.style.display = "block"; // Garantir que o canvas está visível
+  noDataMessageDiv.style.display = "flex";
+  noDataMessageDiv.textContent = "Carregando dados de pico de visitas...";
+  chartCtxElement.style.display = "block";
 
   // Temporariamente limpa o gráfico existente enquanto carrega
   if (myPicoVisitasSazonalidadeChart) {
-    // Limpa os dados visuais mantendo o gráfico visível (escalas e linha base)
     myPicoVisitasSazonalidadeChart.data.datasets[0].data = [];
     myPicoVisitasSazonalidadeChart.update();
   }
@@ -825,8 +819,6 @@ async function carregarPicoVisitasSazonalidadeChart() {
       data.length === 0 ||
       data.every((item) => item.chegadas === 0)
     ) {
-      // Se não há dados, prepare labels para todos os meses e valores como 0
-      // Isso manterá o esqueleto do gráfico visível com uma linha em 0
       labels = [
         "Janeiro",
         "Fevereiro",
@@ -841,20 +833,14 @@ async function carregarPicoVisitasSazonalidadeChart() {
         "Novembro",
         "Dezembro",
       ];
-      valores = Array(12).fill(0); // Preenche com zero para manter a linha base
-      // Opcional: Adicione uma mensagem temporária ou no tooltip customizado
-      // noDataMessageDiv.style.display = 'flex';
-      // noDataMessageDiv.textContent = "Nenhum dado disponível.";
-      // Pode sumir a mensagem após alguns segundos com setTimeout
+      valores = Array(12).fill(0);
     } else {
-      // Se há dados, usa os dados reais da API
       labels = data.map((item) => item.mes_nome);
       valores = data.map((item) => item.chegadas);
     }
 
     // --- Atualização ou Criação do Gráfico ---
     if (myPicoVisitasSazonalidadeChart) {
-      // Se o gráfico já existe, apenas atualiza seus dados
       console.log(
         "carregarPicoVisitasSazonalidadeChart(): Atualizando gráfico existente."
       );
@@ -862,20 +848,18 @@ async function carregarPicoVisitasSazonalidadeChart() {
       myPicoVisitasSazonalidadeChart.data.datasets[0].data = valores;
       myPicoVisitasSazonalidadeChart.update();
     } else {
-      // Se o gráfico não existe, cria um novo
       if (typeof Chart === "undefined") {
         console.error(
           "Chart.js não está carregado. Verifique a inclusão dos scripts Chart.js no HTML."
         );
-        noDataMessageDiv.style.display = "flex"; // Mostra mensagem de erro
+        noDataMessageDiv.style.display = "flex";
         noDataMessageDiv.textContent = "Erro: Chart.js não carregado.";
-        chartCtxElement.style.display = "none"; // Esconde o canvas
+        chartCtxElement.style.display = "none";
         return;
       }
       console.log(
         "carregarPicoVisitasSazonalidadeChart(): Criando novo gráfico."
       );
-      // Cria a nova instância do Chart.js no elemento canvas
       myPicoVisitasSazonalidadeChart = new Chart(chartCtxElement, {
         type: "line",
         data: {
@@ -901,7 +885,6 @@ async function carregarPicoVisitasSazonalidadeChart() {
               bodyFont: estiloDoTextoDoGrafico.font,
               callbacks: {
                 label: function (context) {
-                  // Adiciona um tratamento para 0 no tooltip se preferir
                   if (
                     context.parsed.y === 0 &&
                     valores.every((val) => val === 0)
@@ -935,10 +918,9 @@ async function carregarPicoVisitasSazonalidadeChart() {
     // Em caso de erro, exibe a mensagem de erro e garante que o canvas está visível
     noDataMessageDiv.textContent =
       "Erro ao carregar gráfico de pico de visitas.";
-    noDataMessageDiv.style.display = "flex"; // Mostra mensagem de erro
-    chartCtxElement.style.display = "block"; // Mantém o canvas visível
+    noDataMessageDiv.style.display = "flex";
+    chartCtxElement.style.display = "block";
 
-    // Se houve um erro, limpa os dados do gráfico existente para exibir "sem dados"
     if (myPicoVisitasSazonalidadeChart) {
       myPicoVisitasSazonalidadeChart.data.labels = [
         "Janeiro",
@@ -1018,10 +1000,7 @@ async function carregarTodosOsDadosDoDashboard(usarCache = false) {
     console.log("carregarTodosOsDadosDoDashboard(): Concluído com sucesso.");
   } catch (error) {
     console.error("Erro ao carregar dados do dashboard:", error);
-    // Mesmo com erro, esconde o loading para mostrar o dashboard
-    // (os componentes individuais já tratam seus próprios erros)
   } finally {
-    // Sempre esconde o loading ao final, independente de sucesso ou erro
     setTimeout(() => {
       esconderLoading();
     }, 3000);
@@ -1029,7 +1008,6 @@ async function carregarTodosOsDadosDoDashboard(usarCache = false) {
 }
 
 function aplicarPreferenciasDoUsuario() {
-  // IDs dos elementos relacionados às preferências
   const mapeamentoIds = {
     panoramaGeral: "btnPanoramaGeral",
     perfilTurista: "btnPerfilTurista",
@@ -1062,7 +1040,7 @@ function aplicarPreferenciasDoUsuario() {
     if (ativo === "nao" || ativo === undefined) {
       el.style.display = "none";
     } else {
-      el.style.display = "block"; // ou "flex" se preferir
+      el.style.display = "block";
       botoesVisiveis++;
     }
   });
@@ -1078,36 +1056,27 @@ function aplicarPreferenciasDoUsuario() {
 }
 
 function aplicarPermissaoUsuario() {
-  const idElementoAdmin = "btnAdmin"; // Altere conforme o ID real no HTML
+  const idElementoAdmin = "btnAdmin";
   const el = document.getElementById(idElementoAdmin);
 
   if (el) {
-    // Remove classe e garante que o botão não esteja visível por padrão
     el.classList.remove("ativado");
     el.style.display = "none";
 
-    // Recupera o usuário do localStorage
     const usuario = JSON.parse(localStorage.getItem("usuario"));
 
-    // Se for admin, mostra e aplica a classe ativado
     if (usuario && usuario.permissao === "admin") {
-      el.style.display = "block"; // ou "flex", conforme necessário
+      el.style.display = "block";
       el.classList.add("ativado");
     }
   }
 }
-// Adiciona os event listeners ao funil para chamar a função de carregamento da dashboard
 document.getElementById("funil").addEventListener("click", () => {
-  // Força o carregamento via API, não via cache
   carregarTodosOsDadosDoDashboard(false);
 });
 
-// Event listener para quando a página carrega
 document.addEventListener("DOMContentLoaded", () => {
   aplicarPreferenciasDoUsuario();
-  // aplicarPermissaoUsuario();
 
-  // Chama a função de carregamento ao carregar a página
-  // Prioriza o carregamento do cache para melhor performance inicial
   carregarTodosOsDadosDoDashboard(true);
 });

@@ -8,13 +8,13 @@ const pais = sequelize.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
-      field: "id_pais", // Nome da coluna no banco de dados
+      field: "id_pais",
     },
     pais: {
       type: DataTypes.STRING(100),
       allowNull: false,
       unique: true,
-      field: "pais", // Nome da coluna no banco de dados
+      field: "pais",
     },
   },
   {

@@ -8,13 +8,12 @@ async function buscarPreferenciasUsuario(req, res) {
 
   console.log("id_usuario:" + id_usuario);
   try {
-    // Usar o nome importado (minúsculo) ao invés de PascalCase
     const preferencia = await preferenciaVisualizacaoDashboard.findAll({
       where: { fk_usuario: id_usuario },
       include: [
         {
-          model: telaDashboard, // Usar o nome importado (minúsculo)
-          as: 'tela_dashboard', // Adicionar o alias se necessário
+          model: telaDashboard,
+          as: 'tela_dashboard',
         },
       ],
     });
@@ -45,7 +44,6 @@ async function atualizarPreferenciasUsuario(req, res) {
     for (const pref of preferencias) {
       const { fk_usuario, fk_tela_dashboard, ativo } = pref;
 
-      // Usar o nome importado (minúsculo) ao invés de PascalCase
       const [registro, created] =
         await preferenciaVisualizacaoDashboard.findOrCreate({
           where: { fk_usuario, fk_tela_dashboard },

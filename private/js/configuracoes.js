@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (ativo === "nao" || ativo === undefined) {
         el.style.display = "none";
       } else {
-        el.style.display = "block"; // ou "flex" se preferir
+        el.style.display = "block";
         botoesVisiveis++;
       }
     });
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function aplicarPermissaoUsuario() {
-    const idElementoAdmin = "btnAdmin"; // Altere conforme o ID real no HTML
+    const idElementoAdmin = "btnAdmin";
     const el = document.getElementById(idElementoAdmin);
 
     if (el) {
@@ -68,15 +68,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Se for admin, mostra e aplica a classe ativado
       if (usuario && usuario.permissao === "admin") {
-        el.style.display = "block"; // ou "flex", conforme necessário
+        el.style.display = "block";
         el.classList.add("ativado");
       }
     }
   }
 
   aplicarPreferenciasDoUsuario();
-  // aplicarPermissaoUsuario();
-
   inputs.forEach((input) => {
     input.disabled = true;
     input.style.opacity = "0.5";
@@ -142,7 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // === CARREGAMENTO DAS PREFERÊNCIAS DO USUÁRIO ===
   if (usuario?.id_usuario) {
-    // Preferências de visualização de dashboard
     fetch(
       `/preferenciaVisualizacaoDashboard/usuario/preferencias-visualizacao-dashboard?id_usuario=${usuario.id_usuario}`
     )
@@ -172,7 +169,6 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Não foi possível carregar as preferências do usuário");
       });
 
-    // Configuração do Slack
     // Configuração do Slack
     fetch(
       `/configuracaoSlackRoutes/usuario/configuracaoSlack/tiposNotificacoes?id_usuario=${usuario.id_usuario}`,
@@ -485,7 +481,7 @@ function aplicarPreferenciasDoUsuario() {
     if (ativo === "nao" || ativo === undefined) {
       el.style.display = "none";
     } else {
-      el.style.display = "block"; // ou "flex" se preferir
+      el.style.display = "block";
       botoesVisiveis++;
     }
   });

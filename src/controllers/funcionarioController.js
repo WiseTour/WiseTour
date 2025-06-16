@@ -1,4 +1,3 @@
-// src/controllers/funcionario.js
 const Funcionario = require('../models/funcionario');
 const Usuario = require('../models/usuario');
 
