@@ -1,4 +1,4 @@
-# 🌐 WiseTour ✈️
+# 🌐 WiseTour - Análise de Dados Turísticos ✈️
 ---
 
 ## 📖 Visão Geral
@@ -9,7 +9,93 @@
 - **Meios de transporte mais utilizados** para entrada no país;
 - **Distribuição geográfica e sazonalidade** da demanda turística.
 
-A proposta é fornecer uma plataforma capaz de **prever tendências**, otimizar a **distribuição de campanhas de marketing** e permitir a **criação de pacotes personalizados** de forma ágil e estratégica, contribuindo para uma **vantagem competitiva** frente à crescente concorrência do setor.
+---
+
+## 🗂️ Estrutura do Projeto
+
+O projeto **WiseTour** é dividido em quatro módulos principais:
+
+### 1. WiseTour (Aplicação Web - Frontend + Backend)
+
+- Site institucional
+- Área de cadastro e login de usuários
+- Dashboard com gráficos interativos
+- Filtros dinâmicos para exploração de dados
+
+🔗 Repositório: [WiseTour - Aplicação Web](https://github.com/WiseTour/wise-tour)
+
+---
+
+### 2. ETL (Extração, Transformação e Carga de Dados)
+
+- Processos de extração dos datasets oficiais
+- Limpeza, transformação e carregamento dos dados no banco
+- Registro de logs por etapa (extração, transformação, finalização)
+
+🔗 Repositório: [WiseTour - ETL](https://github.com/WiseTour/etl)
+
+---
+
+### 3. Database (Banco de Dados e Modelo MER)
+
+- Modelagem do banco de dados relacional
+- Scripts de criação de tabelas, constraints e relacionamentos
+- Scripts de inserção inicial de dados
+
+🔗 Repositório: [WiseTour - Database](https://github.com/WiseTour/database)
+
+---
+
+### 4. Shell Scripts (Infraestrutura AWS)
+
+- Automatização da criação do ambiente em nuvem (AWS)
+- Configuração de servidor, banco de dados, backend e frontend
+- Scripts de deploy para facilitar a instalação completa
+
+🔗 Repositório: [WiseTour - Shell Scripts](https://github.com/WiseTour/shell-scripts)
+
+---
+
+## 📊 Fontes Oficiais de Dados
+
+O projeto WiseTour utiliza dois conjuntos de dados públicos fundamentais para o turismo brasileiro:
+
+### 📌 1. Estimativas de Chegadas de Turistas Internacionais ao Brasil
+
+Este conjunto de dados contém informações detalhadas sobre o número de turistas internacionais que chegam ao Brasil, por país de origem, período e ponto de entrada.
+
+🔗 [Acessar o dataset oficial](https://www.gov.br/turismo/pt-br/assuntos/estudos-e-pesquisas/demanda-internacional/estimativas-de-chegadas-de-turistas-internacionais)
+
+---
+
+### 📌 2. Estudo da Demanda Turística Internacional
+
+Documento técnico que analisa tendências de fluxo turístico, perfil dos visitantes, motivos de viagem e fatores que influenciam a vinda de turistas ao Brasil.
+
+🔗 [Acessar o estudo completo](https://www.gov.br/turismo/pt-br/assuntos/estudos-e-pesquisas/demanda-internacional/estudo-da-demanda-turistica-internacional)
+
+---
+
+## 🚀 Tecnologias Utilizadas
+
+- **MySQL** (Banco de Dados)
+- **Node.js + Express** (Backend)
+- **Sequelize** (ORM)
+- **HTML + CSS + JavaScript** (Frontend)
+- **AWS EC2 e RDS** (Infraestrutura)
+- **Apache POI + Java** (Processos ETL)
+- **Shell Scripts** (Automação de infraestrutura)
+
+---
+
+## 🛠️ Como Executar o Projeto
+
+1. Configure o ambiente AWS com os **[Shell Scripts](https://github.com/WiseTour/shell-scripts)**
+2. Ajuste o script de inserção do banco de dados, caso seja necessário **[Database](https://github.com/WiseTour/database)**
+3. Rode os processos de ETL para carregar os dados via **[ETL](https://github.com/WiseTour/etl)**
+4. Acesse a aplicação Web que já estará clonada em seu ambiente da AWS**[WiseTour](https://github.com/WiseTour/wise-tour)**
+
+> **⚠️ Importante:** o shell script prepara todo o ambiente, não será necessário clonar um repositório por vez.
 
 ---
 
