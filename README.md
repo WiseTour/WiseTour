@@ -30,10 +30,10 @@ WiseTour surge como uma resposta a esses desafios, utilizando dados reais e púb
 | Camada                            | Tecnologias                                                                                   |
 | --------------------------------- | --------------------------------------------------------------------------------------------- |
 | **Frontend**                      | HTML, CSS, JavaScript                                                                         |
-| **Backend**                       | Java + Apache POI (processo ETL)                                                              |
+| **Backend**                       | Java + Apache POI (processo ETL) + Node e Sequelize (Dashboard)                               |
 | **Banco de Dados**                | MySQL (estrutura relacional e consultas analíticas)                                           |
 | **Design e Prototipação**         | Figma, Miro                                                                                   |
-| **Infraestrutura em Nuvem**       | AWS EC2 (hospedagem da aplicação), AWS S3 (armazenamento das bases de dados), Docker na AWS  |
+| **Infraestrutura em Nuvem**       | AWS EC2 (hospedagem da aplicação), AWS S3 (armazenamento das bases de dados), Docker na AWS   |
 | **Versionamento e Gerenciamento** | GitHub, Planner                                                                               |
 
 > O processo de ETL (Extração, Transformação e Carga) foi realizado com o uso da biblioteca Apache POI, permitindo a leitura e conversão de arquivos de dados governamentais em estruturas úteis para análise e exibição.  
